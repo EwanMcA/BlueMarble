@@ -1,2 +1,2 @@
-# GameEngine
-Game Engine
+# BlueMarble
+BlueMarble Engine
