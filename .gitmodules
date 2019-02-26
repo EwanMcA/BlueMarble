@@ -1,0 +1,9 @@
+[submodule ".\\BlueMarble\\vendor\\spdlog"]
+	path = .\\BlueMarble\\vendor\\spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "BlueMarble/vendor/GLFW"]
+	path = BlueMarble/vendor/GLFW
+	url = https://github.com/TheCherno/glfw
+[submodule ".\\BlueMarble\\vendor\\imgui"]
+	path = .\\BlueMarble\\vendor\\imgui
+	url = https://github.com/TheCherno/imgui

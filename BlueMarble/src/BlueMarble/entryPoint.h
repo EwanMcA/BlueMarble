@@ -6,7 +6,11 @@ extern BlueMarble::Application* BlueMarble::CreateApplication();
 
 int main(int argc, char** argv)
 {
-	auto app = BlueMarble::CreateApplication();
+	BlueMarble::Log::Init();
+	BM_CORE_WARN("Init Log");
+	BM_INFO("Init Log");
+
+	auto app = BlueMarble::CreateApplication();  
 	app->Run();
 	delete app;
 }
