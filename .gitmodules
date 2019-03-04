@@ -7,3 +7,6 @@
 [submodule ".\\BlueMarble\\vendor\\imgui"]
 	path = .\\BlueMarble\\vendor\\imgui
 	url = https://github.com/TheCherno/imgui
+[submodule ".\\BlueMarble\\vendor\\glm"]
+	path = .\\BlueMarble\\vendor\\glm
+	url = https://github.com/g-truc/glm/
