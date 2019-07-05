@@ -4,7 +4,7 @@
 
 namespace BlueMarble {
 	
-	class BLUEMARBLE_API Input
+	class Input
 	{
 	public:
 		inline static bool IsKeyPressed(int keycode) { return cInstance->IsKeyPressedImpl(keycode); }

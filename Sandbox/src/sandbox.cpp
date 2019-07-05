@@ -10,7 +10,7 @@ public:
 
 	void OnUpdate() override
 	{
-		BM_INFO("ExampleLayer::Update");
+		//BM_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(BlueMarble::Event& event) override
@@ -25,7 +25,7 @@ public:
 	Sandbox() 
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new BlueMarble::ImGuiLayer());
+		PushLayer(new BlueMarble::RenderLayer());
 	}
 
 	~Sandbox()

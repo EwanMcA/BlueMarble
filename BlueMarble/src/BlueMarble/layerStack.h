@@ -7,7 +7,7 @@
 
 namespace BlueMarble {
 
-	class BLUEMARBLE_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack();
@@ -22,7 +22,7 @@ namespace BlueMarble {
 		std::vector<Layer*>::iterator end() { return oLayers.end(); }
 	private:
 		std::vector<Layer*> oLayers;
-		std::vector<Layer*>::iterator oLayerInsert;
+		unsigned int oLayerInsertIndex = 0;
 	};
 
 } // namespace BlueMarble

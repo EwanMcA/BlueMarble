@@ -6,9 +6,11 @@
 #include "BlueMarble/Events/event.h"
 #include "BlueMarble/Events/applicationEvent.h"
 
+#include "BlueMarble/ImGui/imGuiLayer.h"
+
 namespace BlueMarble {
 
-	class BLUEMARBLE_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -27,9 +29,13 @@ namespace BlueMarble {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> oWindow;
+		ImGuiLayer* oImGuiLayer;
+		
 		bool oRunning = true;
 
 		LayerStack oLayerStack; 
+
+        unsigned int oVertexArray, oVertexBuffer, oIndexBuffer;
 
 		static Application* cInstance;
 	};

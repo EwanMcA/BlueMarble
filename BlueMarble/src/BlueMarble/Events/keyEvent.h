@@ -4,7 +4,7 @@
 
 namespace BlueMarble {
 
-	class BLUEMARBLE_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
 		inline int GetKeyCode() const { return m_KeyCode; }
@@ -19,7 +19,7 @@ namespace BlueMarble {
 		int m_KeyCode;
 	};
 
-	class BLUEMARBLE_API KeyPressEvent : public KeyEvent
+	class KeyPressEvent : public KeyEvent
 	{
 	public:
 		KeyPressEvent(int keycode, int repeatCount)
@@ -41,7 +41,7 @@ namespace BlueMarble {
 		int m_RepeatCount;
 	};
 
-	class BLUEMARBLE_API KeyReleaseEvent : public KeyEvent
+	class KeyReleaseEvent : public KeyEvent
 	{
 	public:
 		KeyReleaseEvent(int keycode)
@@ -59,7 +59,7 @@ namespace BlueMarble {
 		virtual const char* GetName() const override { return "KeyRelease"; }
 	};
 
-	class BLUEMARBLE_API KeyTypeEvent : public KeyEvent
+	class KeyTypeEvent : public KeyEvent
 	{
 	public:
 		KeyTypeEvent(int keycode)

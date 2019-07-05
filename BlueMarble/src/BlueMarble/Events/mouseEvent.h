@@ -4,7 +4,7 @@
 
 namespace BlueMarble {
 
-	class BLUEMARBLE_API MouseMoveEvent : public Event
+	class MouseMoveEvent : public Event
 	{
 	public:
 		MouseMoveEvent(float x, float y)
@@ -31,7 +31,7 @@ namespace BlueMarble {
 		float oMouseX, oMouseY;
 	};
 
-	class BLUEMARBLE_API MouseScrollEvent : public Event
+	class MouseScrollEvent : public Event
 	{
 	public:
 		MouseScrollEvent(float xOffset, float yOffset)
@@ -58,7 +58,7 @@ namespace BlueMarble {
 		float oXOffset, oYOffset;
 	};
 
-	class BLUEMARBLE_API MouseButtonEvent : public Event
+	class MouseButtonEvent : public Event
 	{
 	public:
 		inline int GetMouseButton() const { return oButton; }
@@ -74,7 +74,7 @@ namespace BlueMarble {
 		int oButton;
 	};
 
-	class BLUEMARBLE_API MousePressEvent : public MouseButtonEvent
+	class MousePressEvent : public MouseButtonEvent
 	{
 	public:
 		MousePressEvent(int button)
@@ -92,7 +92,7 @@ namespace BlueMarble {
 		virtual const char* GetName() const override { return "MousePress"; }
 	};
 
-	class BLUEMARBLE_API MouseReleaseEvent : public MouseButtonEvent
+	class MouseReleaseEvent : public MouseButtonEvent
 	{
 	public:
 		MouseReleaseEvent(int button)

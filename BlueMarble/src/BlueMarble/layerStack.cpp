@@ -5,7 +5,6 @@ namespace BlueMarble {
 
 	LayerStack::LayerStack()
 	{
-		oLayerInsert = oLayers.begin();
 	}
 
 	// Layers are deallocated if the stack is destructed,
@@ -18,7 +17,8 @@ namespace BlueMarble {
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		oLayerInsert = oLayers.emplace(oLayerInsert, layer);
+		oLayers.emplace(oLayers.begin() + oLayerInsertIndex, layer);
+		oLayerInsertIndex++;
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay)
@@ -32,7 +32,7 @@ namespace BlueMarble {
 		if (it != oLayers.end())
 		{
 			oLayers.erase(it);
-			oLayerInsert--;
+			oLayerInsertIndex--;
 		}
 	}
 

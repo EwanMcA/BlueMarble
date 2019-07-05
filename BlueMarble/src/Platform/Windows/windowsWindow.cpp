@@ -5,7 +5,7 @@
 #include "BlueMarble/Events/MouseEvent.h"
 #include "BlueMarble/Events/KeyEvent.h"
 
-#include "Glad/glad.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace BlueMarble {
 
@@ -49,9 +49,10 @@ namespace BlueMarble {
 		}
 
 		oWindow = glfwCreateWindow((int)props.Width, (int)props.Height, oData.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(oWindow);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		BM_CORE_ASSERT(status, "Failed to initialize Glad!");
+        
+        oContext = new OpenGLContext(oWindow);
+        oContext->Init();
+        //^
 		glfwSetWindowUserPointer(oWindow, &oData);
 		SetVSync(true);
 		
@@ -154,7 +155,7 @@ namespace BlueMarble {
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(oWindow);
+        oContext->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)

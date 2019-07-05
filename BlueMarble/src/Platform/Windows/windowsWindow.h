@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BlueMarble/Window.h"
+#include "BlueMarble/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -28,6 +29,7 @@ namespace BlueMarble {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* oWindow;
+        GraphicsContext* oContext;
 
 		struct WindowData
 		{

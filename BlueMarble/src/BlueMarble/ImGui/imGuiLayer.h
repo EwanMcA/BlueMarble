@@ -7,25 +7,18 @@
 
 namespace BlueMarble {
 
-	class BLUEMARBLE_API ImGuiLayer : public Layer
+	class ImGuiLayer : public Layer
 	{
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
 
-		void OnAttach();
-		void OnDetach();
-		void OnUpdate();
-		void OnEvent(Event& event);
-	private:
-		bool OnMousePressEvent(MousePressEvent& e);
-		bool OnMouseReleaseEvent(MouseReleaseEvent& e);
-		bool OnMouseMoveEvent(MouseMoveEvent& e);
-		bool OnMouseScrollEvent(MouseScrollEvent& e);
-		bool OnKeyPressEvent(KeyPressEvent& e);
-		bool OnKeyReleaseEvent(KeyReleaseEvent& e);
-		bool OnKeyTypeEvent(KeyTypeEvent& e);
-		bool OnWindowResizeEvent(WindowResizeEvent& e);
+		virtual void OnAttach() override;
+		virtual void OnDetach() override;
+		virtual void OnImGuiRender() override;
+
+		void Begin();
+		void End();
 	private:
 		float oTime = 0.0f;
 	};

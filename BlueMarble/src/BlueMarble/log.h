@@ -6,7 +6,7 @@
 
 namespace BlueMarble {
 
-	class BLUEMARBLE_API Log
+	class Log
 	{
 	public:
 		static void Init();

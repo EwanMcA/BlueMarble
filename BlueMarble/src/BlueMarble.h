@@ -11,6 +11,7 @@
 #include "BlueMarble/mouseCodes.h"
 
 #include "BlueMarble/imgui/imguilayer.h"
+#include "BlueMarble/RenderLayer.h"
 
 // Entry Point
 #include "BlueMarble/entryPoint.h"

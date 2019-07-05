@@ -15,6 +15,8 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "BlueMarble/vendor/GLFW/include"
 IncludeDir["Glad"] = "BlueMarble/vendor/Glad/include"
 IncludeDir["ImGui"] = "BlueMarble/vendor/imgui"
+IncludeDir["glm"] = "BlueMarble/vendor/glm"
+IncludeDir["stb_image"] = "BlueMarble/vendor/stb_image"
 
 include "BlueMarble/vendor/GLFW"
 include "BlueMarble/vendor/Glad"
@@ -22,9 +24,10 @@ include "BlueMarble/vendor/imgui"
 
 project "BlueMarble"
 	location "BlueMarble"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -35,7 +38,8 @@ project "BlueMarble"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/stb_image.cpp"
 	}
 
 	includedirs
@@ -44,7 +48,9 @@ project "BlueMarble"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links
@@ -56,7 +62,6 @@ project "BlueMarble"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
 
@@ -67,31 +72,27 @@ project "BlueMarble"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-		}
-
 	filter "configurations:Debug"
 		defines "BM_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
-		defines "BM_RELEASE"
+		defines "BM_RELEASE" 
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "BM_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -105,35 +106,41 @@ project "Sandbox"
 	includedirs
 	{
 		"BlueMarble/vendor/spdlog/include",
-		"BlueMarble/src"
+		"BlueMarble/src",
+		"BlueMarble/vendor",
+		"%{IncludeDir.glm}"
 	}
 
 	links
 	{
 		"BlueMarble"
 	}
+	
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
+	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
 
 		defines
 		{
 			"BM_PLATFORM_WINDOWS"
-		}
+	 	}
 
 	filter "configurations:Debug"
 		defines "BM_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "BM_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "BM_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"

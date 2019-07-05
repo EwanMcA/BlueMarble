@@ -22,7 +22,7 @@ namespace BlueMarble {
 	};
 
 	// Interface representing a desktop Window
-	class BLUEMARBLE_API Window
+	class Window
 	{
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;

@@ -32,7 +32,7 @@ namespace BlueMarble {
 		EventCategoryMouseButton = BIT(4)
 	};
 
-	class BLUEMARBLE_API Event
+	class Event
 	{
 	public:
 		bool Handled = false;
