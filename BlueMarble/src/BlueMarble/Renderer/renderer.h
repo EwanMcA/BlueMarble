@@ -1,15 +1,18 @@
 #pragma once
 
-#include "BlueMarble/Core.h"
+#include "RenderCommand.h"
 
 namespace BlueMarble {
-
+    
 	class Renderer
 	{
 	public:
-		virtual ~Renderer() {}
+        static void BeginScene(); //TODO take in scene parameters
+        static void EndScene();
 
-		virtual void Clear() const = 0;
+        static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+        inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	};
 
 } // Namespace BlueMarble

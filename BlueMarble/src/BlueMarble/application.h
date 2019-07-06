@@ -8,6 +8,10 @@
 
 #include "BlueMarble/ImGui/imGuiLayer.h"
 
+#include "BlueMarble/Renderer/VertexArray.h"
+#include "BlueMarble/Renderer/Shader.h"
+#include "BlueMarble/Renderer/Buffer.h"
+
 namespace BlueMarble {
 
 	class Application
@@ -28,14 +32,18 @@ namespace BlueMarble {
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 
-		std::unique_ptr<Window> oWindow;
+		std::shared_ptr<Window> oWindow;
 		ImGuiLayer* oImGuiLayer;
 		
 		bool oRunning = true;
 
 		LayerStack oLayerStack; 
 
-        unsigned int oVertexArray, oVertexBuffer, oIndexBuffer;
+        std::shared_ptr<Shader> oShader;
+        std::shared_ptr<VertexArray> oVertexArray;
+
+        std::shared_ptr<Shader> oBlueShader;
+        std::shared_ptr<VertexArray> oSquareVA;
 
 		static Application* cInstance;
 	};

@@ -4,7 +4,7 @@
 #include "BlueMarble/Events/event.h"
 #include "BlueMarble/log.h"
 
-#include <Glad/glad.h>
+#include "BlueMarble/Renderer/renderer.h"
 
 #include "input.h"
 
@@ -14,38 +14,120 @@ namespace BlueMarble {
 
 	Application* Application::cInstance = nullptr;
 
-	Application::Application()
-	{
-		BM_CORE_ASSERT(!cInstance, "Application already exists");
-		cInstance = this;
-		oWindow = std::unique_ptr<Window>(Window::Create());
-		oWindow->SetEventCallback(BIND_EVENT_FN(OnEvent));
+    Application::Application()
+    {
+        BM_CORE_ASSERT(!cInstance, "Application already exists");
+        cInstance = this;
+        oWindow = std::unique_ptr<Window>(Window::Create());
+        oWindow->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
-		oImGuiLayer = new ImGuiLayer();
-		PushOverlay(oImGuiLayer);
+        oImGuiLayer = new ImGuiLayer();
+        PushOverlay(oImGuiLayer);
 
-        glGenVertexArrays(1, &oVertexArray);
-        glBindVertexArray(oVertexArray);
+        oVertexArray.reset(VertexArray::Create());
 
-        glGenBuffers(1, &oVertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, oVertexBuffer);
-
-        float vertices[3 * 3] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
+        float vertices[3 * 7] = {
+            -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
+             0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
+             0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
         };
-        
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+        std::shared_ptr<VertexBuffer> vertexBuffer;
+        vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-        glGenBuffers(1, &oIndexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, oIndexBuffer);
+        BufferLayout layout = {
+            {ShaderDataType::Float3, "aPosition" },
+            {ShaderDataType::Float4, "aColor" },
+        };
 
-        unsigned int indices[3] = { 0, 1, 2 };
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        vertexBuffer->SetLayout(layout);
+        oVertexArray->AddVertexBuffer(vertexBuffer);
+
+        uint32_t indices[3] = { 0, 1, 2 };
+        std::shared_ptr<IndexBuffer> indexBuffer;
+        indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+        oVertexArray->SetIndexBuffer(indexBuffer);
+
+        oSquareVA.reset(VertexArray::Create());
+
+        float squareVertices[3 * 4] = {
+            -0.75f, -0.75f, 0.0f,
+             0.75f, -0.75f, 0.0f,
+             0.75f,  0.75f, 0.0f,
+            -0.75f,  0.75f, 0.0f
+        };
+
+        std::shared_ptr<VertexBuffer> squareVB;
+        squareVB.reset(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+        squareVB->SetLayout({{ ShaderDataType::Float3, "aPosition" }});
+        oSquareVA->AddVertexBuffer(squareVB);
+
+        uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+        std::shared_ptr<IndexBuffer> squareIB;
+        squareIB.reset(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+        oSquareVA->SetIndexBuffer(squareIB);
+
+        std::string vertexSrc = R"(
+            #version 330 core
+
+            layout(location = 0) in vec3 aPosition;
+            layout(location = 1) in vec4 aColor;
+
+            out vec3 vPosition;
+            out vec4 vColor;
+
+            void main()
+            {
+                vPosition = aPosition;
+                vColor = aColor;
+                gl_Position = vec4(aPosition, 1.0);
+            }
+        )";
+
+        std::string fragmentSrc = R"(
+            #version 330 core
+
+            layout(location = 0) out vec4 color;
+
+            in vec3 vPosition;
+            in vec4 vColor;
+
+            void main()
+            {
+                color = vec4(vPosition * 0.5 + 0.5, 1.0);
+                color = vColor;
+            }
+        )";
+        oShader.reset(new Shader(vertexSrc, fragmentSrc));
+
+        std::string blueVertexShaderSrc = R"(
+            #version 330 core
+
+            layout(location = 0) in vec3 aPosition;
+
+            out vec3 vPosition;
+
+            void main()
+            {
+                vPosition = aPosition;
+                gl_Position = vec4(aPosition, 1.0);
+            }
+        )";
+
+        std::string blueFragmentShaderSrc = R"(
+            #version 330 core
+
+            layout(location = 0) out vec4 color;
+
+            in vec3 vPosition;
+
+            void main()
+            {
+                color = vec4(0.2, 0.3, 0.8, 1.0);
+            }
+        )";
+
+        oBlueShader.reset(new Shader(blueVertexShaderSrc, blueFragmentShaderSrc));
 	}
 
 	Application::~Application()
@@ -69,7 +151,7 @@ namespace BlueMarble {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
-		BM_CORE_TRACE("{0}", e);
+		//BM_CORE_TRACE("{0}", e); 
 
 		for (auto it = oLayerStack.end(); it != oLayerStack.begin(); )
 		{
@@ -79,16 +161,22 @@ namespace BlueMarble {
 		}
 	}
 
-
 	void Application::Run() 
 	{
 		while (oRunning) {
 
-            glClearColor(0.1f, 0.1f, 0.1f, 1);
-            glClear(GL_COLOR_BUFFER_BIT);
+            RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+            RenderCommand::Clear();
 
-            glBindVertexArray(oVertexArray);
-            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+            Renderer::BeginScene();
+
+            oBlueShader->Bind();
+            Renderer::Submit(oSquareVA);
+            
+            oShader->Bind();
+            Renderer::Submit(oVertexArray);
+
+            Renderer::EndScene();
 
 			for (Layer* layer : oLayerStack)
 				layer->OnUpdate();
