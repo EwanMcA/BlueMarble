@@ -117,12 +117,11 @@ public:
             in vec2 vTexCoord;
             
             uniform sampler2D myTextureSampler;
-
             uniform vec4 uColor;
 
             void main()
             {
-                color = texture( myTextureSampler, vTexCoord );
+                color = texture( myTextureSampler, vTexCoord ) * uColor;
             }
         )";
 
@@ -157,7 +156,7 @@ public:
 
         BlueMarble::Renderer::BeginScene(oCamera);
 
-        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
 
         glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
         glm::vec4 redColor(0.8f, 0.3f, 0.2f, 1.0f);
