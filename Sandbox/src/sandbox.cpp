@@ -87,7 +87,7 @@ public:
         )";
         oShader.reset(new BlueMarble::Shader(vertexSrc, fragmentSrc));
 
-        std::string blueVertexShaderSrc = R"(
+        std::string flatVertexShaderSrc = R"(
             #version 330 core
 
             layout(location = 0) in vec3 aPosition;
@@ -104,20 +104,22 @@ public:
             }
         )";
 
-        std::string blueFragmentShaderSrc = R"(
+        std::string flatFragmentShaderSrc = R"(
             #version 330 core
 
             layout(location = 0) out vec4 color;
 
             in vec3 vPosition;
 
+            uniform vec4 uColor;
+
             void main()
             {
-                color = vec4(0.2, 0.3, 0.8, 1.0);
+                color = uColor;
             }
         )";
 
-        oBlueShader.reset(new BlueMarble::Shader(blueVertexShaderSrc, blueFragmentShaderSrc));
+        oFlatShader.reset(new BlueMarble::Shader(flatVertexShaderSrc, flatFragmentShaderSrc));
     }
 
 	void OnUpdate(BlueMarble::TimeStep ts) override
@@ -148,12 +150,20 @@ public:
 
         glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
+        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+        glm::vec4 redColor(0.8f, 0.3f, 0.2f, 1.0f);
+
         for (int y = 0; y < 20; ++y) {
             for (int x = 0; x < 20; ++x)
                 {
                     glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
                     glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-                    BlueMarble::Renderer::Submit(oBlueShader, oSquareVA, transform);
+                    if (x % 2 == 0)
+                        oFlatShader->UploadUniformFloat4("uColor", redColor);
+                    else
+                        oFlatShader->UploadUniformFloat4("uColor", blueColor);
+
+                    BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, transform);
                 }
         }
         BlueMarble::Renderer::Submit(oShader, oVertexArray);
@@ -177,7 +187,7 @@ private:
     std::shared_ptr<BlueMarble::Shader> oShader;
     std::shared_ptr<BlueMarble::VertexArray> oVertexArray;
 
-    std::shared_ptr<BlueMarble::Shader> oBlueShader;
+    std::shared_ptr<BlueMarble::Shader> oFlatShader;
     std::shared_ptr<BlueMarble::VertexArray> oSquareVA;
 
     BlueMarble::OrthographicCamera oCamera;
