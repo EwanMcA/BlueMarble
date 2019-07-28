@@ -6,11 +6,9 @@
 #include "BlueMarble/Events/event.h"
 #include "BlueMarble/Events/applicationEvent.h"
 
-#include "BlueMarble/ImGui/imGuiLayer.h"
+#include "BlueMarble/Core/timeStep.h"
 
-#include "BlueMarble/Renderer/VertexArray.h"
-#include "BlueMarble/Renderer/Shader.h"
-#include "BlueMarble/Renderer/Buffer.h"
+#include "BlueMarble/ImGui/imGuiLayer.h"
 
 namespace BlueMarble {
 
@@ -27,24 +25,20 @@ namespace BlueMarble {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
-		inline static Application& Get() { return *cInstance; }
 		inline Window& GetWindow() { return *oWindow;  }
+
+		inline static Application& Get() { return *cInstance; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 
+    private:
 		std::shared_ptr<Window> oWindow;
 		ImGuiLayer* oImGuiLayer;
-		
 		bool oRunning = true;
-
 		LayerStack oLayerStack; 
+        float oLastFrameTime = 0.0f;
 
-        std::shared_ptr<Shader> oShader;
-        std::shared_ptr<VertexArray> oVertexArray;
-
-        std::shared_ptr<Shader> oBlueShader;
-        std::shared_ptr<VertexArray> oSquareVA;
-
+    private:
 		static Application* cInstance;
 	};
 

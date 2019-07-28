@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <glm/glm.hpp>
 
 namespace BlueMarble {
 
@@ -12,8 +13,11 @@ namespace BlueMarble {
 
         void Bind() const;
         void Unbind() const;
+
+        // Shader needs to be bound before calling this
+        void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
     private:
-        uint32_t oRendererId;
+        uint32_t oRendererID;
     };
 
 } // namespace BlueMarble

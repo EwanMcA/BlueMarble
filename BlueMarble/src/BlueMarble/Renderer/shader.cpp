@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace BlueMarble {
 
     Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
@@ -71,29 +73,29 @@ namespace BlueMarble {
         // Vertex and fragment shaders are successfully compiled.
         // Now time to link them together into a program.
         // Get a program object.
-        oRendererId = glCreateProgram();
+        oRendererID = glCreateProgram();
 
         // Attach our shaders to our program
-        glAttachShader(oRendererId, vertexShader);
-        glAttachShader(oRendererId, fragmentShader);
+        glAttachShader(oRendererID, vertexShader);
+        glAttachShader(oRendererID, fragmentShader);
 
         // Link our program
-        glLinkProgram(oRendererId);
+        glLinkProgram(oRendererID);
 
         // Note the different functions here: glGetProgram* instead of glGetShader*.
         GLint isLinked = 0;
-        glGetProgramiv(oRendererId, GL_LINK_STATUS, (int *)&isLinked);
+        glGetProgramiv(oRendererID, GL_LINK_STATUS, (int *)&isLinked);
         if (isLinked == GL_FALSE)
         {
             GLint maxLength = 0;
-            glGetProgramiv(oRendererId, GL_INFO_LOG_LENGTH, &maxLength);
+            glGetProgramiv(oRendererID, GL_INFO_LOG_LENGTH, &maxLength);
 
             // The maxLength includes the NULL character
             std::vector<GLchar> infoLog(maxLength);
-            glGetProgramInfoLog(oRendererId, maxLength, &maxLength, &infoLog[0]);
+            glGetProgramInfoLog(oRendererID, maxLength, &maxLength, &infoLog[0]);
 
             // We don't need the program anymore.
-            glDeleteProgram(oRendererId);
+            glDeleteProgram(oRendererID);
             // Don't leak shaders either.
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
@@ -104,23 +106,29 @@ namespace BlueMarble {
         }
 
         // Always detach shaders after a successful link.
-        glDetachShader(oRendererId, vertexShader);
-        glDetachShader(oRendererId, fragmentShader);
+        glDetachShader(oRendererID, vertexShader);
+        glDetachShader(oRendererID, fragmentShader);
     }
 
     Shader::~Shader()
     {
-        glDeleteProgram(oRendererId);
+        glDeleteProgram(oRendererID);
     }
 
     void Shader::Bind() const
     {
-        glUseProgram(oRendererId);
+        glUseProgram(oRendererID);
     }
 
     void Shader::Unbind() const
     {
         glUseProgram(0);
+    }
+
+    void Shader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
+    {
+        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
     //From OPENGL Series
