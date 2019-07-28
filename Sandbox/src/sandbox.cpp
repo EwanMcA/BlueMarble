@@ -34,16 +34,17 @@ public:
 
         oSquareVA.reset(BlueMarble::VertexArray::Create());
 
-        float squareVertices[3 * 4] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.5f,  0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f
+        float squareVertices[5 * 4] = {
+            -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f,     1.0f, 0.0f,
+             0.5f,  0.5f, 0.0f,     1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f,     0.0f, 1.0f
         };
 
         std::shared_ptr<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
-        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" } });
+        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
+                              { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
         oSquareVA->AddVertexBuffer(squareVB);
 
         uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -91,15 +92,18 @@ public:
             #version 330 core
 
             layout(location = 0) in vec3 aPosition;
+            layout(location = 1) in vec2 aTexCoord;
 
             uniform mat4 uViewProjection;
             uniform mat4 uTransform;
 
             out vec3 vPosition;
+            out vec2 vTexCoord;
 
             void main()
             {
                 vPosition = aPosition;
+                vTexCoord = aTexCoord;
                 gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
             }
         )";
@@ -110,21 +114,26 @@ public:
             layout(location = 0) out vec4 color;
 
             in vec3 vPosition;
+            in vec2 vTexCoord;
+            
+            uniform sampler2D myTextureSampler;
 
             uniform vec4 uColor;
 
             void main()
             {
-                color = uColor;
+                color = texture( myTextureSampler, vTexCoord );
             }
         )";
 
         oFlatShader.reset(new BlueMarble::Shader(flatVertexShaderSrc, flatFragmentShaderSrc));
+
+        oTexture.reset(BlueMarble::Texture::Create("blueMarble.jpg"));
     }
 
 	void OnUpdate(BlueMarble::TimeStep ts) override
 	{
-        BM_TRACE("Delta time: {0} ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
+        //BM_TRACE("Delta time: {0} ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
         if (BlueMarble::Input::IsKeyPressed(BM_KEY_LEFT))
             oCameraPosition.x -= oCameraMoveSpeed * ts;
         else if (BlueMarble::Input::IsKeyPressed(BM_KEY_RIGHT))
@@ -153,20 +162,22 @@ public:
         glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
         glm::vec4 redColor(0.8f, 0.3f, 0.2f, 1.0f);
 
-        for (int y = 0; y < 20; ++y) {
+        for (int y = 0; y < 20; ++y) 
+        {
             for (int x = 0; x < 20; ++x)
-                {
-                    glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
-                    glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-                    if (x % 2 == 0)
-                        oFlatShader->UploadUniformFloat4("uColor", redColor);
-                    else
-                        oFlatShader->UploadUniformFloat4("uColor", blueColor);
+            {
+                glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+                glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 
-                    BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, transform);
-                }
+                if (x % 2 == 0)
+                    oFlatShader->UploadUniformFloat4("uColor", redColor);
+                else
+                    oFlatShader->UploadUniformFloat4("uColor", blueColor);
+
+                BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, oTexture, transform);
+            }
         }
-        BlueMarble::Renderer::Submit(oShader, oVertexArray);
+        BlueMarble::Renderer::Submit(oShader, oVertexArray, oTexture);
 
         BlueMarble::Renderer::EndScene();
     }
@@ -189,6 +200,8 @@ private:
 
     std::shared_ptr<BlueMarble::Shader> oFlatShader;
     std::shared_ptr<BlueMarble::VertexArray> oSquareVA;
+
+    std::shared_ptr<BlueMarble::Texture> oTexture;
 
     BlueMarble::OrthographicCamera oCamera;
     glm::vec3 oCameraPosition;
