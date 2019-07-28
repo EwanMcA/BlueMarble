@@ -20,6 +20,7 @@ namespace BlueMarble {
 
     void Renderer::Submit(const std::shared_ptr<Shader>& shader, 
                           const std::shared_ptr<VertexArray>& vertexArray,
+                          const std::shared_ptr<Texture>& texture,
                           const glm::mat4& transform)
     {
         shader->Bind();
@@ -29,6 +30,7 @@ namespace BlueMarble {
         shader->UploadUniformMat4("uTransform", transform);
 
         vertexArray->Bind();
+        texture->Bind();
         RenderCommand::DrawIndexed(vertexArray);
     }
 
