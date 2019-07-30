@@ -8,30 +8,6 @@ public:
 	ExampleLayer()
         : Layer("Example"), oCamera(-2.0f, 2.0f, -2.0f, 2.0f), oCameraPosition(0.0f)
 	{
-        oVertexArray.reset(BlueMarble::VertexArray::Create());
-
-        float vertices[3 * 7] = {
-            -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-             0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-             0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
-        };
-
-        std::shared_ptr<BlueMarble::VertexBuffer> vertexBuffer;
-        vertexBuffer.reset(BlueMarble::VertexBuffer::Create(vertices, sizeof(vertices)));
-
-        BlueMarble::BufferLayout layout = {
-            {BlueMarble::ShaderDataType::Float3, "aPosition" },
-            {BlueMarble::ShaderDataType::Float4, "aColor" },
-        };
-
-        vertexBuffer->SetLayout(layout);
-        oVertexArray->AddVertexBuffer(vertexBuffer);
-
-        uint32_t indices[3] = { 0, 1, 2 };
-        std::shared_ptr<BlueMarble::IndexBuffer> indexBuffer;
-        indexBuffer.reset(BlueMarble::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-        oVertexArray->SetIndexBuffer(indexBuffer);
-
         oSquareVA.reset(BlueMarble::VertexArray::Create());
 
         float squareVertices[5 * 4] = {
@@ -52,80 +28,7 @@ public:
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
         oSquareVA->SetIndexBuffer(squareIB);
 
-        std::string vertexSrc = R"(
-            #version 330 core
-
-            layout(location = 0) in vec3 aPosition;
-            layout(location = 1) in vec4 aColor;
-
-            uniform mat4 uViewProjection;
-            uniform mat4 uTransform;
-
-            out vec3 vPosition;
-            out vec4 vColor;
-
-            void main()
-            {
-                vPosition = aPosition;
-                vColor = aColor;
-                gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
-            }
-        )";
-
-        std::string fragmentSrc = R"(
-            #version 330 core
-
-            layout(location = 0) out vec4 color;
-
-            in vec3 vPosition;
-            in vec4 vColor;
-
-            void main()
-            {
-                color = vec4(vPosition * 0.5 + 0.5, 1.0);
-                color = vColor;
-            }
-        )";
-        oShader.reset(new BlueMarble::Shader(vertexSrc, fragmentSrc));
-
-        std::string flatVertexShaderSrc = R"(
-            #version 330 core
-
-            layout(location = 0) in vec3 aPosition;
-            layout(location = 1) in vec2 aTexCoord;
-
-            uniform mat4 uViewProjection;
-            uniform mat4 uTransform;
-
-            out vec3 vPosition;
-            out vec2 vTexCoord;
-
-            void main()
-            {
-                vPosition = aPosition;
-                vTexCoord = aTexCoord;
-                gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
-            }
-        )";
-
-        std::string flatFragmentShaderSrc = R"(
-            #version 330 core
-
-            layout(location = 0) out vec4 color;
-
-            in vec3 vPosition;
-            in vec2 vTexCoord;
-            
-            uniform sampler2D uTexture1;
-            uniform vec4 uColor;
-
-            void main()
-            {
-                color = texture( uTexture1, vTexCoord ) * uColor;
-            }
-        )";
-
-        oFlatShader.reset(new BlueMarble::Shader(flatVertexShaderSrc, flatFragmentShaderSrc));
+        oFlatShader.reset(new BlueMarble::Shader("shaders/shader.glsl"));
 
         oTexture.reset(BlueMarble::Texture::Create("grass.png"));
     }
@@ -170,7 +73,6 @@ public:
                 BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, oTexture, transform);
             }
         }
-        //BlueMarble::Renderer::Submit(oShader, oVertexArray, oTexture);
 
         BlueMarble::Renderer::EndScene();
     }
@@ -188,9 +90,6 @@ public:
 	}
 
 private:
-    std::shared_ptr<BlueMarble::Shader> oShader;
-    std::shared_ptr<BlueMarble::VertexArray> oVertexArray;
-
     std::shared_ptr<BlueMarble::Shader> oFlatShader;
     std::shared_ptr<BlueMarble::VertexArray> oSquareVA;
 

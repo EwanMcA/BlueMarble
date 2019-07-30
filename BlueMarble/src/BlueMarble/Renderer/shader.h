@@ -8,7 +8,22 @@ namespace BlueMarble {
     class Shader
     {
     public:
-        Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
+        
+        // The Shader object will have both of these (they are just for parsing)
+        enum class ShaderType
+        {
+            NONE = -1, VERTEX = 0, FRAGMENT = 1
+        };
+
+        struct ShaderSource
+        {
+            std::string vertexSrc;
+            std::string fragmentSrc;
+        };
+
+        Shader(const Shader::ShaderSource& src);
+        Shader(const std::string& filename)
+            : Shader(Shader::ParseShader(filename)) {}
         ~Shader();
 
         void Bind() const;
@@ -17,6 +32,10 @@ namespace BlueMarble {
         // Shader needs to be bound before calling this
         void UploadUniformFloat4(const std::string& name, const glm::vec4& values);
         void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
+
+    private:
+        static ShaderSource Shader::ParseShader(const std::string& filepath);
+
     private:
         uint32_t oRendererID;
     };
