@@ -35,10 +35,10 @@ public:
         oSquareVA.reset(BlueMarble::VertexArray::Create());
 
         float squareVertices[5 * 4] = {
-            -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,
-             0.5f, -0.5f, 0.0f,     1.0f, 0.0f,
+            -0.5f, -0.5f, 0.0f,     0.5f, 0.5f,
+             0.5f, -0.5f, 0.0f,     1.0f, 0.5f,
              0.5f,  0.5f, 0.0f,     1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f,     0.0f, 1.0f
+            -0.5f,  0.5f, 0.0f,     0.5f, 1.0f
         };
 
         std::shared_ptr<BlueMarble::VertexBuffer> squareVB;
@@ -116,18 +116,18 @@ public:
             in vec3 vPosition;
             in vec2 vTexCoord;
             
-            uniform sampler2D myTextureSampler;
+            uniform sampler2D uTexture1;
             uniform vec4 uColor;
 
             void main()
             {
-                color = texture( myTextureSampler, vTexCoord ) * uColor;
+                color = texture( uTexture1, vTexCoord ) * uColor;
             }
         )";
 
         oFlatShader.reset(new BlueMarble::Shader(flatVertexShaderSrc, flatFragmentShaderSrc));
 
-        oTexture.reset(BlueMarble::Texture::Create("blueMarble.jpg"));
+        oTexture.reset(BlueMarble::Texture::Create("grass.png"));
     }
 
 	void OnUpdate(BlueMarble::TimeStep ts) override
@@ -156,27 +156,21 @@ public:
 
         BlueMarble::Renderer::BeginScene(oCamera);
 
-        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-
-        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
-        glm::vec4 redColor(0.8f, 0.3f, 0.2f, 1.0f);
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
         for (int y = 0; y < 20; ++y) 
         {
             for (int x = 0; x < 20; ++x)
             {
-                glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+                glm::vec3 pos(x * 0.1f, y * 0.1f, 0.0f);
                 glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 
-                if (x % 2 == 0)
-                    oFlatShader->UploadUniformFloat4("uColor", redColor);
-                else
-                    oFlatShader->UploadUniformFloat4("uColor", blueColor);
+                oFlatShader->UploadUniformFloat4("uColor", glm::vec4(1.0f, 1.0f - (y+x)/60.0f, 1.0f - (x+y)/40.0f, 0.0f));
 
                 BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, oTexture, transform);
             }
         }
-        BlueMarble::Renderer::Submit(oShader, oVertexArray, oTexture);
+        //BlueMarble::Renderer::Submit(oShader, oVertexArray, oTexture);
 
         BlueMarble::Renderer::EndScene();
     }
