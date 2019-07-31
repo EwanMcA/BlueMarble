@@ -26,9 +26,8 @@ in vec3 vPosition;
 in vec2 vTexCoord;
 
 uniform sampler2D uTexture1;
-uniform vec4 uColor;
 
 void main()
 {
-    color = texture( uTexture1, vTexCoord ) * uColor;
+    color = texture( uTexture1, vTexCoord ) * vec4(vPosition * 0.05 + 0.5, 1.0f);
 }

@@ -11,7 +11,7 @@ namespace BlueMarble {
 	{
 	public:
         //TODO take in the rest of the scene parameters
-        static void BeginScene(OrthographicCamera& camera); 
+        static void BeginScene(Camera& camera); 
         static void EndScene();
         
         static void Submit(const std::shared_ptr<Shader>& shader, 
