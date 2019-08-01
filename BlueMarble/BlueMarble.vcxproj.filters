@@ -141,6 +141,7 @@
     <ClInclude Include="src\bmpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlueMarble\terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BlueMarble\ImGui\imGuiBuild.cpp">
@@ -212,5 +213,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\BlueMarble\terrain.cpp" />
   </ItemGroup>
 </Project>

@@ -165,6 +165,7 @@
     <ClInclude Include="src\BlueMarble\layerStack.h" />
     <ClInclude Include="src\BlueMarble\log.h" />
     <ClInclude Include="src\BlueMarble\mouseCodes.h" />
+    <ClInclude Include="src\BlueMarble\terrain.h" />
     <ClInclude Include="src\BlueMarble\window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\glError.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="src\BlueMarble\layer.cpp" />
     <ClCompile Include="src\BlueMarble\layerStack.cpp" />
     <ClCompile Include="src\BlueMarble\log.cpp" />
+    <ClCompile Include="src\BlueMarble\terrain.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\openGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\openGLContext.cpp" />
