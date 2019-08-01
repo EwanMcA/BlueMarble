@@ -24,5 +24,8 @@
 
 #include "BlueMarble/Renderer/camera.h"
 
+// Objects -------------------------------
+#include "BlueMarble/terrain.h"
+
 // Entry Point ---------------------------
 #include "BlueMarble/entryPoint.h"

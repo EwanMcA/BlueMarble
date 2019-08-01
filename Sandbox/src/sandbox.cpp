@@ -14,44 +14,9 @@ public:
                    10.0f), 
         oCameraPosition({ 0.0f, 0.0f, 1.0f })
 	{
-        oSquareVA.reset(BlueMarble::VertexArray::Create());
-
-        std::vector<float> squareVertices;
-        for (int i = -20; i < 21; ++i)
-        {
-            for (int j = -20; j < 21; ++j)
-            {
-                //-0.5f, -0.5f, 0.0f,     0.5f, 0.5f,
-                // 0.5f, -0.5f, 0.0f,     1.0f, 0.5f,
-                // 0.5f,  0.5f, 0.0f,     1.0f, 1.0f,
-                //-0.5f,  0.5f, 0.0f,     0.5f, 1.0f
-                squareVertices.insert(squareVertices.end(), { i * 0.5f - 0.5f, j * 0.5f - 0.5f, 0.0f,     0.5f, 0.5f });
-                squareVertices.insert(squareVertices.end(), { i * 0.5f + 0.5f, j * 0.5f - 0.5f, 0.0f,     1.0f, 0.5f });
-                squareVertices.insert(squareVertices.end(), { i * 0.5f + 0.5f, j * 0.5f + 0.5f, 0.0f,     1.0f, 1.0f });
-                squareVertices.insert(squareVertices.end(), { i * 0.5f - 0.5f, j * 0.5f + 0.5f, 0.0f,     0.5f, 1.0f });
-            }
-        }
-
-        std::shared_ptr<BlueMarble::VertexBuffer> squareVB;
-        squareVB.reset(BlueMarble::VertexBuffer::Create(squareVertices.data(), squareVertices.size() * sizeof(float)));
-        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
-                              { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
-        oSquareVA->AddVertexBuffer(squareVB);
-
-        std::vector<uint32_t> squareIndices;
-        for (uint32_t i = 0; i < 1681; ++i)
-        {
-            // TODO: Not achieving maximum reuse here. After the first square, can reuse 3 of its vertices in the 2nd square.
-            //= { 0, 1, 2, 2, 3, 0 };
-            squareIndices.insert(squareIndices.end(), { 0 + i * 4, 1 + i * 4, 2 + i * 4, 2 + i * 4, 3 + i * 4, 0 + i * 4 });
-        }
-        std::shared_ptr<BlueMarble::IndexBuffer> squareIB;
-        squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
-        oSquareVA->SetIndexBuffer(squareIB);
-
-        oFlatShader.reset(new BlueMarble::Shader("shaders/shader.glsl"));
-
-        oTexture.reset(BlueMarble::Texture::Create("grass.png"));
+        oTerrain.Init(20, 20, 0.1f);
+        oTerrain.GenerateRandomHeightMap();
+        oTerrain.Load();
     }
 
 	void OnUpdate(BlueMarble::TimeStep ts) override
@@ -97,13 +62,12 @@ public:
 
         BlueMarble::Renderer::BeginScene(oCamera);
 
-        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-
+        //glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
         //glm::vec3 pos(x * 0.1f, y * 0.1f, 0.0f);
-        glm::mat4 transform = glm::mat4(1.0f) * scale;
+        //glm::mat4 transform = glm::mat4(1.0f) * scale;
         //oFlatShader->UploadUniformFloat4("uColor", glm::vec4(1.0f, 1.0f - (y+x)/60.0f, 1.0f - (x+y)/40.0f, 0.0f));
 
-        BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, oTexture, transform);
+        oTerrain.Draw();
 
         BlueMarble::Renderer::EndScene();
     }
@@ -121,10 +85,7 @@ public:
 	}
 
 private:
-    std::shared_ptr<BlueMarble::Shader> oFlatShader;
-    std::shared_ptr<BlueMarble::VertexArray> oSquareVA;
-
-    std::shared_ptr<BlueMarble::Texture> oTexture;
+    BlueMarble::Terrain oTerrain;
 
     BlueMarble::PerspectiveCamera oCamera;
     glm::vec3 oCameraPosition;
