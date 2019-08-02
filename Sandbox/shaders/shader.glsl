@@ -32,7 +32,9 @@ in vec3 vNormal;
 in vec2 vTexCoord;
 in vec3 vWorldPosition;
 
+uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
+uniform sampler2D uTexture2;
 
 void main()
 {
@@ -44,6 +46,12 @@ void main()
     float diff = max(dot(n, lightDir), 0.0);
     vec3 diffuse = diff * vec3(1.0f, 1.0f, 1.0f);
 
-    color = vec4(ambient + diffuse, 1.0f) * texture( uTexture1, vTexCoord );
+    if (vPosition.z < 0.025f) {
+        color = vec4(ambient + diffuse, 1.0f) * texture( uTexture0, vTexCoord );
+    } else if (vPosition.z < 0.2f) {
+        color = vec4(ambient + diffuse, 1.0f) * texture( uTexture1, vTexCoord );
+    } else {
+        color = vec4(ambient + diffuse, 1.0f) * texture( uTexture2, vTexCoord );
+    }
     //color = vec4(abs(vNormal), 1.0f);
 }

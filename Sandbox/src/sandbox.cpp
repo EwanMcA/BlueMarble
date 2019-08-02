@@ -14,8 +14,8 @@ public:
                    10.0f), 
         oCameraPosition({ 0.0f, 0.0f, 1.0f })
 	{
-        oTerrain.Init(20, 20, 0.1f);
-        oTerrain.GenerateRandomHeightMap();
+        oTerrain.Init(64, 64, 0.1f);
+        oTerrain.ResetHeightMap(BlueMarble::BMPHeightMap("heightmap.bmp"));
         oTerrain.Load();
     }
 
@@ -35,24 +35,29 @@ public:
         if (BlueMarble::Input::IsKeyPressed(BM_KEY_W)) {
             if (oCameraPosition.z > 0.5f) {
                 oCameraPosition.z -= oCameraMoveSpeed * ts;
-                if (oCameraPosition.z < 1.5f) {
+                if (oCameraPosition.z < 2.5f) {
                     oCameraRotation.x += oCameraRotationSpeed * ts;
                     oCameraRotation.x = std::min(80.0f, oCameraRotation.x);
                 }
             }
         }
         else if (BlueMarble::Input::IsKeyPressed(BM_KEY_S)) {
-            if (oCameraPosition.z < 4.5f) {
+            //if (oCameraPosition.z < 4.5f) {
                 oCameraPosition.z += oCameraMoveSpeed * ts;
                 oCameraRotation.x -= oCameraRotationSpeed * ts;
                 oCameraRotation.x = std::max(0.0f, oCameraRotation.x);
-            }
+            //}
         }
 
         if (BlueMarble::Input::IsKeyPressed(BM_KEY_A))
             oCameraRotation.z += oCameraRotationSpeed * ts;
         else if (BlueMarble::Input::IsKeyPressed(BM_KEY_D))
             oCameraRotation.z -= oCameraRotationSpeed * ts;
+
+        if (BlueMarble::Input::IsMouseButtonPressed(0)) 
+        {
+            oTerrain.AddHeight(20, 20, 0.01f, 5);
+        }
 
         BlueMarble::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         BlueMarble::RenderCommand::Clear();

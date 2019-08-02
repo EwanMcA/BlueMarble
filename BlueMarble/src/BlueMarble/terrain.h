@@ -8,14 +8,24 @@
 
 namespace BlueMarble {
 
+    class BMPHeightMap
+    {
+    public:
+        BMPHeightMap(const std::string& path);
+
+        std::string oFilePath;
+        unsigned char* oLocalBuffer;
+        int oWidth, oHeight, oBPP;
+    };
+
     class Terrain
     {
     public:
         Terrain()
         : oXCount(0), oYCount(0), oSpacing(0), oPosition(glm::vec3(0.0f)) {}
 
-        void Init(const unsigned int xCount,
-                  const unsigned int yCount,
+        void Init(const uint32_t xCount,
+                  const uint32_t yCount,
                   const float spacing = 1.0f,
                   const glm::vec3& position = glm::vec3(0.0f))
         {
@@ -31,13 +41,16 @@ namespace BlueMarble {
         void Draw();
 
         void ResetHeightMap() { oHeightMap.resize(oXCount * oYCount, 0.0f); }
+        void ResetHeightMap(BMPHeightMap& heightMap);
         void GenerateRandomHeightMap();
+        void RefreshVertices();
+        void AddHeight(const uint32_t x, const uint32_t y, const float amount, const uint32_t radius);
 
-        float HeightAt(const unsigned int x, const unsigned int y) const { return oHeightMap[x + y * oXCount]; }
-        void NormalAt(const unsigned int x, const unsigned int y, glm::vec3& normal) const;
+        float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightMap[x + y * oXCount]; }
+        void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
 
         void SetShader(std::shared_ptr<BlueMarble::Shader>& shader) { oShader = shader; }
-        void SetTexture(std::shared_ptr<BlueMarble::Texture>& texture) { oTexture = texture; }
+        void AddTexture(std::shared_ptr<BlueMarble::Texture>& texture) { oTextures.push_back(texture); }
         void SetVA(std::shared_ptr<BlueMarble::VertexArray>& va) { oVA = va; }
     private:
 
@@ -46,6 +59,7 @@ namespace BlueMarble {
         unsigned int oYCount;
         float oSpacing;
         glm::vec3 oPosition;
+        float oHeightScale = 0.25f;
 
         std::vector<float> oHeightMap;
 
@@ -53,7 +67,7 @@ namespace BlueMarble {
         // TODO: Should we actually be storing the shader here? If so, multiple allowed?
         std::shared_ptr<BlueMarble::Shader> oShader;
         // TODO: multiple textures
-        std::shared_ptr<BlueMarble::Texture> oTexture;
+        std::vector<std::shared_ptr<BlueMarble::Texture>> oTextures;
 
     };
 

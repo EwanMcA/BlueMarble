@@ -111,6 +111,9 @@
     <ClInclude Include="src\BlueMarble\mouseCodes.h">
       <Filter>src\BlueMarble</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlueMarble\terrain.h">
+      <Filter>src\BlueMarble</Filter>
+    </ClInclude>
     <ClInclude Include="src\BlueMarble\window.h">
       <Filter>src\BlueMarble</Filter>
     </ClInclude>
@@ -183,6 +186,9 @@
       <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\log.cpp">
+      <Filter>src\BlueMarble</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlueMarble\terrain.cpp">
       <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">

@@ -125,6 +125,12 @@ namespace BlueMarble {
         glUseProgram(0);
     }
 
+    void Shader::UploadUniformInt(const std::string& name, const int value)
+    {
+        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        glUniform1i(location, value);
+    }
+
     void Shader::UploadUniformFloat4(const std::string& name, const glm::vec4& values)
     {
         GLint location = glGetUniformLocation(oRendererID, name.c_str());

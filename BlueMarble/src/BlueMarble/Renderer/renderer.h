@@ -16,7 +16,7 @@ namespace BlueMarble {
         
         static void Submit(const std::shared_ptr<Shader>& shader, 
                            const std::shared_ptr<VertexArray>& vertexArray,
-                           const std::shared_ptr<Texture>& texture,
+                           const std::vector<std::shared_ptr<Texture>>& textures,
                            const glm::mat4& transform = glm::mat4(1.0f));
 
         inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
