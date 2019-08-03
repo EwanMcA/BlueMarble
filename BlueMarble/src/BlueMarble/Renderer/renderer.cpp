@@ -28,13 +28,13 @@ namespace BlueMarble {
         shader->UploadUniformMat4("uViewProjection", cSceneData->ProjectionViewMatrix);
         // This is specific to the object, so it does need to be called every time
         shader->UploadUniformMat4("uTransform", transform);
-        shader->UploadUniformInt("uTexture0", 0);
-        shader->UploadUniformInt("uTexture1", 1);
-        shader->UploadUniformInt("uTexture2", 2);
 
         vertexArray->Bind();
         for (int i = 0; i < textures.size(); ++i) {
             textures[i]->Bind(i);
+            std::string name{ "uTexture" };
+            name += '0' + i;
+            shader->UploadUniformInt(name, i);
         }
         RenderCommand::DrawIndexed(vertexArray);
     }

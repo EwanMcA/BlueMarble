@@ -48,15 +48,6 @@ namespace BlueMarble {
                 //int dy = abs(y - (int)oYCount/2);
                 //oHeightMap[i] = -1 * (1.0f/200.0f) * (dx*dx) - 1 * (1.0f / 200.0f) * (dy*dy) + 0.3f;
                 //oHeightMap[i] = std::max(0.0f, oHeightMap[i]);
-                switch (x)
-                {
-                    case 7: oHeightMap[i] = 0.05f; break;
-                    case 6: oHeightMap[i] = 0.1f; break;
-                    case 5: oHeightMap[i] = 0.25f; break;
-                    case 4: oHeightMap[i] = 0.15f; break;
-                    case 3: oHeightMap[i] = 0.1f; break;
-                    case 2: oHeightMap[i] = 0.05f; break;
-                }
             }
         }
     }
@@ -139,6 +130,8 @@ namespace BlueMarble {
 
         std::shared_ptr<BlueMarble::Texture> texture;
         texture.reset(BlueMarble::Texture::Create("water.png"));
+        oTextures.push_back(texture);
+        texture.reset(BlueMarble::Texture::Create("sand.png"));
         oTextures.push_back(texture);
         texture.reset(BlueMarble::Texture::Create("grass.png"));
         oTextures.push_back(texture);
