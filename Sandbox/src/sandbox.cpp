@@ -1,6 +1,9 @@
 
 #include <BlueMarble.h>
+
+#include "imgui/imgui.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 class ExampleLayer : public BlueMarble::Layer
 {
@@ -67,19 +70,18 @@ public:
 
         BlueMarble::Renderer::BeginScene(oCamera);
 
-        //glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-        //glm::vec3 pos(x * 0.1f, y * 0.1f, 0.0f);
-        //glm::mat4 transform = glm::mat4(1.0f) * scale;
-        //oFlatShader->UploadUniformFloat4("uColor", glm::vec4(1.0f, 1.0f - (y+x)/60.0f, 1.0f - (x+y)/40.0f, 0.0f));
-
         oTerrain.Draw();
+        /*std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oFlatShader)->Bind();
+        std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oFlatShader)->UploadUniformFloat3("uColor", oSquareColor);*/
 
         BlueMarble::Renderer::EndScene();
     }
 
     virtual void OnImGuiRender() override
     {
-
+        ImGui::Begin("Settings");
+        //ImGui::ColorEdit3("Square Color", glm::value_ptr(oSquareColor));
+        ImGui::End();
     }
 
 	void OnEvent(BlueMarble::Event& event) override
@@ -98,6 +100,7 @@ private:
     float oCameraMoveSpeed = 2.0f;
     float oCameraRotationSpeed = 90.0f;
 
+    //glm::vec3 oSquareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 class Sandbox : public BlueMarble::Application

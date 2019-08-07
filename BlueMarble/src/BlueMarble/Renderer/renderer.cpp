@@ -1,6 +1,8 @@
 #include "bmpch.h"
 #include "renderer.h"
 
+#include "Platform/OpenGL/openGLShader.h"
+
 namespace BlueMarble {
 
     Renderer::SceneData* Renderer::cSceneData = new Renderer::SceneData;
@@ -24,10 +26,11 @@ namespace BlueMarble {
                           const glm::mat4& transform)
     {
         shader->Bind();
-        // We don't need to do this on every call... should batch it
-        shader->UploadUniformMat4("uViewProjection", cSceneData->ProjectionViewMatrix);
+        // TODO: Get rid of these dynamic casts when API agnostic material system is properly implemented
+        // TODO: We don't need to do this on every call... should batch it
+        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("uViewProjection", cSceneData->ProjectionViewMatrix);
         // This is specific to the object, so it does need to be called every time
-        shader->UploadUniformMat4("uTransform", transform);
+        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("uTransform", transform);
 
         vertexArray->Bind();
         for (int i = 0; i < textures.size(); ++i) {
