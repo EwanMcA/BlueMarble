@@ -1,7 +1,11 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <glm/glm.hpp>
+
+// TODO: Abstract out the OpenGL calls to OpenGLShader class.
+//       Retain this class as RendererAPI agnostic shader api.
 
 namespace BlueMarble {
 
@@ -37,8 +41,11 @@ namespace BlueMarble {
     private:
         static ShaderSource Shader::ParseShader(const std::string& filepath);
 
+        uint32_t GetUniformLocation(const std::string& name) const;
+
     private:
         uint32_t oRendererID;
+        mutable std::unordered_map<std::string, uint32_t> oUniformLocationCache;
     };
 
 } // namespace BlueMarble

@@ -5,6 +5,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+// TODO: Abstract out the OpenGL calls to OpenGLShader class.
+//       Retain this class as RendererAPI agnostic shader api.
+
 namespace BlueMarble {
 
     Shader::Shader(const Shader::ShaderSource& src)
@@ -127,19 +130,19 @@ namespace BlueMarble {
 
     void Shader::UploadUniformInt(const std::string& name, const int value)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name);
         glUniform1i(location, value);
     }
 
     void Shader::UploadUniformFloat4(const std::string& name, const glm::vec4& values)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name);
         glUniform4f(location, values.x, values.y, values.z, values.w);
     }
 
     void Shader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name);
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
@@ -166,6 +169,16 @@ namespace BlueMarble {
         }
 
         return { ss[0].str(), ss[1].str() };
+    }
+
+    uint32_t Shader::GetUniformLocation(const std::string & name) const
+    {
+        if (oUniformLocationCache.find(name) != oUniformLocationCache.end())
+            return oUniformLocationCache[name];
+
+        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        oUniformLocationCache.insert({ name, location });
+        return location;
     }
 
 } // namespace BlueMarble

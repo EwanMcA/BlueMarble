@@ -54,8 +54,35 @@ namespace BlueMarble {
 
     void Terrain::RefreshVertices()
     {
-        // TODO: refresh without reload
-        Load();
+        // TODO: Check for performance increase by modifying buffer, rather than recreating.
+
+        std::vector<float> vertices;
+        vertices.reserve(oXCount * oYCount * 5);
+        for (int y = 0; y < oYCount; ++y)
+        {
+            for (int x = 0; x < oXCount; ++x)
+            {
+                glm::vec3 normal;
+                NormalAt(x, y, normal);
+                vertices.insert(vertices.end(), { x * oSpacing, y * oSpacing, HeightAt(x, y),
+                                                  normal.x,     normal.y,     normal.z });
+                if ((x % 2 == 0) && (y % 2 == 0))
+                    vertices.insert(vertices.end(), { 0.5f, 0.5f });
+                else if (y % 2 == 0)
+                    vertices.insert(vertices.end(), { 1.0f, 0.5f });
+                else if (x % 2 == 0)
+                    vertices.insert(vertices.end(), { 0.5f, 1.0f });
+                else
+                    vertices.insert(vertices.end(), { 1.0f, 1.0f });
+            }
+        }
+
+        std::shared_ptr<BlueMarble::VertexBuffer> squareVB;
+        squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
+        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
+                              { BlueMarble::ShaderDataType::Float3, "aNormal"   },
+                              { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
+        oVA->SetVertexBuffer(squareVB);
     }
 
     void Terrain::AddHeight(const uint32_t x, const uint32_t y, const float amount, const uint32_t radius)
