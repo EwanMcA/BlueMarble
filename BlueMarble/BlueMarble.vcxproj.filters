@@ -1,191 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="BlueMarble">
-      <UniqueIdentifier>{E0EC6F78-CCA4-B1C5-35AC-8A2121834CB6}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BlueMarble\Core">
-      <UniqueIdentifier>{381D40A5-A4A8-AD69-ADB9-305E19C4096A}</UniqueIdentifier>
+    <Filter Include="src\BlueMarble">
+      <UniqueIdentifier>{978976AF-8357-6AB5-6CEB-DADB5858461A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BlueMarble\Events">
-      <UniqueIdentifier>{C45CDEFA-3073-DC90-79EA-67B2E53FAD18}</UniqueIdentifier>
+    <Filter Include="src\BlueMarble\Core">
+      <UniqueIdentifier>{4F44A8BF-BBA5-85CD-4413-CC7FB073BC8C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BlueMarble\ImGui">
-      <UniqueIdentifier>{0A8AAE4D-F682-CD9F-1FB5-B2240B0DADAB}</UniqueIdentifier>
+    <Filter Include="src\BlueMarble\Events">
+      <UniqueIdentifier>{9BA5EC4F-0712-A84A-D005-40A83C31CAB2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BlueMarble\Renderer">
-      <UniqueIdentifier>{86ACE322-F20D-C130-7B7B-07E3E7DBF7EF}</UniqueIdentifier>
+    <Filter Include="src\BlueMarble\ImGui">
+      <UniqueIdentifier>{01941BB5-ED22-A57E-9641-B97982AFB524}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    <Filter Include="src\BlueMarble\Renderer">
+      <UniqueIdentifier>{1D87A7F4-89BE-EF8B-92C8-53AFFE7E1685}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\OpenGL">
-      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Windows">
-      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Windows">
+      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BlueMarble.h" />
+    <ClInclude Include="src\BlueMarble.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\BlueMarble\Core\timeStep.h">
-      <Filter>BlueMarble\Core</Filter>
+      <Filter>src\BlueMarble\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Events\applicationEvent.h">
-      <Filter>BlueMarble\Events</Filter>
+      <Filter>src\BlueMarble\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Events\event.h">
-      <Filter>BlueMarble\Events</Filter>
+      <Filter>src\BlueMarble\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Events\keyEvent.h">
-      <Filter>BlueMarble\Events</Filter>
+      <Filter>src\BlueMarble\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Events\mouseEvent.h">
-      <Filter>BlueMarble\Events</Filter>
+      <Filter>src\BlueMarble\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\ImGui\imGuiLayer.h">
-      <Filter>BlueMarble\ImGui</Filter>
+      <Filter>src\BlueMarble\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\RendererAPI.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\buffer.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\camera.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\graphicsContext.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\renderCommand.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\renderer.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\shader.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BlueMarble\Renderer\texture.h">
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\vertexArray.h">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\application.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\core.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\entryPoint.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\input.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\keyCodes.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\layer.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\layerStack.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\log.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\mouseCodes.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\terrain.h">
       <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\window.h">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\glError.h">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\openGLBuffer.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\openGLContext.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\openGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\openGLTexture.h">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\openGLVertexArray.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\windowsInput.h">
-      <Filter>Platform\Windows</Filter>
+      <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\windowsWindow.h">
-      <Filter>Platform\Windows</Filter>
+      <Filter>src\Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\bmpch.h" />
-    <ClInclude Include="src\Platform\OpenGL\openGLShader.h" />
+    <ClInclude Include="src\bmpch.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BlueMarble\ImGui\imGuiBuild.cpp">
-      <Filter>BlueMarble\ImGui</Filter>
+      <Filter>src\BlueMarble\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\ImGui\imGuiLayer.cpp">
-      <Filter>BlueMarble\ImGui</Filter>
+      <Filter>src\BlueMarble\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\RendererAPI.cpp">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\buffer.cpp">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\camera.cpp">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\renderCommand.cpp">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\renderer.cpp">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\shader.cpp">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlueMarble\Renderer\texture.cpp">
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\vertexArray.cpp">
-      <Filter>BlueMarble\Renderer</Filter>
+      <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\application.cpp">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\layer.cpp">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\layerStack.cpp">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\log.cpp">
-      <Filter>BlueMarble</Filter>
+      <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\terrain.cpp">
       <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\openGLBuffer.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\openGLContext.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\openGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\openGLTexture.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\openGLVertexArray.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\windowsInput.cpp">
-      <Filter>Platform\Windows</Filter>
+      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\windowsWindow.cpp">
-      <Filter>Platform\Windows</Filter>
+      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\bmpch.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\openGLShader.cpp" />
+    <ClCompile Include="src\bmpch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>vendor\stb_image</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

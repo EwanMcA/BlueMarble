@@ -8,7 +8,21 @@ namespace BlueMarble {
     class OpenGLShader : public Shader
     {
     public:
-        OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+        // The Shader object will have both of these (they are just for parsing)
+        enum class ShaderType
+        {
+            NONE = -1, VERTEX = 0, FRAGMENT = 1
+        };
+
+        struct ShaderSource
+        {
+            std::string vertexSrc;
+            std::string fragmentSrc;
+        };
+
+        OpenGLShader(const OpenGLShader::ShaderSource& src);
+        OpenGLShader(const std::string& filename)
+            : OpenGLShader(OpenGLShader::ParseShader(filename)) {}
         virtual ~OpenGLShader();
 
         virtual void Bind() const override;
@@ -22,8 +36,14 @@ namespace BlueMarble {
         void UploadUniformFloat4(const std::string& name, const glm::vec4& values);
         void UploadUniformMat3(const std::string& name, const glm::mat3& matrix);
         void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
+
+    private:
+        static ShaderSource OpenGLShader::ParseShader(const std::string& filepath);
+        uint32_t GetUniformLocation(const std::string& name) const;
+
     private:
         uint32_t oRendererID;
+        mutable std::unordered_map<std::string, uint32_t> oUniformLocationCache;
     };
 
 } // namespace BlueMarble

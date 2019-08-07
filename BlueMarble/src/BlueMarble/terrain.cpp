@@ -16,13 +16,6 @@ namespace BlueMarble {
 
     void Terrain::ResetHeightMap(BMPHeightMap& heightMap)
     {
-        //BM_CORE_INFO("{0}, {1}, {2}", heightMap.oWidth, heightMap.oHeight, heightMap.oBPP);
-        //for (int i = 0; i < heightMap.oWidth * heightMap.oHeight; i += 4)
-        //{
-        //    //if ((uint8_t)heightMap.oLocalBuffer[i] != 255 && (uint8_t)heightMap.oLocalBuffer[i] != 0)
-        //        BM_CORE_INFO("{0} {1} {2} {3}", heightMap.oLocalBuffer[i], heightMap.oLocalBuffer[i+1], heightMap.oLocalBuffer[i+2], heightMap.oLocalBuffer[i+3]);
-        //}
-
         int xPPV = heightMap.oWidth / oXCount;
         int yPPV = heightMap.oHeight / oYCount;
 
@@ -39,16 +32,6 @@ namespace BlueMarble {
         if (oXCount == oYCount)
         {
             // TODO: Diamond Square Algorithm
-
-            for (int i = 0; i < oHeightMap.size(); ++i) 
-            {
-                int x = i % oXCount;
-                //int dx = abs(x - (int)oXCount/2);
-                //int y = i / oXCount;
-                //int dy = abs(y - (int)oYCount/2);
-                //oHeightMap[i] = -1 * (1.0f/200.0f) * (dx*dx) - 1 * (1.0f / 200.0f) * (dy*dy) + 0.3f;
-                //oHeightMap[i] = std::max(0.0f, oHeightMap[i]);
-            }
         }
     }
 
@@ -153,7 +136,7 @@ namespace BlueMarble {
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
         oVA->SetIndexBuffer(squareIB);
 
-        oShader.reset(new BlueMarble::Shader("shaders/shader.glsl"));
+        oShader.reset(BlueMarble::Shader::Create("shaders/shader.glsl"));
 
         std::shared_ptr<BlueMarble::Texture> texture;
         texture.reset(BlueMarble::Texture::Create("water.png"));

@@ -37,7 +37,7 @@ namespace BlueMarble {
             textures[i]->Bind(i);
             std::string name{ "uTexture" };
             name += '0' + i;
-            shader->UploadUniformInt(name, i);
+            std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt(name, i);
         }
         RenderCommand::DrawIndexed(vertexArray);
     }

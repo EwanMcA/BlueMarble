@@ -7,14 +7,14 @@
 
 namespace BlueMarble {
 
-    OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+    OpenGLShader::OpenGLShader(const OpenGLShader::ShaderSource& src)
     {
         // Create an empty vertex shader handle
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
         // Send the vertex shader source code to GL
         // Note that std::string's .c_str is NULL character terminated.
-        const GLchar* source = vertexSrc.c_str();
+        const GLchar* source = src.vertexSrc.c_str();
         glShaderSource(vertexShader, 1, &source, 0);
 
         // Compile the vertex shader
@@ -44,7 +44,7 @@ namespace BlueMarble {
 
         // Send the fragment shader source code to GL
         // Note that std::string's .c_str is NULL character terminated.
-        source = fragmentSrc.c_str();
+        source = src.fragmentSrc.c_str();
         glShaderSource(fragmentShader, 1, &source, 0);
 
         // Compile the fragment shader
@@ -125,57 +125,51 @@ namespace BlueMarble {
         glUseProgram(0);
     }
 
-    void OpenGLShader::UploadUniformInt(const std::string & name, const int value)
+    void OpenGLShader::UploadUniformInt(const std::string& name, const int value)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name);
         glUniform1i(location, value);
     }
 
     void OpenGLShader::UploadUniformFloat(const std::string & name, const float value)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name.c_str());
         glUniform1f(location, value);
     }
 
     void OpenGLShader::UploadUniformFloat2(const std::string & name, const glm::vec2 & values)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name.c_str());
         glUniform2f(location, values.x, values.y);
     }
 
     void OpenGLShader::UploadUniformFloat3(const std::string & name, const glm::vec3 & values)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name.c_str());
         glUniform3f(location, values.x, values.y, values.z);
     }
-
     void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& values)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name);
         glUniform4f(location, values.x, values.y, values.z, values.w);
     }
 
     void OpenGLShader::UploadUniformMat3(const std::string & name, const glm::mat3 & matrix)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name.c_str());
         glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
     void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
     {
-        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        GLint location = GetUniformLocation(name);
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
-    //From OPENGL Series
-    /*ShaderSource OpenGLShader::ParseShader(const std::string& filepath)
+    // From OPENGL Series
+    OpenGLShader::ShaderSource OpenGLShader::ParseShader(const std::string& filepath)
     {
         std::ifstream stream(filepath);
-
-        enum class ShaderType
-        {
-            NONE = -1, VERTEX = 0, FRAGMENT = 1
-        };
 
         std::string line;
         std::stringstream ss[2];
@@ -195,6 +189,16 @@ namespace BlueMarble {
         }
 
         return { ss[0].str(), ss[1].str() };
-    }*/
+    }
+
+    uint32_t OpenGLShader::GetUniformLocation(const std::string & name) const
+    {
+        if (oUniformLocationCache.find(name) != oUniformLocationCache.end())
+            return oUniformLocationCache[name];
+
+        GLint location = glGetUniformLocation(oRendererID, name.c_str());
+        oUniformLocationCache.insert({ name, location });
+        return location;
+    }
 
 } // namespace BlueMarble
