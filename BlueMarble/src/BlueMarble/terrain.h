@@ -39,6 +39,7 @@ namespace BlueMarble {
 
         void Load();
         void Draw();
+        void Draw(glm::vec4 textureCutoffs);
 
         void ResetHeightMap() { oHeightMap.resize(oXCount * oYCount, 0.0f); }
         void ResetHeightMap(BMPHeightMap& heightMap);

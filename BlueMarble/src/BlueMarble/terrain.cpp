@@ -2,6 +2,8 @@
 
 #include "terrain.h"
 #include "BlueMarble/Renderer/renderer.h"
+// TODO: Remove this, to make terrain API agnostic
+#include "Platform/OpenGL/openGLShader.h"
 #include "stb_image.h"
 
 namespace BlueMarble {
@@ -151,6 +153,13 @@ namespace BlueMarble {
 
     void Terrain::Draw()
     {
+        BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::mat4(1.0f));
+    }
+
+    void Terrain::Draw(glm::vec4 textureCutoffs)
+    {
+        oShader->Bind();
+        std::dynamic_pointer_cast<OpenGLShader>(oShader)->UploadUniformFloat4("uTextureCutoffs", textureCutoffs);
         BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::mat4(1.0f));
     }
 

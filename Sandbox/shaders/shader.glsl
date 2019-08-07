@@ -36,6 +36,7 @@ uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
 uniform sampler2D uTexture3;
+uniform vec4 uTextureCutoffs;
 
 void main()
 {
@@ -47,18 +48,17 @@ void main()
     float diff = max(dot(n, lightDir), 0.0);
     vec3 diffuse = diff * vec3(1.0f, 1.0f, 1.0f);
 
-    vec4 texCaps = {0.0f, 0.015f, 0.025f, 0.2f};
     vec4 texMix;
     float ratio;
 
-    if (vPosition.z < texCaps.g) {
-        ratio = (vPosition.z - texCaps.r) / (texCaps.g - texCaps.r);
+    if (vPosition.z < uTextureCutoffs.g) {
+        ratio = (vPosition.z - uTextureCutoffs.r) / (uTextureCutoffs.g - uTextureCutoffs.r);
         texMix = mix(texture( uTexture0, vTexCoord ), texture( uTexture1, vTexCoord ), ratio);
-    } else if (vPosition.z < texCaps.b) {
-        ratio = (vPosition.z - texCaps.g) / (texCaps.b - texCaps.g);
+    } else if (vPosition.z < uTextureCutoffs.b) {
+        ratio = (vPosition.z - uTextureCutoffs.g) / (uTextureCutoffs.b - uTextureCutoffs.g);
         texMix = mix(texture( uTexture1, vTexCoord ), texture( uTexture2, vTexCoord ), ratio);
-    } else if (vPosition.z < texCaps.a) {
-        ratio = (vPosition.z - 0.15f) / (texCaps.a - 0.15f);
+    } else if (vPosition.z < uTextureCutoffs.a) {
+        ratio = (vPosition.z - 0.15f) / (uTextureCutoffs.a - 0.15f);
         ratio = max(0.0f, ratio);
         texMix = mix(texture( uTexture2, vTexCoord ), texture( uTexture3, vTexCoord ), ratio);
     } else {
@@ -66,5 +66,4 @@ void main()
     }
 
     color = vec4(ambient + diffuse, 1.0f) * texMix;
-    //color = vec4(abs(vNormal), 1.0f);
 }

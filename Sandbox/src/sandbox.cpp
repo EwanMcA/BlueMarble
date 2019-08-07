@@ -15,7 +15,7 @@ public:
                   (float)BlueMarble::Application::Get().GetWindow().GetHeight(), 
                    0.1f, 
                    10.0f), 
-        oCameraPosition({ 0.0f, 0.0f, 1.0f })
+        oCameraPosition({ 2.5f, 3.0f, 8.0f })
 	{
         oTerrain.Init(64, 64, 0.1f);
         oTerrain.ResetHeightMap(BlueMarble::BMPHeightMap("heightmap.bmp"));
@@ -24,7 +24,6 @@ public:
 
 	void OnUpdate(BlueMarble::TimeStep ts) override
 	{
-        //BM_TRACE("Delta time: {0} ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
         if (BlueMarble::Input::IsKeyPressed(BM_KEY_LEFT))
             oCameraPosition.x -= oCameraMoveSpeed * ts;
         else if (BlueMarble::Input::IsKeyPressed(BM_KEY_RIGHT))
@@ -45,11 +44,9 @@ public:
             }
         }
         else if (BlueMarble::Input::IsKeyPressed(BM_KEY_S)) {
-            //if (oCameraPosition.z < 4.5f) {
-                oCameraPosition.z += oCameraMoveSpeed * ts;
-                oCameraRotation.x -= oCameraRotationSpeed * ts;
-                oCameraRotation.x = std::max(0.0f, oCameraRotation.x);
-            //}
+            oCameraPosition.z += oCameraMoveSpeed * ts;
+            oCameraRotation.x -= oCameraRotationSpeed * ts;
+            oCameraRotation.x = std::max(0.0f, oCameraRotation.x);
         }
 
         if (BlueMarble::Input::IsKeyPressed(BM_KEY_A))
@@ -57,10 +54,11 @@ public:
         else if (BlueMarble::Input::IsKeyPressed(BM_KEY_D))
             oCameraRotation.z -= oCameraRotationSpeed * ts;
 
-        if (BlueMarble::Input::IsMouseButtonPressed(0)) 
+        // TODO: Allow user to manipulate height
+       /* if (BlueMarble::Input::IsMouseButtonPressed(0)) 
         {
             oTerrain.AddHeight(20, 20, 0.01f, 5);
-        }
+        }*/
 
         BlueMarble::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         BlueMarble::RenderCommand::Clear();
@@ -70,17 +68,17 @@ public:
 
         BlueMarble::Renderer::BeginScene(oCamera);
 
-        oTerrain.Draw();
-        /*std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oFlatShader)->Bind();
-        std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oFlatShader)->UploadUniformFloat3("uColor", oSquareColor);*/
+        oTerrain.Draw(oTerrainCutoffs);
 
         BlueMarble::Renderer::EndScene();
     }
 
     virtual void OnImGuiRender() override
     {
-        ImGui::Begin("Settings");
-        //ImGui::ColorEdit3("Square Color", glm::value_ptr(oSquareColor));
+        ImGui::Begin("Texture Cutoff Heights");
+        ImGui::DragFloatRange2("Water", &oTerrainCutoffs.r, &oTerrainCutoffs.g, 0.001f);
+        ImGui::DragFloatRange2("Sand", &oTerrainCutoffs.g, &oTerrainCutoffs.b, 0.001f);
+        ImGui::DragFloatRange2("Grass", &oTerrainCutoffs.b, &oTerrainCutoffs.a, 0.001f);
         ImGui::End();
     }
 
@@ -100,7 +98,7 @@ private:
     float oCameraMoveSpeed = 2.0f;
     float oCameraRotationSpeed = 90.0f;
 
-    //glm::vec3 oSquareColor = { 0.2f, 0.3f, 0.8f };
+    glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.025f, 0.2f };
 };
 
 class Sandbox : public BlueMarble::Application
