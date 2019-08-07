@@ -1,6 +1,10 @@
 
 #include <BlueMarble.h>
+#include "Platform/OpenGL/openGLShader.h"
+
+#include "imgui/imgui.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 class ExampleLayer : public BlueMarble::Layer
 {
@@ -85,7 +89,7 @@ public:
                 color = vColor;
             }
         )";
-        oShader.reset(new BlueMarble::Shader(vertexSrc, fragmentSrc));
+        oShader.reset(BlueMarble::Shader::Create(vertexSrc, fragmentSrc));
 
         std::string flatVertexShaderSrc = R"(
             #version 330 core
@@ -111,15 +115,15 @@ public:
 
             in vec3 vPosition;
 
-            uniform vec4 uColor;
+            uniform vec3 uColor;
 
             void main()
             {
-                color = uColor;
+                color = vec4(uColor, 1.0);
             }
         )";
 
-        oFlatShader.reset(new BlueMarble::Shader(flatVertexShaderSrc, flatFragmentShaderSrc));
+        oFlatShader.reset(BlueMarble::Shader::Create(flatVertexShaderSrc, flatFragmentShaderSrc));
     }
 
 	void OnUpdate(BlueMarble::TimeStep ts) override
@@ -150,19 +154,14 @@ public:
 
         glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
-        glm::vec4 redColor(0.8f, 0.3f, 0.2f, 1.0f);
+        std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oFlatShader)->Bind();
+        std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oFlatShader)->UploadUniformFloat3("uColor", oSquareColor);
 
         for (int y = 0; y < 20; ++y) {
             for (int x = 0; x < 20; ++x)
                 {
                     glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
                     glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-                    if (x % 2 == 0)
-                        oFlatShader->UploadUniformFloat4("uColor", redColor);
-                    else
-                        oFlatShader->UploadUniformFloat4("uColor", blueColor);
-
                     BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, transform);
                 }
         }
@@ -173,7 +172,9 @@ public:
 
     virtual void OnImGuiRender() override
     {
-
+        ImGui::Begin("Settings");
+        ImGui::ColorEdit3("Square Color", glm::value_ptr(oSquareColor));
+        ImGui::End();
     }
 
 	void OnEvent(BlueMarble::Event& event) override
@@ -196,6 +197,7 @@ private:
     float oCameraMoveSpeed = 2.0f;
     float oCameraRotationSpeed = 180.0f;
 
+    glm::vec3 oSquareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 class Sandbox : public BlueMarble::Application
