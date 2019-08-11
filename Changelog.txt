@@ -1,0 +1,16 @@
+Changelog
+Specifically keeping track of BlueMarble engine features I have added/modified for BlueMarbleGame.
+Put Classes changed in parentheses after msg.
+
+07/08/19
+- Dynamic control of terrain texture boundaries.
+	- Added uniform to shader for cutoffs.
+	- Added ImGui controls for cutoffs, which get passed through terrain.Draw(...);
+	- Started camera in a nicer position.
+	
+- Merged master branch work around abstracting the Shader class from rendererAPI.
+
+- Adding caching of shader uniform locations and allowed vertex modifications. (Shader/Terrain/VertexArray)
+
+03/08/19
+- Added blending between terrain textures. (Shader/Terrain/Renderer)
