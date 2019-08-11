@@ -160,7 +160,7 @@ namespace BlueMarble {
     {
         oShader->Bind();
         std::dynamic_pointer_cast<OpenGLShader>(oShader)->UploadUniformFloat4("uTextureCutoffs", textureCutoffs);
-        BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::mat4(1.0f));
+        BlueMarble::Renderer::Submit(oShader, oVA, oTextures);
     }
 
     void Terrain::NormalAt(const unsigned int x, const unsigned int y, glm::vec3& normal) const
