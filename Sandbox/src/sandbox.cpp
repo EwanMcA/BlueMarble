@@ -20,7 +20,7 @@ public:
              0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
         };
 
-        std::shared_ptr<BlueMarble::VertexBuffer> vertexBuffer;
+        BlueMarble::Ref<BlueMarble::VertexBuffer> vertexBuffer;
         vertexBuffer.reset(BlueMarble::VertexBuffer::Create(vertices, sizeof(vertices)));
 
         BlueMarble::BufferLayout layout = {
@@ -32,7 +32,7 @@ public:
         oVertexArray->AddVertexBuffer(vertexBuffer);
 
         uint32_t indices[3] = { 0, 1, 2 };
-        std::shared_ptr<BlueMarble::IndexBuffer> indexBuffer;
+        BlueMarble::Ref<BlueMarble::IndexBuffer> indexBuffer;
         indexBuffer.reset(BlueMarble::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         oVertexArray->SetIndexBuffer(indexBuffer);
 
@@ -45,13 +45,13 @@ public:
             -0.5f,  0.5f, 0.0f
         };
 
-        std::shared_ptr<BlueMarble::VertexBuffer> squareVB;
+        BlueMarble::Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" } });
         oSquareVA->AddVertexBuffer(squareVB);
 
         uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-        std::shared_ptr<BlueMarble::IndexBuffer> squareIB;
+        BlueMarble::Ref<BlueMarble::IndexBuffer> squareIB;
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
         oSquareVA->SetIndexBuffer(squareIB);
 
@@ -185,11 +185,11 @@ public:
 	}
 
 private:
-    std::shared_ptr<BlueMarble::Shader> oShader;
-    std::shared_ptr<BlueMarble::VertexArray> oVertexArray;
+    BlueMarble::Ref<BlueMarble::Shader> oShader;
+    BlueMarble::Ref<BlueMarble::VertexArray> oVertexArray;
 
-    std::shared_ptr<BlueMarble::Shader> oFlatShader;
-    std::shared_ptr<BlueMarble::VertexArray> oSquareVA;
+    BlueMarble::Ref<BlueMarble::Shader> oFlatShader;
+    BlueMarble::Ref<BlueMarble::VertexArray> oSquareVA;
 
     BlueMarble::OrthographicCamera oCamera;
     glm::vec3 oCameraPosition;

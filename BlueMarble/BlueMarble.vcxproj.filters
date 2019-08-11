@@ -109,6 +109,9 @@
     <ClInclude Include="src\Platform\OpenGL\openGLContext.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\openGLShader.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\openGLVertexArray.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
@@ -119,7 +122,6 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\bmpch.h" />
-    <ClInclude Include="src\Platform\OpenGL\openGLShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BlueMarble\ImGui\imGuiBuild.cpp">
@@ -170,6 +172,9 @@
     <ClCompile Include="src\Platform\OpenGL\openGLContext.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\openGLShader.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\openGLVertexArray.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
@@ -180,6 +185,5 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\bmpch.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\openGLShader.cpp" />
   </ItemGroup>
 </Project>
