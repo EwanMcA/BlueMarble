@@ -20,9 +20,9 @@ namespace BlueMarble {
 
     }
 
-    void Renderer::Submit(const std::shared_ptr<Shader>& shader, 
-                          const std::shared_ptr<VertexArray>& vertexArray,
-                          const std::vector<std::shared_ptr<Texture>>& textures,
+    void Renderer::Submit(const Ref<Shader>& shader, 
+                          const Ref<VertexArray>& vertexArray,
+                          const std::vector<Ref<Texture>>& textures,
                           const glm::mat4& transform)
     {
         shader->Bind();

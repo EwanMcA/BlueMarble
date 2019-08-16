@@ -10,11 +10,11 @@ class ExampleLayer : public BlueMarble::Layer
 public:
 	ExampleLayer()
         : Layer("Example"), 
-          oCamera(0.77f, 
+          oCamera(glm::radians(45.0f),
                   (float)BlueMarble::Application::Get().GetWindow().GetWidth() / 
                   (float)BlueMarble::Application::Get().GetWindow().GetHeight(), 
                    0.1f, 
-                   10.0f), 
+                   100.0f), 
         oCameraPosition({ 2.5f, 3.0f, 8.0f })
 	{
         oTerrain.Init(64, 64, 0.1f);
@@ -54,11 +54,24 @@ public:
         else if (BlueMarble::Input::IsKeyPressed(BM_KEY_D))
             oCameraRotation.z -= oCameraRotationSpeed * ts;
 
-        // TODO: Allow user to manipulate height
-       /* if (BlueMarble::Input::IsMouseButtonPressed(0)) 
+        // Demo manipulating terrain height
         {
-            oTerrain.AddHeight(20, 20, 0.01f, 5);
-        }*/
+            unsigned int width = BlueMarble::Application::Get().GetWindow().GetWidth();
+            unsigned int height = BlueMarble::Application::Get().GetWindow().GetHeight();
+
+            if (BlueMarble::Input::IsMouseButtonPressed(0))
+            {
+                float normMouseX = BlueMarble::Input::GetMouseX() / (width * 0.5f) - 1.0f;
+                float normMouseY = BlueMarble::Input::GetMouseY() / (height * 0.5f) - 1.0f;
+                glm::vec3 rayDirection = oCamera.CreateRay(normMouseX, normMouseY);
+                glm::vec3 world = oCamera.GetPosition() + 
+                                  rayDirection * (oCamera.GetPosition().z - BlueMarble::Input::GetMouseZ());
+
+                oTerrain.AddHeight((world.x / oTerrain.GetXWidth()) * oTerrain.GetXCount(), 
+                                   (world.y / oTerrain.GetYWidth()) * oTerrain.GetYCount(), 
+                                    oTerrainModAmount, oTerrainModRadius);
+            }
+        }
 
         BlueMarble::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         BlueMarble::RenderCommand::Clear();
@@ -80,6 +93,11 @@ public:
         ImGui::DragFloatRange2("Sand", &oTerrainCutoffs.g, &oTerrainCutoffs.b, 0.001f);
         ImGui::DragFloatRange2("Grass", &oTerrainCutoffs.b, &oTerrainCutoffs.a, 0.001f);
         ImGui::End();
+
+        ImGui::Begin("Terrain Modification");
+        ImGui::InputFloat("Change", &oTerrainModAmount, 0.001f);
+        ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
+        ImGui::End();
     }
 
 	void OnEvent(BlueMarble::Event& event) override
@@ -97,6 +115,8 @@ private:
     glm::vec3 oCameraRotation = glm::vec3(0.0f);
     float oCameraMoveSpeed = 2.0f;
     float oCameraRotationSpeed = 90.0f;
+    float oTerrainModAmount = 0.01f;
+    float oTerrainModRadius = 3.0f;
 
     glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.025f, 0.2f };
 };

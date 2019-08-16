@@ -57,6 +57,9 @@
     <ClInclude Include="src\BlueMarble\ImGui\imGuiLayer.h">
       <Filter>src\BlueMarble\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlueMarble\Renderer\RenderCommand.h">
+      <Filter>src\BlueMarble\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\RendererAPI.h">
       <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
@@ -67,9 +70,6 @@
       <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\graphicsContext.h">
-      <Filter>src\BlueMarble\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BlueMarble\Renderer\renderCommand.h">
       <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\renderer.h">
