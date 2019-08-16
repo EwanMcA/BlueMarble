@@ -22,6 +22,8 @@ namespace BlueMarble{
         BM_CORE_INFO("  Vendor: {0}", glGetString(GL_VENDOR));
         BM_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
         BM_CORE_INFO("  Version: {0}", glGetString(GL_VERSION));
+
+        glEnable(GL_DEPTH_TEST);
     }
     
     void OpenGLContext::SwapBuffers()

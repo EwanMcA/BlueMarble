@@ -49,7 +49,7 @@ namespace BlueMarble {
         uint32_t GetYCount() const { return oYCount; }
         const glm::vec3& getPosition() const { return oPosition; }
 
-        float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightMap[x + y * oXCount]; }
+        float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightScale * oHeightMap[x + y * oXCount]; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
 
         // Modifiers
@@ -59,6 +59,7 @@ namespace BlueMarble {
         void RefreshVertices();
         void AddHeight(const int x, const int y, const float amount, const int radius);
 
+        void SetHeightScale(const float scale) { oHeightScale = scale; }
         void SetShader(Ref<BlueMarble::Shader>& shader) { oShader = shader; }
         void AddTexture(Ref<BlueMarble::Texture>& texture) { oTextures.push_back(texture); }
         void SetVA(Ref<BlueMarble::VertexArray>& va) { oVA = va; }

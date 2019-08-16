@@ -25,7 +25,7 @@ namespace BlueMarble {
         {
             int height = heightMap.oLocalBuffer[i * 4 * xPPV];
                 
-            oHeightMap[i] = oHeightScale * (height / 255.0f);
+            oHeightMap[i] = (height / 255.0f);
         }
     }
 

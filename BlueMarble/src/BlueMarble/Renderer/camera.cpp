@@ -37,15 +37,14 @@ namespace BlueMarble {
 
     void PerspectiveCamera::RecalculateViewMatrix()
     {
-        // This is rotation-order dependent, should replace with quarternions in future
-        //glm::mat4 transform = glm::translate(glm::mat4(1.0f), oPosition) *
-        //    glm::rotate(glm::mat4(1.0f), glm::radians(oRotation.x), glm::vec3(1, 0, 0)) *
-        //    glm::rotate(glm::mat4(1.0f), glm::radians(oRotation.y), glm::vec3(0, 1, 0)) *
-        //    glm::rotate(glm::mat4(1.0f), glm::radians(oRotation.z), glm::vec3(0, 0, 1));
+        // TODO: Fix this hacky way to do the rotation
+        glm::mat4 rotationMat = glm::rotate(glm::mat4(1.0f), glm::radians(oRotation.x), glm::vec3(1, 0, 0)) *
+                                glm::rotate(glm::mat4(1.0f), glm::radians(oRotation.y), glm::vec3(0, 1, 0)) *
+                                glm::rotate(glm::mat4(1.0f), glm::radians(oRotation.z), glm::vec3(0, 0, 1));
+        glm::vec3 up = rotationMat * glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f};
+        glm::vec3 dir = rotationMat * glm::vec4{ 0.0f, 0.0f, -1.0f, 1.0f };
 
-        oViewMatrix = glm::lookAt(oPosition, 
-                                  oPosition + glm::vec3{0.0f, 0.0f, -1.0f},
-                                  glm::vec3{ 0.0f, 1.0f, 0.0f });
+        oViewMatrix = glm::lookAt(oPosition, oPosition + dir, up);
         oPVMatrix = oProjectionMatrix * oViewMatrix;
     }
 
