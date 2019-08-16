@@ -63,9 +63,12 @@ public:
             {
                 float normMouseX = BlueMarble::Input::GetMouseX() / (width * 0.5f) - 1.0f;
                 float normMouseY = BlueMarble::Input::GetMouseY() / (height * 0.5f) - 1.0f;
+                
                 glm::vec3 rayDirection = oCamera.CreateRay(normMouseX, normMouseY);
+                
+                // World coords at the terrain are camera position + (rayDirection * distance to terrain) 
                 glm::vec3 world = oCamera.GetPosition() + 
-                                  rayDirection * (oCamera.GetPosition().z - BlueMarble::Input::GetMouseZ());
+                                  rayDirection * (oCamera.GetPosition().z / -rayDirection.z);
 
                 oTerrain.AddHeight((world.x / oTerrain.GetXWidth()) * oTerrain.GetXCount(), 
                                    (world.y / oTerrain.GetYWidth()) * oTerrain.GetYCount(), 
@@ -73,7 +76,9 @@ public:
             }
         }
 
-        BlueMarble::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+        oTerrain.SetHeightScale(oTerrainHeightScale);
+
+        BlueMarble::RenderCommand::SetClearColor({ 0.4f, 0.6f, 1.0f, 1 });
         BlueMarble::RenderCommand::Clear();
 
         oCamera.SetPosition(oCameraPosition);
@@ -97,6 +102,7 @@ public:
         ImGui::Begin("Terrain Modification");
         ImGui::InputFloat("Change", &oTerrainModAmount, 0.001f);
         ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
+        ImGui::InputFloat("Height Scale", &oTerrainHeightScale, 0.01f);
         ImGui::End();
     }
 
@@ -115,8 +121,9 @@ private:
     glm::vec3 oCameraRotation = glm::vec3(0.0f);
     float oCameraMoveSpeed = 2.0f;
     float oCameraRotationSpeed = 90.0f;
-    float oTerrainModAmount = 0.01f;
+    float oTerrainModAmount = 0.05f;
     float oTerrainModRadius = 3.0f;
+    float oTerrainHeightScale = 0.25f;
 
     glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.025f, 0.2f };
 };
