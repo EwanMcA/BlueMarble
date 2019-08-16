@@ -2,6 +2,8 @@
 
 #include "BlueMarble/core.h"
 
+#include "BlueMarble/Renderer/camera.h"
+
 namespace BlueMarble {
 	
 	class Input
@@ -13,6 +15,7 @@ namespace BlueMarble {
 		inline static std::pair<float, float> GetMousePosition() { return cInstance->GetMousePositionImpl(); }
 		inline static float GetMouseX() { return cInstance->GetMouseXImpl(); }
 		inline static float GetMouseY() { return cInstance->GetMouseYImpl(); }
+        inline static float GetMouseZ() { return cInstance->GetMouseZImpl(); }
 	protected:
 		virtual bool IsKeyPressedImpl(int keycode) = 0;
 
@@ -20,6 +23,7 @@ namespace BlueMarble {
 		virtual std::pair<float, float> GetMousePositionImpl() = 0;
 		virtual float GetMouseXImpl() = 0;
 		virtual float GetMouseYImpl() = 0;
+        virtual float GetMouseZImpl() = 0;
 	private:
 		static Input* cInstance;
 

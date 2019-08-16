@@ -147,11 +147,11 @@
     <ClInclude Include="src\BlueMarble\Events\keyEvent.h" />
     <ClInclude Include="src\BlueMarble\Events\mouseEvent.h" />
     <ClInclude Include="src\BlueMarble\ImGui\imGuiLayer.h" />
+    <ClInclude Include="src\BlueMarble\Renderer\RenderCommand.h" />
     <ClInclude Include="src\BlueMarble\Renderer\RendererAPI.h" />
     <ClInclude Include="src\BlueMarble\Renderer\buffer.h" />
     <ClInclude Include="src\BlueMarble\Renderer\camera.h" />
     <ClInclude Include="src\BlueMarble\Renderer\graphicsContext.h" />
-    <ClInclude Include="src\BlueMarble\Renderer\renderCommand.h" />
     <ClInclude Include="src\BlueMarble\Renderer\renderer.h" />
     <ClInclude Include="src\BlueMarble\Renderer\shader.h" />
     <ClInclude Include="src\BlueMarble\Renderer\texture.h" />
@@ -221,4 +221,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project> 
+</Project>

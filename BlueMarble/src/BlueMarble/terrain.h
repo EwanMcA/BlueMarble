@@ -41,18 +41,27 @@ namespace BlueMarble {
         void Draw();
         void Draw(glm::vec4 textureCutoffs);
 
-        void ResetHeightMap() { oHeightMap.resize(oXCount * oYCount, 0.0f); }
-        void ResetHeightMap(BMPHeightMap& heightMap);
-        void GenerateRandomHeightMap();
-        void RefreshVertices();
-        void AddHeight(const uint32_t x, const uint32_t y, const float amount, const uint32_t radius);
+        // Getters
+        float GetXWidth() const { return oXCount * oSpacing; }
+        float GetYWidth() const { return oYCount * oSpacing; }
+        float GetSpacing() const { return oSpacing; }
+        uint32_t GetXCount() const { return oXCount; }
+        uint32_t GetYCount() const { return oYCount; }
+        const glm::vec3& getPosition() const { return oPosition; }
 
         float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightMap[x + y * oXCount]; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
 
-        void SetShader(std::shared_ptr<BlueMarble::Shader>& shader) { oShader = shader; }
-        void AddTexture(std::shared_ptr<BlueMarble::Texture>& texture) { oTextures.push_back(texture); }
-        void SetVA(std::shared_ptr<BlueMarble::VertexArray>& va) { oVA = va; }
+        // Modifiers
+        void ResetHeightMap() { oHeightMap.resize(oXCount * oYCount, 0.0f); }
+        void ResetHeightMap(BMPHeightMap& heightMap);
+        void GenerateRandomHeightMap();
+        void RefreshVertices();
+        void AddHeight(const int x, const int y, const float amount, const int radius);
+
+        void SetShader(Ref<BlueMarble::Shader>& shader) { oShader = shader; }
+        void AddTexture(Ref<BlueMarble::Texture>& texture) { oTextures.push_back(texture); }
+        void SetVA(Ref<BlueMarble::VertexArray>& va) { oVA = va; }
     private:
 
         // Counts = number of squares (also number of vertices in the heightmap)
@@ -64,11 +73,11 @@ namespace BlueMarble {
 
         std::vector<float> oHeightMap;
 
-        std::shared_ptr<BlueMarble::VertexArray> oVA;
+        Ref<BlueMarble::VertexArray> oVA;
         // TODO: Should we actually be storing the shader here? If so, multiple allowed?
-        std::shared_ptr<BlueMarble::Shader> oShader;
+        Ref<BlueMarble::Shader> oShader;
         // TODO: multiple textures
-        std::vector<std::shared_ptr<BlueMarble::Texture>> oTextures;
+        std::vector<Ref<BlueMarble::Texture>> oTextures;
 
     };
 

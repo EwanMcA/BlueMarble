@@ -54,6 +54,10 @@ namespace BlueMarble {
         PerspectiveCamera(float fovy, float aspect, float near, float far);
 
         const glm::vec3 GetRotation() const { return oRotation; }
+        
+        // mouseX & mouseY in normalized [-1, 1] coords
+        glm::vec3 CreateRay(float mouseX, float mouseY) const;
+        
         void SetRotation(glm::vec3 rotation) { oRotation = rotation; RecalculateViewMatrix(); }
 
     protected:

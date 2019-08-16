@@ -62,7 +62,7 @@ namespace BlueMarble {
             }
         }
 
-        std::shared_ptr<BlueMarble::VertexBuffer> squareVB;
+        Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
                               { BlueMarble::ShaderDataType::Float3, "aNormal"   },
@@ -70,11 +70,11 @@ namespace BlueMarble {
         oVA->SetVertexBuffer(squareVB);
     }
 
-    void Terrain::AddHeight(const uint32_t x, const uint32_t y, const float amount, const uint32_t radius)
+    void Terrain::AddHeight(const int x, const int y, const float amount, const int radius)
     {
-        for (int i = y - radius; i < y + radius; ++i)
+        for (int i = y - radius; i < y + radius && i < (int) oYCount; ++i)
         {
-            for (int j = x - radius; j < x + radius; ++j)
+            for (int j = x - radius; j < x + radius && j < (int) oXCount; ++j)
             {
                 if (i < 0 || j < 0 || i > oYCount || j > oXCount)
                     continue;
@@ -115,7 +115,7 @@ namespace BlueMarble {
             }
         }
 
-        std::shared_ptr<BlueMarble::VertexBuffer> squareVB;
+        Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
                               { BlueMarble::ShaderDataType::Float3, "aNormal"   },
@@ -134,13 +134,13 @@ namespace BlueMarble {
                 squareIndices.insert(squareIndices.end(), { topLeft, topRight, botRight, botRight, botLeft, topLeft });
             }
         }
-        std::shared_ptr<BlueMarble::IndexBuffer> squareIB;
+        Ref<BlueMarble::IndexBuffer> squareIB;
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
         oVA->SetIndexBuffer(squareIB);
 
         oShader.reset(BlueMarble::Shader::Create("shaders/shader.glsl"));
 
-        std::shared_ptr<BlueMarble::Texture> texture;
+        Ref<BlueMarble::Texture> texture;
         texture.reset(BlueMarble::Texture::Create("water.png"));
         oTextures.push_back(texture);
         texture.reset(BlueMarble::Texture::Create("sand.png"));
