@@ -15,9 +15,9 @@ public:
                   (float)BlueMarble::Application::Get().GetWindow().GetHeight(), 
                    0.1f, 
                    100.0f), 
-        oCameraPosition({ 2.5f, 3.0f, 8.0f })
+        oCameraPosition({ 0.0f, 0.0f, 8.0f })
 	{
-        oTerrain.Init(64, 64, 0.1f);
+        oTerrain.Init(64, 64, 0.1f, glm::vec3{ -3.2f, -3.2f, 0.0f });
         oTerrain.ResetHeightMap(BlueMarble::BMPHeightMap("heightmap.bmp"));
         oTerrain.Load();
     }
@@ -63,16 +63,18 @@ public:
             {
                 float normMouseX = BlueMarble::Input::GetMouseX() / (width * 0.5f) - 1.0f;
                 float normMouseY = BlueMarble::Input::GetMouseY() / (height * 0.5f) - 1.0f;
-                
-                glm::vec3 rayDirection = oCamera.CreateRay(normMouseX, normMouseY);
-                
+
+                glm::vec3 rayDirection = oCamera.CreateRay(normMouseX, normMouseY, 1.0f);
                 // World coords at the terrain are camera position + (rayDirection * distance to terrain) 
                 glm::vec3 world = oCamera.GetPosition() + 
-                                  rayDirection * (oCamera.GetPosition().z / -rayDirection.z);
+                                  rayDirection * abs(oCamera.GetPosition().z / rayDirection.z);
 
-                oTerrain.AddHeight((world.x / oTerrain.GetXWidth()) * oTerrain.GetXCount(), 
-                                   (world.y / oTerrain.GetYWidth()) * oTerrain.GetYCount(), 
-                                    oTerrainModAmount, oTerrainModRadius);
+                float relativeX = ((world.x + oTerrain.GetXWidth() / 2.0f) / oTerrain.GetXWidth());
+                float relativeY = ((world.y + oTerrain.GetYWidth() / 2.0f) / oTerrain.GetYWidth());
+
+                oTerrain.AddHeight(relativeX * oTerrain.GetXCount(), 
+                                   relativeY * oTerrain.GetYCount(), 
+                                   oTerrainModAmount, oTerrainModRadius);
             }
         }
 

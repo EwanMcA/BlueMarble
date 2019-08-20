@@ -4,6 +4,7 @@
 #include "BlueMarble/application.h"
 
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace BlueMarble {
 
@@ -52,7 +53,7 @@ namespace BlueMarble {
         auto p = GetMousePositionImpl();
         glm::vec2 screenPos{ p.first, p.second };
         glm::vec3 win = glm::vec3(screenPos.x, screenPos.y, 0.0f);
-        //glReadPixels((GLint)win.x, (GLint)win.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &win.z);
+        glReadPixels((GLint)win.x, (GLint)win.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &win.z);
 
         return win.z;
     }

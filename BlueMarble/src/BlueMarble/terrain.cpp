@@ -4,7 +4,9 @@
 #include "BlueMarble/Renderer/renderer.h"
 // TODO: Remove this, to make terrain API agnostic
 #include "Platform/OpenGL/openGLShader.h"
+
 #include "stb_image.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace BlueMarble {
     
@@ -37,11 +39,9 @@ namespace BlueMarble {
         }
     }
 
-    void Terrain::RefreshVertices()
+    void Terrain::GenerateVertices(std::vector<float>& vertices)
     {
-        // TODO: Check for performance increase by modifying buffer, rather than recreating.
-
-        std::vector<float> vertices;
+        vertices.clear();
         vertices.reserve(oXCount * oYCount * 5);
         for (int y = 0; y < oYCount; ++y)
         {
@@ -49,8 +49,10 @@ namespace BlueMarble {
             {
                 glm::vec3 normal;
                 NormalAt(x, y, normal);
-                vertices.insert(vertices.end(), { x * oSpacing, y * oSpacing, HeightAt(x, y),
-                                                  normal.x,     normal.y,     normal.z });
+                float xpos = x * oSpacing;
+                float ypos = y * oSpacing;
+                vertices.insert(vertices.end(), { xpos, ypos, HeightAt(x, y),
+                                                  normal.x, normal.y, normal.z });
                 if ((x % 2 == 0) && (y % 2 == 0))
                     vertices.insert(vertices.end(), { 0.5f, 0.5f });
                 else if (y % 2 == 0)
@@ -61,6 +63,14 @@ namespace BlueMarble {
                     vertices.insert(vertices.end(), { 1.0f, 1.0f });
             }
         }
+    }
+
+    void Terrain::RefreshVertices()
+    {
+        // TODO: Check for performance increase by modifying buffer, rather than recreating.
+
+        std::vector<float> vertices;
+        GenerateVertices(vertices);
 
         Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
@@ -95,25 +105,7 @@ namespace BlueMarble {
         oVA.reset(BlueMarble::VertexArray::Create());
 
         std::vector<float> vertices;
-        vertices.reserve(oXCount * oYCount * 5);
-        for (int y = 0; y < oYCount; ++y)
-        {
-            for (int x = 0; x < oXCount; ++x)
-            {
-                glm::vec3 normal;
-                NormalAt(x, y, normal);
-                vertices.insert(vertices.end(), { x * oSpacing, y * oSpacing, HeightAt(x, y), 
-                                                  normal.x,     normal.y,     normal.z });
-                if ((x % 2 == 0) && (y % 2 == 0))
-                    vertices.insert(vertices.end(), { 0.5f, 0.5f });
-                else if (y % 2 == 0)
-                    vertices.insert(vertices.end(), { 1.0f, 0.5f });
-                else if (x % 2 == 0)
-                    vertices.insert(vertices.end(), { 0.5f, 1.0f });
-                else
-                    vertices.insert(vertices.end(), { 1.0f, 1.0f });
-            }
-        }
+        GenerateVertices(vertices);
 
         Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
@@ -160,7 +152,7 @@ namespace BlueMarble {
     {
         oShader->Bind();
         std::dynamic_pointer_cast<OpenGLShader>(oShader)->UploadUniformFloat4("uTextureCutoffs", textureCutoffs);
-        BlueMarble::Renderer::Submit(oShader, oVA, oTextures);
+        BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::translate(glm::mat4(1.0f), oPosition));
     }
 
     void Terrain::NormalAt(const unsigned int x, const unsigned int y, glm::vec3& normal) const

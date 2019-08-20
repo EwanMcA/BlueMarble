@@ -52,6 +52,8 @@ namespace BlueMarble {
         float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightScale * oHeightMap[x + y * oXCount]; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
 
+        void GenerateVertices(std::vector<float>& vertices);
+
         // Modifiers
         void ResetHeightMap() { oHeightMap.resize(oXCount * oYCount, 0.0f); }
         void ResetHeightMap(BMPHeightMap& heightMap);
