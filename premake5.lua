@@ -16,6 +16,7 @@ IncludeDir["GLFW"] = "BlueMarble/vendor/GLFW/include"
 IncludeDir["Glad"] = "BlueMarble/vendor/Glad/include"
 IncludeDir["ImGui"] = "BlueMarble/vendor/imgui"
 IncludeDir["glm"] = "BlueMarble/vendor/glm"
+IncludeDir["stb_image"] = "BlueMarble/vendor/stb_image"
 
 include "BlueMarble/vendor/GLFW"
 include "BlueMarble/vendor/Glad"
@@ -38,6 +39,10 @@ project "BlueMarble"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl",
 	}
 
 	includedirs
@@ -48,6 +53,7 @@ project "BlueMarble"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}",
 	}
 
 	links

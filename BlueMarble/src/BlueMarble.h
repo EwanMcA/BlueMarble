@@ -20,6 +20,7 @@
 
 #include "BlueMarble/Renderer/buffer.h"
 #include "BlueMarble/Renderer/shader.h"
+#include "BlueMarble/Renderer/texture.h"
 #include "BlueMarble/Renderer/vertexArray.h"
 
 #include "BlueMarble/Renderer/camera.h"

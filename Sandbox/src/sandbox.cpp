@@ -10,7 +10,7 @@ class ExampleLayer : public BlueMarble::Layer
 {
 public:
 	ExampleLayer()
-        : Layer("Example"), oCamera(-2.0f, 2.0f, -2.0f, 2.0f), oCameraPosition(0.0f)
+        : Layer("Example"), oCamera(-1.6f, 1.6f, -0.9f, 0.9f), oCameraPosition(0.0f)
 	{
         oVertexArray.reset(BlueMarble::VertexArray::Create());
 
@@ -38,16 +38,17 @@ public:
 
         oSquareVA.reset(BlueMarble::VertexArray::Create());
 
-        float squareVertices[3 * 4] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.5f,  0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f
+        float squareVertices[5 * 4] = {
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
         };
 
         BlueMarble::Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
-        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" } });
+        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
+                              { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
         oSquareVA->AddVertexBuffer(squareVB);
 
         uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -124,6 +125,47 @@ public:
         )";
 
         oFlatShader.reset(BlueMarble::Shader::Create(flatVertexShaderSrc, flatFragmentShaderSrc));
+
+        std::string texVertexShaderSrc = R"(
+            #version 330 core
+
+            layout(location = 0) in vec3 aPosition;
+            layout(location = 1) in vec2 aTexCoord;
+
+            uniform mat4 uViewProjection;
+            uniform mat4 uTransform;
+
+            out vec2 vTexCoord;
+
+            void main()
+            {
+                vTexCoord = aTexCoord;
+                gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
+            }
+        )";
+
+        std::string texFragmentShaderSrc = R"(
+            #version 330 core
+
+            layout(location = 0) out vec4 color;
+
+            in vec2 vTexCoord;
+
+            uniform sampler2D uTexture;
+
+            void main()
+            {
+                color = texture(uTexture, vTexCoord);
+            }
+        )";
+
+        oTextureShader.reset(BlueMarble::Shader::Create(texVertexShaderSrc, texFragmentShaderSrc));
+
+        oTexture = BlueMarble::Texture2D::Create("assets/textures/grass.png");
+
+        std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oTextureShader)->Bind();
+        std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oTextureShader)->UploadUniformInt("uTexture", 0);
+
     }
 
 	void OnUpdate(BlueMarble::TimeStep ts) override
@@ -165,7 +207,12 @@ public:
                     BlueMarble::Renderer::Submit(oFlatShader, oSquareVA, transform);
                 }
         }
-        BlueMarble::Renderer::Submit(oShader, oVertexArray);
+
+        oTexture->Bind();
+        BlueMarble::Renderer::Submit(oTextureShader, oSquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+        //Triangle
+        //BlueMarble::Renderer::Submit(oShader, oVertexArray);
 
         BlueMarble::Renderer::EndScene();
     }
@@ -188,8 +235,10 @@ private:
     BlueMarble::Ref<BlueMarble::Shader> oShader;
     BlueMarble::Ref<BlueMarble::VertexArray> oVertexArray;
 
-    BlueMarble::Ref<BlueMarble::Shader> oFlatShader;
+    BlueMarble::Ref<BlueMarble::Shader> oFlatShader, oTextureShader;
     BlueMarble::Ref<BlueMarble::VertexArray> oSquareVA;
+
+    BlueMarble::Ref<BlueMarble::Texture2D> oTexture;
 
     BlueMarble::OrthographicCamera oCamera;
     glm::vec3 oCameraPosition;
