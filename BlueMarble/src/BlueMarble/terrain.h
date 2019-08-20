@@ -61,7 +61,7 @@ namespace BlueMarble {
 
         void SetHeightScale(const float scale) { oHeightScale = scale; }
         void SetShader(Ref<BlueMarble::Shader>& shader) { oShader = shader; }
-        void AddTexture(Ref<BlueMarble::Texture>& texture) { oTextures.push_back(texture); }
+        void AddTexture(Ref<BlueMarble::Texture2D>& texture) { oTextures.push_back(texture); }
         void SetVA(Ref<BlueMarble::VertexArray>& va) { oVA = va; }
     private:
 
@@ -78,7 +78,7 @@ namespace BlueMarble {
         // TODO: Should we actually be storing the shader here? If so, multiple allowed?
         Ref<BlueMarble::Shader> oShader;
         // TODO: multiple textures
-        std::vector<Ref<BlueMarble::Texture>> oTextures;
+        std::vector<Ref<BlueMarble::Texture2D>> oTextures;
 
     };
 

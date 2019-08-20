@@ -4,23 +4,22 @@
 #include "BlueMarble/Renderer/texture.h"
 
 namespace BlueMarble {
+    
+    class OpenGLTexture2D : public Texture2D
+    {
+    public:
+        OpenGLTexture2D(const std::string& path);
+        virtual ~OpenGLTexture2D();
 
-	class OpenGLTexture : public Texture
-	{
-	public:
-        OpenGLTexture(const std::string& path);
-		~OpenGLTexture();
+        virtual uint32_t GetWidth() const override { return oWidth; }
+        virtual uint32_t GetHeight() const override { return oHeight; }
 
-		void Bind(unsigned int slot = 0) const;
-		void Unbind() const;
+        virtual void Bind(uint32_t slot = 0) const override;
+    private:
+        std::string oPath;
+        
+        uint32_t oWidth, oHeight;
+        uint32_t oRendererID;
 
-		inline int GetWidth() const { return oWidth; }
-		inline int GetHeight() const { return oHeight; }
-	private:
-		unsigned int oRendererID;
-		std::string oFilePath;
-		unsigned char* oLocalBuffer;
-		int oWidth, oHeight, oBPP;
-	};
-
-} // Namespace BlueMarble
+    };
+}

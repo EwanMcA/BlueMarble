@@ -87,9 +87,8 @@ namespace BlueMarble {
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		static bool show = false;
-		//ImGui::ShowDemoWindow(&show);
-	}
+
+    }
 
 
 } // namespace BlueMarble

@@ -22,7 +22,7 @@ namespace BlueMarble {
 
     void Renderer::Submit(const Ref<Shader>& shader, 
                           const Ref<VertexArray>& vertexArray,
-                          const std::vector<Ref<Texture>>& textures,
+                          const std::vector<Ref<Texture2D>>& textures,
                           const glm::mat4& transform)
     {
         shader->Bind();

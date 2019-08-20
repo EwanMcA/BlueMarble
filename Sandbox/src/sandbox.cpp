@@ -117,6 +117,7 @@ private:
     BlueMarble::Terrain oTerrain;
 
     BlueMarble::PerspectiveCamera oCamera;
+
     glm::vec3 oCameraPosition;
     glm::vec3 oCameraRotation = glm::vec3(0.0f);
     float oCameraMoveSpeed = 2.0f;

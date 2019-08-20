@@ -140,14 +140,14 @@ namespace BlueMarble {
 
         oShader.reset(BlueMarble::Shader::Create("shaders/shader.glsl"));
 
-        Ref<BlueMarble::Texture> texture;
-        texture.reset(BlueMarble::Texture::Create("water.png"));
+        Ref<BlueMarble::Texture2D> texture;
+        texture = BlueMarble::Texture2D::Create("assets/textures/water.png");
         oTextures.push_back(texture);
-        texture.reset(BlueMarble::Texture::Create("sand.png"));
+        texture = BlueMarble::Texture2D::Create("assets/textures/sand.png");
         oTextures.push_back(texture);
-        texture.reset(BlueMarble::Texture::Create("grass.png"));
+        texture = BlueMarble::Texture2D::Create("assets/textures/grass.png");
         oTextures.push_back(texture);
-        texture.reset(BlueMarble::Texture::Create("snow.png"));
+        texture = BlueMarble::Texture2D::Create("assets/textures/snow.png");
         oTextures.push_back(texture);
     }
 
