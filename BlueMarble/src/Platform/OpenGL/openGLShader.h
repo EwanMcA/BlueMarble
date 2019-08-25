@@ -14,16 +14,10 @@ namespace BlueMarble {
             NONE = -1, VERTEX = 0, FRAGMENT = 1
         };
 
-        struct ShaderSource
-        {
-            std::string vertexSrc;
-            std::string fragmentSrc;
-        };
-
-        OpenGLShader(const OpenGLShader::ShaderSource& src);
-        OpenGLShader(const std::string& filename)
-            : OpenGLShader(OpenGLShader::ParseShader(filename)) {}
+        OpenGLShader(const std::string& filename);
         virtual ~OpenGLShader();
+
+        void CreateShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 
         virtual void Bind() const override;
         virtual void Unbind() const override;
@@ -38,7 +32,7 @@ namespace BlueMarble {
         void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
     private:
-        static ShaderSource OpenGLShader::ParseShader(const std::string& filepath);
+        std::tuple<std::string, std::string> OpenGLShader::ParseShader(const std::string& filepath);
         uint32_t GetUniformLocation(const std::string& name) const;
 
     private:

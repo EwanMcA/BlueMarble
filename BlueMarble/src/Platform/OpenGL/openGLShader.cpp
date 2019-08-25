@@ -7,14 +7,21 @@
 
 namespace BlueMarble {
 
-    OpenGLShader::OpenGLShader(const OpenGLShader::ShaderSource& src)
+    OpenGLShader::OpenGLShader(const std::string& filename)
+        : oRendererID(0)
+    {
+        auto[vertSrc, fragSrc] = OpenGLShader::ParseShader(filename);
+        CreateShader(vertSrc, fragSrc);
+    }
+
+    void OpenGLShader::CreateShader(const std::string& vertexSrc, const std::string& fragmentSrc)
     {
         // Create an empty vertex shader handle
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
         // Send the vertex shader source code to GL
         // Note that std::string's .c_str is NULL character terminated.
-        const GLchar* source = src.vertexSrc.c_str();
+        const GLchar* source = vertexSrc.c_str();
         glShaderSource(vertexShader, 1, &source, 0);
 
         // Compile the vertex shader
@@ -44,7 +51,7 @@ namespace BlueMarble {
 
         // Send the fragment shader source code to GL
         // Note that std::string's .c_str is NULL character terminated.
-        source = src.fragmentSrc.c_str();
+        source = fragmentSrc.c_str();
         glShaderSource(fragmentShader, 1, &source, 0);
 
         // Compile the fragment shader
@@ -167,7 +174,7 @@ namespace BlueMarble {
     }
 
     // From OPENGL Series
-    OpenGLShader::ShaderSource OpenGLShader::ParseShader(const std::string& filepath)
+    std::tuple<std::string, std::string> OpenGLShader::ParseShader(const std::string& filepath)
     {
         std::ifstream stream(filepath);
 
