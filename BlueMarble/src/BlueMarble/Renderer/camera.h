@@ -1,5 +1,7 @@
 #pragma once
 
+#include "BlueMarble/Core/timeStep.h"
+
 #include <glm/glm.hpp>
 
 namespace BlueMarble {
@@ -51,7 +53,7 @@ namespace BlueMarble {
     class PerspectiveCamera : public Camera
     {
     public:
-        PerspectiveCamera(float fovy, float aspect, float near, float far);
+        PerspectiveCamera(float fovy, float aspect, float zNear, float zFar);
 
         const glm::vec3 GetRotation() const { return oRotation; }
         
@@ -66,6 +68,20 @@ namespace BlueMarble {
     private:
         //TODO Need to do this with quarternions in future
         glm::vec3 oRotation = { 0.0f, 0.0f, 0.0f };
+    };
+
+    class GameCamera : public PerspectiveCamera
+    {
+    public:
+        GameCamera(float fovy, float aspect, float zNear, float zFar);
+
+        void Zoom(int change);
+        void Translate(const float x, const float y);
+    protected:
+        virtual void RecalculateViewMatrix() override;
+    
+    private:
+        int oZoom = 50;
     };
 
 } // namespace BlueMarble

@@ -5,6 +5,11 @@
 
 namespace BlueMarble {
 
+    float quickLerp(const float f1, const float f2, const float ratio)
+    {
+        return f1 * (1.0f - ratio) + f2 * ratio;
+    }
+
     /**********************************************************
         Orthographic Camera
     ***********************************************************/
@@ -55,6 +60,43 @@ namespace BlueMarble {
         glm::vec3 dir = glm::normalize(glm::vec3(worldPos));
 
         return dir;
+    }
+
+    /**********************************************************
+    Game Camera
+    ***********************************************************/
+
+    GameCamera::GameCamera(float fovy, float aspect, float zNear, float zFar)
+    : PerspectiveCamera(fovy, aspect, zNear, zFar)
+    {
+        RecalculateViewMatrix();
+    }
+
+    void GameCamera::RecalculateViewMatrix()
+    {
+        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), 
+                                         glm::radians(quickLerp(0.0f, 70.0f, (oZoom * oZoom) / 10000.0f)), 
+                                         glm::vec3(1, 0, 0));
+
+        oPosition.z = quickLerp(10.0f, 0.5f, oZoom / 100.0f);
+        glm::mat4 translation = glm::translate(glm::mat4(1.0f), oPosition);
+
+        oViewMatrix = glm::inverse(rotation) * glm::inverse(translation);
+        oPVMatrix = oProjectionMatrix * oViewMatrix;
+    }
+
+    void GameCamera::Zoom(int change)
+    {
+        oZoom += change;
+        oZoom = std::clamp(oZoom, 0, 100);
+        RecalculateViewMatrix();
+    }
+
+    void GameCamera::Translate(const float x, const float y)
+    {
+        oPosition.x += x;
+        oPosition.y += y;
+        RecalculateViewMatrix();
     }
 
 } // namespace BlueMarble

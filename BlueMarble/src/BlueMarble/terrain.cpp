@@ -130,7 +130,7 @@ namespace BlueMarble {
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
         oVA->SetIndexBuffer(squareIB);
 
-        oShader.reset(BlueMarble::Shader::Create("shaders/shader.glsl"));
+        oShader.reset(BlueMarble::Shader::Create("shaders/terrain.glsl"));
 
         Ref<BlueMarble::Texture2D> texture;
         texture = BlueMarble::Texture2D::Create("assets/textures/water.png");
