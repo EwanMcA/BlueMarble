@@ -70,6 +70,7 @@ public:
             }
         }
 
+
         oTerrain.SetHeightScale(oTerrainHeightScale);
 
         BlueMarble::RenderCommand::SetClearColor({ 0.4f, 0.6f, 1.0f, 1 });

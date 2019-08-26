@@ -10,6 +10,9 @@ namespace BlueMarble {
 	class Renderer
 	{
 	public:
+
+        static void Init();
+
         //TODO take in the rest of the scene parameters
         static void BeginScene(Camera& camera); 
         static void EndScene();

@@ -23,6 +23,8 @@ namespace BlueMarble {
         oWindow = std::unique_ptr<Window>(Window::Create());
         oWindow->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
+        Renderer::Init();
+
         oImGuiLayer = new ImGuiLayer();
         PushOverlay(oImGuiLayer);
 	}
