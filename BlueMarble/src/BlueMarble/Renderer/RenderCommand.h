@@ -7,6 +7,13 @@ namespace BlueMarble {
     class RenderCommand
     {
     public:
+
+        inline static void Init()
+        {
+            cRendererAPI->Init();
+        }
+
+
         inline static void SetClearColor(const glm::vec4& color)
         {
             cRendererAPI->SetClearColor(color);

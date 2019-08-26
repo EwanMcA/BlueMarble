@@ -162,6 +162,7 @@ public:
         oTextureShader.reset(BlueMarble::Shader::Create(texVertexShaderSrc, texFragmentShaderSrc));
 
         oTexture = BlueMarble::Texture2D::Create("assets/textures/grass.png");
+        oTexture2 = BlueMarble::Texture2D::Create("assets/textures/test.png");
 
         std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oTextureShader)->Bind();
         std::dynamic_pointer_cast<BlueMarble::OpenGLShader>(oTextureShader)->UploadUniformInt("uTexture", 0);
@@ -210,7 +211,11 @@ public:
 
         oTexture->Bind();
         BlueMarble::Renderer::Submit(oTextureShader, oSquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-
+        oTexture2->Bind();
+        BlueMarble::Renderer::Submit(
+            oTextureShader, 
+            oSquareVA, 
+            glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
         //Triangle
         //BlueMarble::Renderer::Submit(oShader, oVertexArray);
 
@@ -239,6 +244,7 @@ private:
     BlueMarble::Ref<BlueMarble::VertexArray> oSquareVA;
 
     BlueMarble::Ref<BlueMarble::Texture2D> oTexture;
+    BlueMarble::Ref<BlueMarble::Texture2D> oTexture2;
 
     BlueMarble::OrthographicCamera oCamera;
     glm::vec3 oCameraPosition;

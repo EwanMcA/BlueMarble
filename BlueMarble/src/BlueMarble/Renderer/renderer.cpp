@@ -7,6 +7,11 @@ namespace BlueMarble {
 
     Renderer::SceneData* Renderer::cSceneData = new Renderer::SceneData;
 
+    void Renderer::Init()
+    {
+        RenderCommand::Init();
+    }
+
     void Renderer::BeginScene(OrthographicCamera& camera)
     {
         // Get the data to put in uniforms to the shaders
