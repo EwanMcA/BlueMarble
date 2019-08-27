@@ -3,5 +3,5 @@ Expanding on and customizing the general purpose game engine Hazel (https://gith
 
 So far have added a terrain system which allows height manipulation and customisable texture bands:
 
-![](Sandbox/images/example_terrain.png)
+<img src="Sandbox/images/example_terrain.png">
 
