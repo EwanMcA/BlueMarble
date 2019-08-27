@@ -1,3 +1,7 @@
 # BlueMarble
-The core of BlueMarble Engine is essentially a fork of general purpose game engine Hazel (https://github.com/TheCherno/Hazel). The plan is to expand upon this core to build an engine specialising in map-based explore/expand strategy games.
+Expanding on and customizing the general purpose game engine Hazel (https://github.com/TheCherno/Hazel), in order to focus on map-based explore/expand game/simulation development.
+
+So far have added a terrain system which allows height manipulation and customisable texture bands:
+
+![](Sandbox/images/example_terrain.png)
 
