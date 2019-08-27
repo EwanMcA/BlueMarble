@@ -20,14 +20,16 @@ namespace BlueMarble {
 
     void Terrain::ResetHeightMap(BMPHeightMap& heightMap)
     {
-        int xPPV = heightMap.oWidth / oXCount;
-        int yPPV = heightMap.oHeight / oYCount;
-
-        for (int i = 0; i < oXCount * oYCount; ++i)
+        for (int i = 0; i < oYCount && i < heightMap.oHeight; ++i)
         {
-            int height = heightMap.oLocalBuffer[i * 4 * xPPV];
+            for (int j = 0; j < oXCount && j < heightMap.oWidth; ++j)
+            {
+                int pixel = i * heightMap.oWidth + j;
+                int vertex = i * oXCount + j;
+                int height = heightMap.oLocalBuffer[pixel * 4];
                 
-            oHeightMap[i] = (height / 255.0f);
+                oHeightMap[vertex] = (height / 255.0f);
+            }
         }
     }
 

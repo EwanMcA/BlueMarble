@@ -61,11 +61,11 @@ public:
                 glm::vec3 world = oCamera.GetPosition() +
                     rayDirection * abs(oCamera.GetPosition().z / rayDirection.z);
 
-                float relativeX = ((world.x + oTerrain.GetXWidth() / 2.0f) / oTerrain.GetXWidth());
-                float relativeY = ((world.y + oTerrain.GetYWidth() / 2.0f) / oTerrain.GetYWidth());
+                float xRatio = (world.x - oTerrain.getPosition().x)  / oTerrain.GetXWidth();
+                float yRatio = (world.y - oTerrain.getPosition().y) / oTerrain.GetYWidth();
 
-                oTerrain.AddHeight(relativeX * oTerrain.GetXCount(),
-                                   relativeY * oTerrain.GetYCount(),
+                oTerrain.AddHeight(xRatio * oTerrain.GetXCount(),
+                                   yRatio * oTerrain.GetYCount(),
                                    oTerrainModAmount, oTerrainModRadius);
             }
         }
