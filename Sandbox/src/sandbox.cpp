@@ -55,11 +55,9 @@ public:
             {
                 float normMouseX = BlueMarble::Input::GetMouseX() / (width * 0.5f) - 1.0f;
                 float normMouseY = BlueMarble::Input::GetMouseY() / (height * 0.5f) - 1.0f;
-
-                glm::vec3 rayDirection = oCamera.CreateRay(normMouseX, normMouseY, 1.0f);
-                // World coords at the terrain are camera position + (rayDirection * distance to terrain) 
-                glm::vec3 world = oCamera.GetPosition() +
-                    rayDirection * abs(oCamera.GetPosition().z / rayDirection.z);
+                float normMouseZ = 2 * BlueMarble::Input::GetMouseZ() - 1.0f;
+                
+                glm::vec3 world = oCamera.GetWorldCoords(normMouseX, normMouseY, normMouseZ);
 
                 float xRatio = (world.x - oTerrain.getPosition().x)  / oTerrain.GetXWidth();
                 float yRatio = (world.y - oTerrain.getPosition().y) / oTerrain.GetYWidth();

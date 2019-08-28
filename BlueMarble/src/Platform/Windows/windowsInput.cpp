@@ -52,7 +52,8 @@ namespace BlueMarble {
         unsigned int height = Application::Get().GetWindow().GetHeight();
         auto p = GetMousePositionImpl();
         glm::vec2 screenPos{ p.first, p.second };
-        glm::vec3 win = glm::vec3(screenPos.x, screenPos.y, 0.0f);
+        glm::vec3 win = glm::vec3(screenPos.x, height - screenPos.y, 0.0f);
+
         glReadPixels((GLint)win.x, (GLint)win.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &win.z);
 
         return win.z;

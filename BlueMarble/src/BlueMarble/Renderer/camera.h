@@ -57,8 +57,8 @@ namespace BlueMarble {
 
         const glm::vec3 GetRotation() const { return oRotation; }
         
-        // mouseX & mouseY in normalized [-1, 1] coords
-        glm::vec3 CreateRay(float mouseX, float mouseY, float mouseZ) const;
+        // Params in normalized [-1, 1] coords
+        glm::vec3 GetWorldCoords(float mouseX, float mouseY, float mouseZ) const;
 
         void SetRotation(glm::vec3 rotation) { oRotation = rotation; RecalculateViewMatrix(); }
 

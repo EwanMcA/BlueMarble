@@ -53,13 +53,13 @@ namespace BlueMarble {
         oPVMatrix = oProjectionMatrix * oViewMatrix;
     }
 
-    glm::vec3 PerspectiveCamera::CreateRay(float mouseX, float mouseY, float mouseZ) const
+    glm::vec3 PerspectiveCamera::GetWorldCoords(float mouseX, float mouseY, float mouseZ) const
     {
         glm::vec4 screenPos = glm::vec4(mouseX, -mouseY, mouseZ, 1.0f);
         glm::vec4 worldPos = (glm::inverse(oPVMatrix) * screenPos);
-        glm::vec3 dir = glm::normalize(glm::vec3(worldPos));
+        worldPos /= worldPos.w;
 
-        return dir;
+        return worldPos;
     }
 
     /**********************************************************

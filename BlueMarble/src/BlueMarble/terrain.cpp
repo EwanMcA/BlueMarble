@@ -69,13 +69,23 @@ namespace BlueMarble {
 
     void Terrain::RefreshVertices()
     {
-        // TODO: Check for performance increase by modifying buffer, rather than recreating.
-
-        std::vector<float> vertices;
-        GenerateVertices(vertices);
+        // Update heights and normals
+        for (int y = 0; y < oYCount; ++y)
+        {
+            for (int x = 0; x < oXCount; ++x)
+            {
+                int vbIndex = y * (oXCount * 8) + (x * 8);
+                glm::vec3 normal;
+                NormalAt(x, y, normal);
+                oVertices[vbIndex + 2] = HeightAt(x, y);
+                oVertices[vbIndex + 3] = normal.x;
+                oVertices[vbIndex + 4] = normal.y;
+                oVertices[vbIndex + 5] = normal.z;
+            }
+        }
 
         Ref<BlueMarble::VertexBuffer> squareVB;
-        squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
+        squareVB.reset(BlueMarble::VertexBuffer::Create(oVertices.data(), oVertices.size() * sizeof(float)));
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
                               { BlueMarble::ShaderDataType::Float3, "aNormal"   },
                               { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
@@ -86,9 +96,12 @@ namespace BlueMarble {
     {
         for (int i = y - radius; i < y + radius && i < (int) oYCount; ++i)
         {
+            if (i < 0)
+                continue;
+
             for (int j = x - radius; j < x + radius && j < (int) oXCount; ++j)
             {
-                if (i < 0 || j < 0 || i > oYCount || j > oXCount)
+                if (j < 0)
                     continue;
 
                 float dx = abs(j - (int)x);
@@ -106,11 +119,10 @@ namespace BlueMarble {
     {
         oVA.reset(BlueMarble::VertexArray::Create());
 
-        std::vector<float> vertices;
-        GenerateVertices(vertices);
+        GenerateVertices(oVertices);
 
         Ref<BlueMarble::VertexBuffer> squareVB;
-        squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
+        squareVB.reset(BlueMarble::VertexBuffer::Create(oVertices.data(), oVertices.size() * sizeof(float)));
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
                               { BlueMarble::ShaderDataType::Float3, "aNormal"   },
                               { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
