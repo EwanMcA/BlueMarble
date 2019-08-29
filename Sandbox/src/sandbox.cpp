@@ -2,6 +2,7 @@
 #include <BlueMarble.h>
 
 #include "imgui/imgui.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -64,7 +65,7 @@ public:
 
                 oTerrain.AddHeight(xRatio * oTerrain.GetXCount(),
                                    yRatio * oTerrain.GetYCount(),
-                                   oTerrainModAmount, oTerrainModRadius);
+                                   oTerrainModAmount * ts, oTerrainModRadius);
             }
         }
 
@@ -84,20 +85,35 @@ public:
     virtual void OnImGuiRender() override
     {
         ImGui::Begin("Terrain", nullptr);
-            ImGui::SetWindowSize(ImVec2(300, 250), ImGuiCond_FirstUseEver);
+            ImGui::SetWindowSize(ImVec2(300, 325), ImGuiCond_FirstUseEver);
             ImGui::Text("Texture Cutoff Heights");
+            ImGui::NewLine();
             ImGui::DragFloatRange2("Water", &oTerrainCutoffs.r, &oTerrainCutoffs.g, 0.001f);
             ImGui::DragFloatRange2("Sand", &oTerrainCutoffs.g, &oTerrainCutoffs.b, 0.001f);
             ImGui::DragFloatRange2("Grass", &oTerrainCutoffs.b, &oTerrainCutoffs.a, 0.001f);
             
-            ImGui::Spacing();
             ImGui::Separator();
-            ImGui::Spacing();
 
             ImGui::Text("Terrain Modification");
-            ImGui::InputFloat("Change", &oTerrainModAmount, 0.001f);
+            ImGui::NewLine();
+            ImGui::InputFloat("Change", &oTerrainModAmount, 0.5f);
             ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
             ImGui::InputFloat("Height Scale", &oTerrainHeightScale, 0.01f);
+
+            ImGui::Separator();
+
+            ImGui::NewLine();
+            ImGui::InputText("heightmap file (bmp)", &oHeightmapFilename);
+            if (ImGui::Button("Reset")) {
+                if (!oHeightmapFilename.empty()) {
+                    BlueMarble::BMPHeightMap hm(oHeightmapFilename);
+                    oTerrain.ResetHeightMap(hm);
+                }
+                else {
+                    oTerrain.ResetHeightMap();
+                }
+                oTerrain.RefreshVertices();
+            }
         ImGui::End();
     }
 
@@ -115,11 +131,12 @@ public:
 
 private:
     BlueMarble::Terrain oTerrain;
+    std::string oHeightmapFilename;
 
     BlueMarble::GameCamera oCamera;
 
     float oCameraMoveSpeed = 5.0f;
-    float oTerrainModAmount = 0.05f;
+    float oTerrainModAmount = 1.0f;
     float oTerrainModRadius = 3.0f;
     float oTerrainHeightScale = 0.25f;
 

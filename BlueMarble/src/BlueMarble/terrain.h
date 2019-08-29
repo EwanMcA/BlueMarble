@@ -55,7 +55,7 @@ namespace BlueMarble {
         void GenerateVertices(std::vector<float>& vertices);
 
         // Modifiers
-        void ResetHeightMap() { oHeightMap.resize(oXCount * oYCount, 0.0f); }
+        void ResetHeightMap() { oHeightMap.clear(); oHeightMap.resize(oXCount * oYCount, 0.0f); }
         void ResetHeightMap(BMPHeightMap& heightMap);
         void GenerateRandomHeightMap();
         void RefreshVertices();
