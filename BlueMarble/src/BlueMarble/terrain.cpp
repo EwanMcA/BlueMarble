@@ -41,6 +41,17 @@ namespace BlueMarble {
         }
     }
 
+    void Terrain::LoadVB()
+    {
+        Ref<BlueMarble::VertexBuffer> squareVB;
+        squareVB.reset(BlueMarble::VertexBuffer::Create(oVertices.data(), oVertices.size() * sizeof(float)));
+        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
+                              { BlueMarble::ShaderDataType::Float3, "aNormal"   },
+                              { BlueMarble::ShaderDataType::Float2, "aTexCoord" },
+                              { BlueMarble::ShaderDataType::Float2, "aStats" } });
+        oVA->SetVertexBuffer(squareVB);
+    }
+
     void Terrain::GenerateVertices(std::vector<float>& vertices)
     {
         vertices.clear();
@@ -55,55 +66,55 @@ namespace BlueMarble {
                 float ypos = y * oSpacing;
                 vertices.insert(vertices.end(), { xpos, ypos, HeightAt(x, y),
                                                   normal.x, normal.y, normal.z });
-                if ((x % 2 == 0) && (y % 2 == 0))
-                    vertices.insert(vertices.end(), { 0.5f, 0.5f });
-                else if (y % 2 == 0)
-                    vertices.insert(vertices.end(), { 1.0f, 0.5f });
-                else if (x % 2 == 0)
-                    vertices.insert(vertices.end(), { 0.5f, 1.0f });
-                else
-                    vertices.insert(vertices.end(), { 1.0f, 1.0f });
+
+                float xTex{ 0.0f }, yTex{ 0.0f };
+                if (oTexCoordCallback) {
+                    std::tie(xTex, yTex) = oTexCoordCallback(x, y);
+                }
+                vertices.insert(vertices.end(), { xTex, yTex });
+
+                float stat1{ 0.0f }, stat2{ 0.0f };
+                if (oVertexStatsCallback) {
+                    std::tie(stat1, stat2) = oVertexStatsCallback(x, y);
+                }
+                vertices.insert(vertices.end(), { stat1, stat2 });
             }
         }
     }
 
-    void Terrain::RefreshVertices()
+    void Terrain::RefreshVertices(int xMin, int yMin, int xMax, int yMax)
     {
         // Update heights and normals
-        for (int y = 0; y < oYCount; ++y)
+        for (int y = yMin; y < yMax; ++y)
         {
-            for (int x = 0; x < oXCount; ++x)
+            for (int x = xMin; x < xMax; ++x)
             {
-                int vbIndex = y * (oXCount * 8) + (x * 8);
+                int vbIndex = y * (oXCount * 10) + (x * 10);
                 glm::vec3 normal;
                 NormalAt(x, y, normal);
                 oVertices[vbIndex + 2] = HeightAt(x, y);
                 oVertices[vbIndex + 3] = normal.x;
                 oVertices[vbIndex + 4] = normal.y;
                 oVertices[vbIndex + 5] = normal.z;
+
+                float stat1{ 0 }, stat2{ 0 };
+                if (oVertexStatsCallback) {
+                    std::tie(stat1, stat2) = oVertexStatsCallback(x, y);
+                }
+                oVertices[vbIndex + 8] = stat1;
+                oVertices[vbIndex + 9] = stat2;
             }
         }
 
-        Ref<BlueMarble::VertexBuffer> squareVB;
-        squareVB.reset(BlueMarble::VertexBuffer::Create(oVertices.data(), oVertices.size() * sizeof(float)));
-        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
-                              { BlueMarble::ShaderDataType::Float3, "aNormal"   },
-                              { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
-        oVA->SetVertexBuffer(squareVB);
+        LoadVB();
     }
 
     void Terrain::AddHeight(const int x, const int y, const float amount, const int radius)
     {
-        for (int i = y - radius; i < y + radius && i < (int) oYCount; ++i)
+        for (int i = std::max(0, y - radius); i < y + radius && i < (int) oYCount; ++i)
         {
-            if (i < 0)
-                continue;
-
-            for (int j = x - radius; j < x + radius && j < (int) oXCount; ++j)
+            for (int j = std::max(0, x - radius); j < x + radius && j < (int) oXCount; ++j)
             {
-                if (j < 0)
-                    continue;
-
                 float dx = abs(j - (int)x);
                 float dy = abs(i - (int)y);
                 float dist = sqrt(dx*dx + dy*dy);
@@ -112,7 +123,10 @@ namespace BlueMarble {
             }
         }
 
-        RefreshVertices();
+        RefreshVertices(std::max(0, x - radius), 
+                        std::max(0, y - radius), 
+                        std::min(x + radius, (int)oXCount), 
+                        std::min(y + radius, (int)oYCount));
     }
 
     void Terrain::Load()
@@ -120,13 +134,7 @@ namespace BlueMarble {
         oVA.reset(BlueMarble::VertexArray::Create());
 
         GenerateVertices(oVertices);
-
-        Ref<BlueMarble::VertexBuffer> squareVB;
-        squareVB.reset(BlueMarble::VertexBuffer::Create(oVertices.data(), oVertices.size() * sizeof(float)));
-        squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
-                              { BlueMarble::ShaderDataType::Float3, "aNormal"   },
-                              { BlueMarble::ShaderDataType::Float2, "aTexCoord" } });
-        oVA->AddVertexBuffer(squareVB);
+        LoadVB();
 
         std::vector<uint32_t> squareIndices;
         for (unsigned int y = 0; y < oYCount - 1; ++y)
@@ -159,7 +167,7 @@ namespace BlueMarble {
 
     void Terrain::Draw()
     {
-        BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::mat4(1.0f));
+        BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::translate(glm::mat4(1.0f), oPosition));
     }
 
     void Terrain::Draw(glm::vec4 textureCutoffs)

@@ -58,13 +58,22 @@ namespace BlueMarble {
         void ResetHeightMap() { oHeightMap.clear(); oHeightMap.resize(oXCount * oYCount, 0.0f); }
         void ResetHeightMap(BMPHeightMap& heightMap);
         void GenerateRandomHeightMap();
-        void RefreshVertices();
+        void RefreshVertices() { RefreshVertices(0, 0, oXCount, oYCount); }
+        void RefreshVertices(int xMin, int yMin, int xMax, int yMax);
         void AddHeight(const int x, const int y, const float amount, const int radius);
-
         void SetHeightScale(const float scale) { oHeightScale = scale; }
+        void SetTexCoordCallback(const std::function<std::pair<float, float>(int, int)>& callback) 
+        {
+            oTexCoordCallback = callback;
+        }
+        void SetVertexStatsCallback(const std::function<std::tuple<float, float>(int, int)>& callback)
+        {
+            oVertexStatsCallback = callback;
+        }
+
         void SetShader(Ref<BlueMarble::Shader>& shader) { oShader = shader; }
         void AddTexture(Ref<BlueMarble::Texture2D>& texture) { oTextures.push_back(texture); }
-        void SetVA(Ref<BlueMarble::VertexArray>& va) { oVA = va; }
+        void LoadVB();
     private:
 
         // Counts = number of squares (also number of vertices in the heightmap)
@@ -77,7 +86,25 @@ namespace BlueMarble {
         std::vector<float> oHeightMap;
         std::vector<float> oVertices;
 
+        // TODO: Generalise this callback system so that everything beyond positions/normals comes from the 
+        //       user, and not with the stock terrain object.
+        //       Thus only the game code / shader would know about the tex coords and vertex stats.
+        //       - The difficulty lies in modifying the BufferLayout.
+
+        // (x, y) -> (2d texture coords)  by default, function returns unit square coords.
+        std::function<std::pair<float, float>(int, int)> oTexCoordCallback =
+            [](int x, int y) -> std::pair<float, float> {
+            float xTex = (x % 2 == 0) ? 0.0f : 1.0f;
+            float yTex = (y % 2 == 0) ? 0.0f : 1.0f;
+            return { xTex, yTex };
+        };
+
+        // (x, y) -> (stat1, stat2)
+        std::function<std::tuple<float, float>(int, int)> oVertexStatsCallback;
+
         Ref<BlueMarble::VertexArray> oVA;
+        Ref<BlueMarble::BufferLayout> oLayout;
+        
         // TODO: Should we actually be storing the shader here? If so, multiple allowed?
         Ref<BlueMarble::Shader> oShader;
         // TODO: multiple textures

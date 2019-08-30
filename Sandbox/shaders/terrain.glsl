@@ -4,6 +4,7 @@
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
 layout(location = 2) in vec2 aTexCoord;
+layout(location = 3) in vec2 aStats;
 
 uniform mat4 uViewProjection;
 uniform mat4 uTransform;
@@ -12,6 +13,7 @@ out vec3 vPosition;
 out vec3 vNormal;
 out vec2 vTexCoord;
 out vec3 vWorldPosition;
+out vec2 vStats;
 
 void main()
 {
@@ -20,6 +22,7 @@ void main()
     vTexCoord = aTexCoord;
     gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
     vWorldPosition = vec3(uTransform * vec4(aPosition, 1.0));
+	vStats = aStats;
 }
 
 #shader fragment
@@ -31,6 +34,7 @@ in vec3 vPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
 in vec3 vWorldPosition;
+in vec2 vStats;
 
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
@@ -60,8 +64,9 @@ void main()
     } else if (vPosition.z < uTextureCutoffs.a) {
         ratio = (vPosition.z - 0.15f) / (uTextureCutoffs.a - 0.15f);
         ratio = max(0.0f, ratio);
-        texMix = mix(texture( uTexture2, vTexCoord ), texture( uTexture3, vTexCoord ), ratio);
-    } else {
+		texMix = mix(texture( uTexture2, vTexCoord ), vec4(0.65, 0.35, 0.0, 1.0), 0.5 - vStats.x/2);
+        texMix = mix(texMix, texture( uTexture3, vTexCoord ), ratio);
+	} else {
         texMix = texture( uTexture3, vTexCoord );
     }
 

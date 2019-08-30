@@ -17,8 +17,20 @@ public:
                    0.1f, 
                    100.0f) 
 	{
-        oTerrain.Init(64, 64, 0.1f, glm::vec3{ -3.2f, -3.2f, 0.0f });
+        oTerrain.Init(128, 128, 0.05f, glm::vec3{ -3.2f, -3.2f, 0.0f });
         oTerrain.ResetHeightMap(BlueMarble::BMPHeightMap("heightmap.bmp"));
+        oTerrain.SetHeightScale(oTerrainHeightScale);
+        
+        oTerrain.SetTexCoordCallback([](int x, int y) -> std::pair<float, float> {
+            float xTex = (x % 2 == 0) ? 0.5f : 1.0f;
+            float yTex = (y % 2 == 0) ? 0.5f : 1.0f;
+            return { xTex, yTex };
+        });
+
+        oTerrain.SetVertexStatsCallback([this](int x, int y) -> std::tuple<float, float> {
+            return { 1.0f, 0.0f };
+        });
+
         oTerrain.Load();
         oCamera.Translate(0.0f, -3.2f);
     }       
@@ -69,9 +81,8 @@ public:
             }
         }
 
-
         oTerrain.SetHeightScale(oTerrainHeightScale);
-
+        
         BlueMarble::RenderCommand::SetClearColor({ 0.4f, 0.6f, 1.0f, 1 });
         BlueMarble::RenderCommand::Clear();
 
@@ -138,9 +149,9 @@ private:
     float oCameraMoveSpeed = 5.0f;
     float oTerrainModAmount = 1.0f;
     float oTerrainModRadius = 3.0f;
-    float oTerrainHeightScale = 0.25f;
+    float oTerrainHeightScale = 0.5f;
 
-    glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.025f, 0.2f };
+    glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.03f, 0.4f };
 };
 
 class Sandbox : public BlueMarble::Application
