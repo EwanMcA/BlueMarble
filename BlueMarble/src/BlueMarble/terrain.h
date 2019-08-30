@@ -27,16 +27,7 @@ namespace BlueMarble {
         void Init(const uint32_t xCount,
                   const uint32_t yCount,
                   const float spacing = 1.0f,
-                  const glm::vec3& position = glm::vec3(0.0f))
-        {
-            oXCount = xCount;
-            oYCount = yCount;
-            oPosition = position;
-            oSpacing = spacing;
-
-            oHeightMap.resize(oXCount * oYCount, 0.0f);
-        }
-
+                  const glm::vec3& position = glm::vec3(0.0f));
         void Load();
         void Draw();
         void Draw(glm::vec4 textureCutoffs);
@@ -48,13 +39,11 @@ namespace BlueMarble {
         uint32_t GetXCount() const { return oXCount; }
         uint32_t GetYCount() const { return oYCount; }
         const glm::vec3& getPosition() const { return oPosition; }
-
         float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightScale * oHeightMap[x + y * oXCount]; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
 
-        void GenerateVertices(std::vector<float>& vertices);
-
         // Modifiers
+        void GenerateVertices(std::vector<float>& vertices);
         void ResetHeightMap() { oHeightMap.clear(); oHeightMap.resize(oXCount * oYCount, 0.0f); }
         void ResetHeightMap(BMPHeightMap& heightMap);
         void GenerateRandomHeightMap();
@@ -103,8 +92,6 @@ namespace BlueMarble {
         std::function<std::tuple<float, float>(int, int)> oVertexStatsCallback;
 
         Ref<BlueMarble::VertexArray> oVA;
-        Ref<BlueMarble::BufferLayout> oLayout;
-        
         // TODO: Should we actually be storing the shader here? If so, multiple allowed?
         Ref<BlueMarble::Shader> oShader;
         // TODO: multiple textures

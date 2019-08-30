@@ -151,7 +151,7 @@ private:
     float oTerrainModRadius = 3.0f;
     float oTerrainHeightScale = 0.5f;
 
-    glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.03f, 0.4f };
+    glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.03f, 0.3f };
 };
 
 class Sandbox : public BlueMarble::Application

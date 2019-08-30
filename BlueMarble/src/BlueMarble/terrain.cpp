@@ -18,6 +18,19 @@ namespace BlueMarble {
         oLocalBuffer = stbi_load(path.c_str(), &oWidth, &oHeight, &oBPP, 4);
     }
 
+    void Terrain::Init(const uint32_t xCount,
+                       const uint32_t yCount,
+                       const float spacing,
+                       const glm::vec3& position)
+    {
+        oXCount = xCount;
+        oYCount = yCount;
+        oPosition = position;
+        oSpacing = spacing;
+
+        oHeightMap.resize(oXCount * oYCount, 0.0f);
+    }
+
     void Terrain::ResetHeightMap(BMPHeightMap& heightMap)
     {
         for (int i = 0; i < oYCount && i < heightMap.oHeight; ++i)
