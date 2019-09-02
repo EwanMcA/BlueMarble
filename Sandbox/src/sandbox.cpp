@@ -6,10 +6,13 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-class ExampleLayer : public BlueMarble::Layer
+#define X_VERTICES 128
+#define Y_VERTICES 128
+
+class GameLayer : public BlueMarble::Layer
 {
 public:
-	ExampleLayer()
+	GameLayer()
         : Layer("Example"), 
           oCamera(glm::radians(45.0f),
                   (float)BlueMarble::Application::Get().GetWindow().GetWidth() / 
@@ -17,9 +20,11 @@ public:
                    0.1f, 
                    100.0f) 
 	{
-        oTerrain.Init(128, 128, 0.05f, glm::vec3{ -3.2f, -3.2f, 0.0f });
+        oCamera.Translate(0.0f, -3.2f);
+        oTerrain.Init(X_VERTICES, Y_VERTICES, 0.05f, glm::vec3{ -3.2f, -3.2f, 0.0f });
         oTerrain.ResetHeightMap(BlueMarble::BMPHeightMap("heightmap.bmp"));
         oTerrain.SetHeightScale(oTerrainHeightScale);
+        oMoisture.resize(X_VERTICES * Y_VERTICES, 0.0f);
         
         oTerrain.SetTexCoordCallback([](int x, int y) -> std::pair<float, float> {
             float xTex = (x % 2 == 0) ? 0.5f : 1.0f;
@@ -28,12 +33,45 @@ public:
         });
 
         oTerrain.SetVertexStatsCallback([this](int x, int y) -> std::tuple<float, float> {
-            return { 1.0f, 0.0f };
+            return { oMoisture[y * X_VERTICES + x], 0.0f };
         });
 
         oTerrain.Load();
-        oCamera.Translate(0.0f, -3.2f);
+
+        BlueMarble::Ref<BlueMarble::Texture2D> texture;
+        texture = BlueMarble::Texture2D::Create("assets/textures/water.png");
+        oTextures.push_back(texture);
+        texture = BlueMarble::Texture2D::Create("assets/textures/sand.png");
+        oTextures.push_back(texture);
+        texture = BlueMarble::Texture2D::Create("assets/textures/grass.png");
+        oTextures.push_back(texture);
+        texture = BlueMarble::Texture2D::Create("assets/textures/snow.png");
+        oTextures.push_back(texture);
+
     }       
+
+    void UpdateTerrain(BlueMarble::TimeStep ts)
+    {
+        unsigned int width = BlueMarble::Application::Get().GetWindow().GetWidth();
+        unsigned int height = BlueMarble::Application::Get().GetWindow().GetHeight();
+
+        if (BlueMarble::Input::IsMouseButtonPressed(0))
+        {
+            float normMouseX = BlueMarble::Input::GetMouseX() / (width * 0.5f) - 1.0f;
+            float normMouseY = BlueMarble::Input::GetMouseY() / (height * 0.5f) - 1.0f;
+            float normMouseZ = 2 * BlueMarble::Input::GetMouseZ() - 1.0f;
+
+            glm::vec3 world = oCamera.GetWorldCoords(normMouseX, normMouseY, normMouseZ);
+
+            float xRatio = (world.x - oTerrain.getPosition().x) / oTerrain.GetXWidth();
+            float yRatio = (world.y - oTerrain.getPosition().y) / oTerrain.GetYWidth();
+
+            oTerrain.AddHeight(xRatio * oTerrain.GetXCount(),
+                yRatio * oTerrain.GetYCount(),
+                oTerrainModAmount * ts, oTerrainModRadius);
+        }
+        oTerrain.SetHeightScale(oTerrainHeightScale);
+    }
 
     void OnUpdate(BlueMarble::TimeStep ts) override
     {
@@ -59,72 +97,71 @@ public:
             oCamera.Translate(0.0f, -oCameraMoveSpeed * ts);
         }
 
-        // Demo manipulating terrain height
+        if (oEditing) 
         {
-            unsigned int width = BlueMarble::Application::Get().GetWindow().GetWidth();
-            unsigned int height = BlueMarble::Application::Get().GetWindow().GetHeight();
-
-            if (BlueMarble::Input::IsMouseButtonPressed(0))
-            {
-                float normMouseX = BlueMarble::Input::GetMouseX() / (width * 0.5f) - 1.0f;
-                float normMouseY = BlueMarble::Input::GetMouseY() / (height * 0.5f) - 1.0f;
-                float normMouseZ = 2 * BlueMarble::Input::GetMouseZ() - 1.0f;
-                
-                glm::vec3 world = oCamera.GetWorldCoords(normMouseX, normMouseY, normMouseZ);
-
-                float xRatio = (world.x - oTerrain.getPosition().x)  / oTerrain.GetXWidth();
-                float yRatio = (world.y - oTerrain.getPosition().y) / oTerrain.GetYWidth();
-
-                oTerrain.AddHeight(xRatio * oTerrain.GetXCount(),
-                                   yRatio * oTerrain.GetYCount(),
-                                   oTerrainModAmount * ts, oTerrainModRadius);
-            }
+            UpdateTerrain(ts);
         }
-
-        oTerrain.SetHeightScale(oTerrainHeightScale);
         
         BlueMarble::RenderCommand::SetClearColor({ 0.4f, 0.6f, 1.0f, 1 });
         BlueMarble::RenderCommand::Clear();
 
         BlueMarble::Renderer::BeginScene(oCamera);
 
-        oTerrain.Draw(oTerrainCutoffs);
+        oTerrain.Draw(oTextures, oTerrainCutoffs);
 
         BlueMarble::Renderer::EndScene();
     }
 
     virtual void OnImGuiRender() override
     {
-        ImGui::Begin("Terrain", nullptr);
-            ImGui::SetWindowSize(ImVec2(300, 325), ImGuiCond_FirstUseEver);
-            ImGui::Text("Texture Cutoff Heights");
-            ImGui::NewLine();
-            ImGui::DragFloatRange2("Water", &oTerrainCutoffs.r, &oTerrainCutoffs.g, 0.001f);
-            ImGui::DragFloatRange2("Sand", &oTerrainCutoffs.g, &oTerrainCutoffs.b, 0.001f);
-            ImGui::DragFloatRange2("Grass", &oTerrainCutoffs.b, &oTerrainCutoffs.a, 0.001f);
-            
-            ImGui::Separator();
+        ImGui::Begin("Mode");
+        if (ImGui::RadioButton("Terrain Editor", oEditing)) {
+            oEditing = true;
+            oPlaying = false;
+        }
+        if (ImGui::RadioButton("Gameplay", oPlaying)) {
+            oEditing = false;
+            oPlaying = true;
+        }
+        ImGui::End();
 
-            ImGui::Text("Terrain Modification");
-            ImGui::NewLine();
-            ImGui::InputFloat("Change", &oTerrainModAmount, 0.5f);
-            ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
-            ImGui::InputFloat("Height Scale", &oTerrainHeightScale, 0.01f);
+        if (oEditing) {
+            RenderEditorUI();
+        }
+    }
 
-            ImGui::Separator();
+    void RenderEditorUI()
+    {
+        ImGui::Begin("Terrain");
+        ImGui::SetWindowSize(ImVec2(300, 325), ImGuiCond_FirstUseEver);
+        ImGui::Text("Texture Cutoff Heights");
+        ImGui::NewLine();
+        ImGui::DragFloatRange2("Water", &oTerrainCutoffs.r, &oTerrainCutoffs.g, 0.001f);
+        ImGui::DragFloatRange2("Sand", &oTerrainCutoffs.g, &oTerrainCutoffs.b, 0.001f);
+        ImGui::DragFloatRange2("Grass", &oTerrainCutoffs.b, &oTerrainCutoffs.a, 0.001f);
 
-            ImGui::NewLine();
-            ImGui::InputText("heightmap file (bmp)", &oHeightmapFilename);
-            if (ImGui::Button("Reset")) {
-                if (!oHeightmapFilename.empty()) {
-                    BlueMarble::BMPHeightMap hm(oHeightmapFilename);
-                    oTerrain.ResetHeightMap(hm);
-                }
-                else {
-                    oTerrain.ResetHeightMap();
-                }
-                oTerrain.RefreshVertices();
+        ImGui::Separator();
+
+        ImGui::Text("Terrain Modification");
+        ImGui::NewLine();
+        ImGui::InputFloat("Change", &oTerrainModAmount, 0.5f);
+        ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
+        ImGui::InputFloat("Height Scale", &oTerrainHeightScale, 0.01f);
+
+        ImGui::Separator();
+
+        ImGui::NewLine();
+        ImGui::InputText("heightmap file (bmp)", &oHeightmapFilename);
+        if (ImGui::Button("Reset")) {
+            if (!oHeightmapFilename.empty()) {
+                BlueMarble::BMPHeightMap hm(oHeightmapFilename);
+                oTerrain.ResetHeightMap(hm);
             }
+            else {
+                oTerrain.ResetHeightMap();
+            }
+            oTerrain.RefreshVertices();
+        }
         ImGui::End();
     }
 
@@ -137,12 +174,13 @@ public:
 	void OnEvent(BlueMarble::Event& event) override
 	{
         BlueMarble::EventDispatcher dispatcher(event);
-        dispatcher.Dispatch<BlueMarble::MouseScrollEvent>(BM_BIND_EVENT_FN(ExampleLayer::OnMouseScrollEvent));
+        dispatcher.Dispatch<BlueMarble::MouseScrollEvent>(BM_BIND_EVENT_FN(GameLayer::OnMouseScrollEvent));
 	}
 
 private:
     BlueMarble::Terrain oTerrain;
     std::string oHeightmapFilename;
+    std::vector<BlueMarble::Ref<BlueMarble::Texture2D>> oTextures;
 
     BlueMarble::GameCamera oCamera;
 
@@ -152,6 +190,10 @@ private:
     float oTerrainHeightScale = 0.5f;
 
     glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.03f, 0.3f };
+    std::vector<float> oMoisture;
+
+    bool oEditing{ true };
+    bool oPlaying{ false };
 };
 
 class Sandbox : public BlueMarble::Application
@@ -159,7 +201,7 @@ class Sandbox : public BlueMarble::Application
 public:
 	Sandbox() 
 	{
-		PushLayer(new ExampleLayer());
+		PushLayer(new GameLayer());
 	}  
 
 	~Sandbox()

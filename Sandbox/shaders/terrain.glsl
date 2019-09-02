@@ -48,7 +48,7 @@ void main()
     vec3 ambient = ambientStrength * vec3(1.0f, 1.0f, 1.0f);
 
     vec3 n = normalize(vNormal);
-    vec3 lightDir = normalize(vec3(0.0f, 0.0f, 5.0f) - vWorldPosition);
+    vec3 lightDir = normalize(vec3(0.0f, 0.0f, 15.0f) - vWorldPosition);
     float diff = max(dot(n, lightDir), 0.0);
     vec3 diffuse = diff * vec3(1.0f, 1.0f, 1.0f);
 
@@ -64,7 +64,7 @@ void main()
     } else if (vPosition.z < uTextureCutoffs.a) {
         ratio = (vPosition.z - 0.15f) / (uTextureCutoffs.a - 0.15f);
         ratio = max(0.0f, ratio);
-		texMix = mix(texture( uTexture2, vTexCoord ), vec4(0.65, 0.35, 0.0, 1.0), 0.5 - vStats.x/2);
+		texMix = (vStats.x == 1.0) ? texture( uTexture0, vTexCoord ) : texture( uTexture2, vTexCoord );
         texMix = mix(texMix, texture( uTexture3, vTexCoord ), ratio);
 	} else {
         texMix = texture( uTexture3, vTexCoord );

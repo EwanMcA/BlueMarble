@@ -29,8 +29,7 @@ namespace BlueMarble {
                   const float spacing = 1.0f,
                   const glm::vec3& position = glm::vec3(0.0f));
         void Load();
-        void Draw();
-        void Draw(glm::vec4 textureCutoffs);
+        void Draw(const std::vector<Ref<BlueMarble::Texture2D>>& textures, glm::vec4 textureCutoffs);
 
         // Getters
         float GetXWidth() const { return oXCount * oSpacing; }
@@ -61,7 +60,6 @@ namespace BlueMarble {
         }
 
         void SetShader(Ref<BlueMarble::Shader>& shader) { oShader = shader; }
-        void AddTexture(Ref<BlueMarble::Texture2D>& texture) { oTextures.push_back(texture); }
         void LoadVB();
     private:
 
@@ -94,8 +92,6 @@ namespace BlueMarble {
         Ref<BlueMarble::VertexArray> oVA;
         // TODO: Should we actually be storing the shader here? If so, multiple allowed?
         Ref<BlueMarble::Shader> oShader;
-        // TODO: multiple textures
-        std::vector<Ref<BlueMarble::Texture2D>> oTextures;
 
     };
 

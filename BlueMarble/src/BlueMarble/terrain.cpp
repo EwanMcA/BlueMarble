@@ -166,28 +166,13 @@ namespace BlueMarble {
         oVA->SetIndexBuffer(squareIB);
 
         oShader.reset(BlueMarble::Shader::Create("shaders/terrain.glsl"));
-
-        Ref<BlueMarble::Texture2D> texture;
-        texture = BlueMarble::Texture2D::Create("assets/textures/water.png");
-        oTextures.push_back(texture);
-        texture = BlueMarble::Texture2D::Create("assets/textures/sand.png");
-        oTextures.push_back(texture);
-        texture = BlueMarble::Texture2D::Create("assets/textures/grass.png");
-        oTextures.push_back(texture);
-        texture = BlueMarble::Texture2D::Create("assets/textures/snow.png");
-        oTextures.push_back(texture);
     }
 
-    void Terrain::Draw()
-    {
-        BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::translate(glm::mat4(1.0f), oPosition));
-    }
-
-    void Terrain::Draw(glm::vec4 textureCutoffs)
+    void Terrain::Draw(const std::vector<Ref<BlueMarble::Texture2D>>& textures, glm::vec4 textureCutoffs)
     {
         oShader->Bind();
         std::dynamic_pointer_cast<OpenGLShader>(oShader)->UploadUniformFloat4("uTextureCutoffs", textureCutoffs);
-        BlueMarble::Renderer::Submit(oShader, oVA, oTextures, glm::translate(glm::mat4(1.0f), oPosition));
+        BlueMarble::Renderer::Submit(oShader, oVA, textures, glm::translate(glm::mat4(1.0f), oPosition));
     }
 
     void Terrain::NormalAt(const unsigned int x, const unsigned int y, glm::vec3& normal) const
