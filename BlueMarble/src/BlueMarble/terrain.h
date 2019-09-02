@@ -90,9 +90,7 @@ namespace BlueMarble {
         std::function<std::tuple<float, float>(int, int)> oVertexStatsCallback;
 
         Ref<BlueMarble::VertexArray> oVA;
-        // TODO: Should we actually be storing the shader here? If so, multiple allowed?
         Ref<BlueMarble::Shader> oShader;
-
     };
 
 } // namespace BlueMarble

@@ -165,7 +165,7 @@ namespace BlueMarble {
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
         oVA->SetIndexBuffer(squareIB);
 
-        oShader.reset(BlueMarble::Shader::Create("shaders/terrain.glsl"));
+        oShader.reset(BlueMarble::Shader::Create("assets/shaders/terrain.glsl"));
     }
 
     void Terrain::Draw(const std::vector<Ref<BlueMarble::Texture2D>>& textures, glm::vec4 textureCutoffs)

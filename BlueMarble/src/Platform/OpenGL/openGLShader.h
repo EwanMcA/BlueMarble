@@ -3,18 +3,16 @@
 #include "BlueMarble/Renderer/shader.h"
 #include "glm/glm.hpp"
 
+// TODO: Remove
+typedef unsigned int GLenum;
+
 namespace BlueMarble {
 
     class OpenGLShader : public Shader
     {
     public:
-        // The Shader object will have both of these (they are just for parsing)
-        enum class ShaderType
-        {
-            NONE = -1, VERTEX = 0, FRAGMENT = 1
-        };
-
-        OpenGLShader(const std::string& filename);
+        OpenGLShader(const std::string& filepath);
+        OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
         virtual ~OpenGLShader();
 
         void CreateShader(const std::string& vertexSrc, const std::string& fragmentSrc);
@@ -32,9 +30,12 @@ namespace BlueMarble {
         void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
     private:
-        std::tuple<std::string, std::string> OpenGLShader::ParseShader(const std::string& filepath);
         uint32_t GetUniformLocation(const std::string& name) const;
 
+    private:
+        std::string ReadFile(const std::string& filepath);
+        std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
+        void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
     private:
         uint32_t oRendererID;
         mutable std::unordered_map<std::string, uint32_t> oUniformLocationCache;
