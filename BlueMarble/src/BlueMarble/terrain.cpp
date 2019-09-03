@@ -10,6 +10,12 @@
 
 namespace BlueMarble {
     
+    bool WithinRadius(const int x, const int y, const int i, const int j, const int radius)
+    {
+        float dx = abs(j - (int)x);
+        float dy = abs(i - (int)y);
+        return sqrt(dx * dx + dy * dy) < radius;
+    }
     
     BMPHeightMap::BMPHeightMap(const std::string& path)
         : oFilePath(path), oLocalBuffer(nullptr), oWidth(0), oHeight(0), oBPP(0)
@@ -124,14 +130,12 @@ namespace BlueMarble {
 
     void Terrain::AddHeight(const int x, const int y, const float amount, const int radius)
     {
+        // loops form a square, so there is an additional check for circular radius
         for (int i = std::max(0, y - radius); i < y + radius && i < (int) oYCount; ++i)
         {
             for (int j = std::max(0, x - radius); j < x + radius && j < (int) oXCount; ++j)
             {
-                float dx = abs(j - (int)x);
-                float dy = abs(i - (int)y);
-                float dist = sqrt(dx*dx + dy*dy);
-                if (dist < radius)
+                if (WithinRadius(x, y, i, j, radius))
                     oHeightMap[j + i * oXCount] += amount;
             }
         }
@@ -140,6 +144,29 @@ namespace BlueMarble {
                         std::max(0, y - radius), 
                         std::min(x + radius, (int)oXCount), 
                         std::min(y + radius, (int)oYCount));
+    }
+
+    void Terrain::SmoothHeight(const int x, const int y, const int radius)
+    {
+        for (int i = std::max(0, y - radius); i < y + radius && i < (int)oYCount; ++i)
+        {
+            for (int j = std::max(0, x - radius); j < x + radius && j < (int)oXCount; ++j)
+            {
+                if (WithinRadius(x, y, i, j, radius)) {
+                    float heightSum{ 0 };
+                    heightSum += (j > 0) ? oHeightMap[j - 1 + i * oXCount] : 0;
+                    heightSum += (i > 0) ? oHeightMap[j + (i - 1) * oXCount] : 0;
+                    heightSum += (j < oXCount - 1) ? oHeightMap[j + 1 + i * oXCount] : 0;
+                    heightSum += (i < oYCount - 1) ? oHeightMap[j + (i + 1) * oXCount] : 0;
+                    oHeightMap[j + i * oXCount] += ((heightSum / 4) - oHeightMap[j + i * oXCount]) * 0.1f;
+                }
+            }
+        }
+
+        RefreshVertices(std::max(0, x - radius),
+            std::max(0, y - radius),
+            std::min(x + radius, (int)oXCount),
+            std::min(y + radius, (int)oYCount));
     }
 
     void Terrain::Load()

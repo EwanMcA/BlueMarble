@@ -12,6 +12,18 @@
 class GameLayer : public BlueMarble::Layer
 {
 public:
+
+    typedef enum GAME_MODE {
+        EDITING = 0,
+        PLAYING = 1
+    };
+
+    typedef enum EDIT_MODE {
+        ADD = 0,
+        SUBTRACT = 1,
+        SMOOTH = 2
+    };
+
 	GameLayer()
         : Layer("Example"), 
           oCamera(glm::radians(45.0f),
@@ -65,10 +77,21 @@ public:
 
             float xRatio = (world.x - oTerrain.getPosition().x) / oTerrain.GetXWidth();
             float yRatio = (world.y - oTerrain.getPosition().y) / oTerrain.GetYWidth();
+            if (oEditMode == SMOOTH) 
+            {
+                oTerrain.SmoothHeight(xRatio * oTerrain.GetXCount(),
+                                      yRatio * oTerrain.GetYCount(),
+                                      oTerrainModRadius);
+            }
+            else
+            {
+                int sign = (oEditMode == ADD) ? 1 : -1;
+                oTerrain.AddHeight(xRatio * oTerrain.GetXCount(),
+                                   yRatio * oTerrain.GetYCount(),
+                                   sign * oTerrainModAmount * ts, 
+                                   oTerrainModRadius);
+            }
 
-            oTerrain.AddHeight(xRatio * oTerrain.GetXCount(),
-                yRatio * oTerrain.GetYCount(),
-                oTerrainModAmount * ts, oTerrainModRadius);
         }
         oTerrain.SetHeightScale(oTerrainHeightScale);
     }
@@ -97,7 +120,7 @@ public:
             oCamera.Translate(0.0f, -oCameraMoveSpeed * ts);
         }
 
-        if (oEditing) 
+        if (oMode == EDITING)
         {
             UpdateTerrain(ts);
         }
@@ -115,17 +138,12 @@ public:
     virtual void OnImGuiRender() override
     {
         ImGui::Begin("Mode");
-        if (ImGui::RadioButton("Terrain Editor", oEditing)) {
-            oEditing = true;
-            oPlaying = false;
-        }
-        if (ImGui::RadioButton("Gameplay", oPlaying)) {
-            oEditing = false;
-            oPlaying = true;
-        }
+        ImGui::RadioButton("Terrain Editor", (int*)&oMode, EDITING);
+        ImGui::RadioButton("Gameplay", (int*)&oMode, PLAYING);
         ImGui::End();
 
-        if (oEditing) {
+        if (oMode == EDITING) 
+        {
             RenderEditorUI();
         }
     }
@@ -133,7 +151,7 @@ public:
     void RenderEditorUI()
     {
         ImGui::Begin("Terrain");
-        ImGui::SetWindowSize(ImVec2(300, 325), ImGuiCond_FirstUseEver);
+        ImGui::SetWindowSize(ImVec2(350, 375), ImGuiCond_FirstUseEver);
         ImGui::Text("Texture Cutoff Heights");
         ImGui::NewLine();
         ImGui::DragFloatRange2("Water", &oTerrainCutoffs.r, &oTerrainCutoffs.g, 0.001f);
@@ -144,7 +162,14 @@ public:
 
         ImGui::Text("Terrain Modification");
         ImGui::NewLine();
-        ImGui::InputFloat("Change", &oTerrainModAmount, 0.5f);
+
+        ImGui::RadioButton("Add", (int*)&oEditMode, ADD);
+        ImGui::RadioButton("Subtract", (int*)&oEditMode, SUBTRACT);
+        ImGui::RadioButton("Smooth", (int*)&oEditMode, SMOOTH);
+        ImGui::NewLine();
+
+        if (oEditMode == 1 || oEditMode == 2)
+            ImGui::InputFloat("Change", &oTerrainModAmount, 0.5f);
         ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
         ImGui::InputFloat("Height Scale", &oTerrainHeightScale, 0.01f);
 
@@ -192,8 +217,8 @@ private:
     glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.03f, 0.3f };
     std::vector<float> oMoisture;
 
-    bool oEditing{ true };
-    bool oPlaying{ false };
+    GAME_MODE oMode{ EDITING };
+    EDIT_MODE oEditMode{ ADD };
 };
 
 class Sandbox : public BlueMarble::Application
