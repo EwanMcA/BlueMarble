@@ -13,12 +13,12 @@ class GameLayer : public BlueMarble::Layer
 {
 public:
 
-    typedef enum GAME_MODE {
+    enum GAME_MODE {
         EDITING = 0,
         PLAYING = 1
     };
 
-    typedef enum EDIT_MODE {
+    enum EDIT_MODE {
         ADD = 0,
         SUBTRACT = 1,
         SMOOTH = 2
