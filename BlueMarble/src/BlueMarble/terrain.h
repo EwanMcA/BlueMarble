@@ -48,18 +48,15 @@ namespace BlueMarble {
         void GenerateRandomHeightMap();
         void RefreshVertices() { RefreshVertices(0, 0, oXCount, oYCount); }
         void RefreshVertices(int xMin, int yMin, int xMax, int yMax);
-        void AddHeight(const int x, const int y, const float amount, const int radius);
-        void SmoothHeight(const int x, const int y, const int radius);
+        void LayerAdd(const int layerIx, const int x, const int y, const float amount, const int radius);
+        void LayerSmooth(const int layerIx, const int x, const int y, const int radius);
         void SetHeightScale(const float scale) { oHeightScale = scale; }
         void SetTexCoordCallback(const std::function<std::pair<float, float>(int, int)>& callback) 
         {
             oTexCoordCallback = callback;
         }
-        void SetVertexStatsCallback(const std::function<std::tuple<float, float>(int, int)>& callback)
-        {
-            oVertexStatsCallback = callback;
-        }
 
+        void AddDataLayer(Ref<std::vector<float>> layer) { oDataLayers.push_back(layer); }
         void SetShader(Ref<BlueMarble::Shader>& shader) { oShader = shader; }
         void LoadVB();
     private:
@@ -87,8 +84,8 @@ namespace BlueMarble {
             return { xTex, yTex };
         };
 
-        // (x, y) -> (stat1, stat2)
-        std::function<std::tuple<float, float>(int, int)> oVertexStatsCallback;
+        // Layers have a data point for each vertex, and are submitted to the shader in the vertex buffer
+        std::vector<Ref<std::vector<float>>> oDataLayers;
 
         Ref<BlueMarble::VertexArray> oVA;
         Ref<BlueMarble::Shader> oShader;

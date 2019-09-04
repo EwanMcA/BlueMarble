@@ -35,6 +35,7 @@ namespace BlueMarble {
         oSpacing = spacing;
 
         oHeightMap.resize(oXCount * oYCount, 0.0f);
+        oDataLayers.push_back(Ref<std::vector<float>>(&oHeightMap));
     }
 
     void Terrain::ResetHeightMap(BMPHeightMap& heightMap)
@@ -92,11 +93,8 @@ namespace BlueMarble {
                 }
                 vertices.insert(vertices.end(), { xTex, yTex });
 
-                float stat1{ 0.0f }, stat2{ 0.0f };
-                if (oVertexStatsCallback) {
-                    std::tie(stat1, stat2) = oVertexStatsCallback(x, y);
-                }
-                vertices.insert(vertices.end(), { stat1, stat2 });
+                for (int i = 1; i < oDataLayers.size(); ++i)
+                    vertices.push_back((*oDataLayers[i])[x + y * oXCount]);
             }
         }
     }
@@ -115,20 +113,17 @@ namespace BlueMarble {
                 oVertices[vbIndex + 3] = normal.x;
                 oVertices[vbIndex + 4] = normal.y;
                 oVertices[vbIndex + 5] = normal.z;
+                // Skip tex coords as they are constant
 
-                float stat1{ 0 }, stat2{ 0 };
-                if (oVertexStatsCallback) {
-                    std::tie(stat1, stat2) = oVertexStatsCallback(x, y);
-                }
-                oVertices[vbIndex + 8] = stat1;
-                oVertices[vbIndex + 9] = stat2;
+                for (int i = 1; i < oDataLayers.size(); ++i)
+                    oVertices[vbIndex + 7 + i] = (*oDataLayers[i])[x + y * oXCount];
             }
         }
 
         LoadVB();
     }
 
-    void Terrain::AddHeight(const int x, const int y, const float amount, const int radius)
+    void Terrain::LayerAdd(const int layerIx, const int x, const int y, const float amount, const int radius)
     {
         // loops form a square, so there is an additional check for circular radius
         for (int i = std::max(0, y - radius); i < y + radius && i < (int) oYCount; ++i)
@@ -136,7 +131,7 @@ namespace BlueMarble {
             for (int j = std::max(0, x - radius); j < x + radius && j < (int) oXCount; ++j)
             {
                 if (WithinRadius(x, y, i, j, radius))
-                    oHeightMap[j + i * oXCount] += amount;
+                    (*oDataLayers[layerIx])[j + i * oXCount] += amount;
             }
         }
 
@@ -146,19 +141,20 @@ namespace BlueMarble {
                         std::min(y + radius, (int)oYCount));
     }
 
-    void Terrain::SmoothHeight(const int x, const int y, const int radius)
+    void Terrain::LayerSmooth(const int layerIx, const int x, const int y, const int radius)
     {
         for (int i = std::max(0, y - radius); i < y + radius && i < (int)oYCount; ++i)
         {
             for (int j = std::max(0, x - radius); j < x + radius && j < (int)oXCount; ++j)
             {
                 if (WithinRadius(x, y, i, j, radius)) {
-                    float heightSum{ 0 };
-                    heightSum += (j > 0) ? oHeightMap[j - 1 + i * oXCount] : 0;
-                    heightSum += (i > 0) ? oHeightMap[j + (i - 1) * oXCount] : 0;
-                    heightSum += (j < oXCount - 1) ? oHeightMap[j + 1 + i * oXCount] : 0;
-                    heightSum += (i < oYCount - 1) ? oHeightMap[j + (i + 1) * oXCount] : 0;
-                    oHeightMap[j + i * oXCount] += ((heightSum / 4) - oHeightMap[j + i * oXCount]) * 0.1f;
+                    float sum{ 0 };
+                    sum += (j > 0) ? (*oDataLayers[layerIx])[j - 1 + i * oXCount] : 0;
+                    sum += (i > 0) ? (*oDataLayers[layerIx])[j + (i - 1) * oXCount] : 0;
+                    sum += (j < oXCount - 1) ? (*oDataLayers[layerIx])[j + 1 + i * oXCount] : 0;
+                    sum += (i < oYCount - 1) ? (*oDataLayers[layerIx])[j + (i + 1) * oXCount] : 0;
+                    (*oDataLayers[layerIx])[j + i * oXCount] += 
+                        ((sum / 4) - (*oDataLayers[layerIx])[j + i * oXCount]) * 0.1f;
                 }
             }
         }

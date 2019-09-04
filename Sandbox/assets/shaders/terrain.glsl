@@ -54,7 +54,6 @@ void main()
 
     vec4 texMix;
     float ratio;
-
     if (vPosition.z < uTextureCutoffs.g) {
         ratio = (vPosition.z - uTextureCutoffs.r) / (uTextureCutoffs.g - uTextureCutoffs.r);
         texMix = mix(texture( uTexture0, vTexCoord ), texture( uTexture1, vTexCoord ), ratio);
@@ -62,9 +61,9 @@ void main()
         ratio = (vPosition.z - uTextureCutoffs.g) / (uTextureCutoffs.b - uTextureCutoffs.g);
         texMix = mix(texture( uTexture1, vTexCoord ), texture( uTexture2, vTexCoord ), ratio);
     } else if (vPosition.z < uTextureCutoffs.a) {
-        ratio = (vPosition.z - 0.15f) / (uTextureCutoffs.a - 0.15f);
-        ratio = max(0.0f, ratio);
-		texMix = (vStats.x == 1.0) ? texture( uTexture0, vTexCoord ) : texture( uTexture2, vTexCoord );
+        ratio = (vPosition.z - uTextureCutoffs.b) / (uTextureCutoffs.a - uTextureCutoffs.b);
+        ratio = ratio * ratio;
+        texMix = (vStats.x >= 1.0) ? texture( uTexture0, vTexCoord ) : texture( uTexture2, vTexCoord );
         texMix = mix(texMix, texture( uTexture3, vTexCoord ), ratio);
 	} else {
         texMix = texture( uTexture3, vTexCoord );
