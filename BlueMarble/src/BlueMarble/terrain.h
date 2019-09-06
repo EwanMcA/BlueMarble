@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include "BlueMarble/entity.h"
 #include "BlueMarble/Renderer/shader.h"
 #include "BlueMarble/Renderer/vertexArray.h"
 #include "BlueMarble/Renderer/texture.h"
@@ -18,18 +19,17 @@ namespace BlueMarble {
         int oWidth, oHeight, oBPP;
     };
 
-    class Terrain
+    class Terrain : public Entity
     {
     public:
         Terrain()
-        : oXCount(0), oYCount(0), oSpacing(0), oPosition(glm::vec3(0.0f)) {}
+        : oXCount(0), oYCount(0), oSpacing(0) {}
 
         void Init(const uint32_t xCount,
                   const uint32_t yCount,
                   const float spacing = 1.0f,
                   const glm::vec3& position = glm::vec3(0.0f));
-        void Load();
-        void Draw(const std::vector<Ref<BlueMarble::Texture2D>>& textures, glm::vec4 textureCutoffs);
+        void Load(Ref<Material> material);
 
         // Getters
         float GetXWidth() const { return oXCount * oSpacing; }
@@ -37,9 +37,9 @@ namespace BlueMarble {
         float GetSpacing() const { return oSpacing; }
         uint32_t GetXCount() const { return oXCount; }
         uint32_t GetYCount() const { return oYCount; }
-        const glm::vec3& getPosition() const { return oPosition; }
         float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightScale * oHeightMap[x + y * oXCount]; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
+        const glm::vec3& GetPosition() const { return oPosition; }
 
         // Modifiers
         void GenerateVertices(std::vector<float>& vertices);
@@ -57,7 +57,6 @@ namespace BlueMarble {
         }
 
         void AddDataLayer(Ref<std::vector<float>> layer) { oDataLayers.push_back(layer); }
-        void SetShader(Ref<BlueMarble::Shader>& shader) { oShader = shader; }
         void LoadVB();
     private:
 
@@ -65,8 +64,8 @@ namespace BlueMarble {
         unsigned int oXCount;
         unsigned int oYCount;
         float oSpacing;
-        glm::vec3 oPosition;
         float oHeightScale = 0.25f;
+        glm::vec3 oPosition;
 
         std::vector<float> oHeightMap;
         std::vector<float> oVertices;
@@ -88,7 +87,6 @@ namespace BlueMarble {
         std::vector<Ref<std::vector<float>>> oDataLayers;
 
         Ref<BlueMarble::VertexArray> oVA;
-        Ref<BlueMarble::Shader> oShader;
     };
 
 } // namespace BlueMarble

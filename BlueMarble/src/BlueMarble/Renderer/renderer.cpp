@@ -26,25 +26,20 @@ namespace BlueMarble {
 
     }
 
-    void Renderer::Submit(const Ref<Shader>& shader, 
+    void Renderer::Submit(const Ref<Material>& material,
                           const Ref<VertexArray>& vertexArray,
-                          const std::vector<Ref<Texture2D>>& textures,
                           const glm::mat4& transform)
     {
-        shader->Bind();
         // TODO: Get rid of these dynamic casts when API agnostic material system is properly implemented
         // TODO: We don't need to do this on every call... should batch it
-        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("uViewProjection", cSceneData->ProjectionViewMatrix);
+        material->SetMat4("uViewProjection", cSceneData->ProjectionViewMatrix);
         // This is specific to the object, so it does need to be called every time
-        std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("uTransform", transform);
+        material->SetMat4("uTransform", transform);
+        material->UploadUniforms();
+        material->UploadTextures();
 
         vertexArray->Bind();
-        for (int i = 0; i < textures.size(); ++i) {
-            textures[i]->Bind(i);
-            std::string name{ "uTexture" };
-            name += '0' + i;
-            std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt(name, i);
-        }
+        
         RenderCommand::DrawIndexed(vertexArray);
     }
 

@@ -40,6 +40,7 @@ uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
 uniform sampler2D uTexture3;
+uniform sampler2D uTexture4;
 uniform vec4 uTextureCutoffs;
 
 void main()
@@ -54,6 +55,14 @@ void main()
 
     vec4 texMix;
     float ratio;
+
+    // TODO: Biomes
+    /*                Zone 0    Zone 1    Zone 2          Zone 3
+        Default:      Water     Beach     Grassland       Snow
+        LowM, LowH:                       Rocky desert    Rock
+        LowM, HighH:                      Sandy desert    Rock
+        HighM, HighH:                     Rainforest      Rock
+    */
     if (vPosition.z < uTextureCutoffs.g) {
         ratio = (vPosition.z - uTextureCutoffs.r) / (uTextureCutoffs.g - uTextureCutoffs.r);
         texMix = mix(texture( uTexture0, vTexCoord ), texture( uTexture1, vTexCoord ), ratio);

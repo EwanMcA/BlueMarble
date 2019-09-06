@@ -21,6 +21,7 @@ namespace BlueMarble {
 		inline const std::string& GetName() const { return oDebugName; }
 	protected:
 		std::string oDebugName;
+
 	};
 
 }

@@ -15,8 +15,6 @@ namespace BlueMarble {
         OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
         virtual ~OpenGLShader();
 
-        void CreateShader(const std::string& vertexSrc, const std::string& fragmentSrc);
-
         virtual void Bind() const override;
         virtual void Unbind() const override;
 

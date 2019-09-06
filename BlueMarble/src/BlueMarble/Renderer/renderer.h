@@ -1,7 +1,8 @@
 #pragma once
 
-#include "renderCommand.h"
 #include "camera.h"
+#include "material.h"
+#include "renderCommand.h"
 #include "shader.h"
 #include "texture.h"
 
@@ -17,9 +18,8 @@ namespace BlueMarble {
         static void BeginScene(Camera& camera); 
         static void EndScene();
         
-        static void Submit(const Ref<Shader>& shader,
+        static void Submit(const Ref<Material>& material,
                            const Ref<VertexArray>& vertexArray,
-                           const std::vector<Ref<Texture2D>>& textures,
                            const glm::mat4& transform = glm::mat4(1.0f));
 
         inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }

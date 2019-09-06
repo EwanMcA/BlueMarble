@@ -131,6 +131,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\gameLayer.h" />
+    <ClInclude Include="src\renderLayer.h" />
+    <ClInclude Include="src\sandbox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GameLayer.cpp" />
+    <ClCompile Include="src\RenderLayer.cpp" />
     <ClCompile Include="src\sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>

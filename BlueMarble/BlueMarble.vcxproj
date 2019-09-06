@@ -152,12 +152,15 @@
     <ClInclude Include="src\BlueMarble\Renderer\buffer.h" />
     <ClInclude Include="src\BlueMarble\Renderer\camera.h" />
     <ClInclude Include="src\BlueMarble\Renderer\graphicsContext.h" />
+    <ClInclude Include="src\BlueMarble\Renderer\material.h" />
     <ClInclude Include="src\BlueMarble\Renderer\renderer.h" />
     <ClInclude Include="src\BlueMarble\Renderer\shader.h" />
     <ClInclude Include="src\BlueMarble\Renderer\texture.h" />
     <ClInclude Include="src\BlueMarble\Renderer\vertexArray.h" />
     <ClInclude Include="src\BlueMarble\application.h" />
+    <ClInclude Include="src\BlueMarble\component.h" />
     <ClInclude Include="src\BlueMarble\core.h" />
+    <ClInclude Include="src\BlueMarble\entity.h" />
     <ClInclude Include="src\BlueMarble\entryPoint.h" />
     <ClInclude Include="src\BlueMarble\input.h" />
     <ClInclude Include="src\BlueMarble\keyCodes.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="src\Platform\OpenGL\glError.h" />
     <ClInclude Include="src\Platform\OpenGL\openGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\openGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\openGLMaterial.h" />
     <ClInclude Include="src\Platform\OpenGL\openGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\openGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGL\openGLVertexArray.h" />
@@ -547,6 +551,7 @@
     <ClCompile Include="src\BlueMarble\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\BlueMarble\Renderer\buffer.cpp" />
     <ClCompile Include="src\BlueMarble\Renderer\camera.cpp" />
+    <ClCompile Include="src\BlueMarble\Renderer\material.cpp" />
     <ClCompile Include="src\BlueMarble\Renderer\renderCommand.cpp" />
     <ClCompile Include="src\BlueMarble\Renderer\renderer.cpp" />
     <ClCompile Include="src\BlueMarble\Renderer\shader.cpp" />
@@ -560,6 +565,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\openGLBuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\openGLMaterial.cpp" />
     <ClCompile Include="src\Platform\OpenGL\openGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\openGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\openGLVertexArray.cpp" />

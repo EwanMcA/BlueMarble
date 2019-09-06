@@ -1,5 +1,7 @@
 #pragma once
 
+#include "BlueMarble/log.h"
+
 namespace BlueMarble {
 
     // Could make this a uint8_t if we really want to pack it tighter

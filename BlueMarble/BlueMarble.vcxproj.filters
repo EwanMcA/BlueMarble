@@ -90,6 +90,9 @@
     <ClInclude Include="src\BlueMarble\Renderer\graphicsContext.h">
       <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlueMarble\Renderer\material.h">
+      <Filter>src\BlueMarble\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\BlueMarble\Renderer\renderer.h">
       <Filter>src\BlueMarble\Renderer</Filter>
     </ClInclude>
@@ -105,7 +108,13 @@
     <ClInclude Include="src\BlueMarble\application.h">
       <Filter>src\BlueMarble</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlueMarble\component.h">
+      <Filter>src\BlueMarble</Filter>
+    </ClInclude>
     <ClInclude Include="src\BlueMarble\core.h">
+      <Filter>src\BlueMarble</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BlueMarble\entity.h">
       <Filter>src\BlueMarble</Filter>
     </ClInclude>
     <ClInclude Include="src\BlueMarble\entryPoint.h">
@@ -145,6 +154,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\openGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\openGLMaterial.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\openGLShader.h">
@@ -1271,6 +1283,9 @@
     <ClCompile Include="src\BlueMarble\Renderer\camera.cpp">
       <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\BlueMarble\Renderer\material.cpp">
+      <Filter>src\BlueMarble\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\BlueMarble\Renderer\renderCommand.cpp">
       <Filter>src\BlueMarble\Renderer</Filter>
     </ClCompile>
@@ -1308,6 +1323,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\openGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\openGLMaterial.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\openGLShader.cpp">

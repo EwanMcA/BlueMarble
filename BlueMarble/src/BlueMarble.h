@@ -29,4 +29,5 @@
 #include "BlueMarble/terrain.h"
 
 // Entry Point ---------------------------
-#include "BlueMarble/entryPoint.h"
+// TODO: Have to include this manually at the moment
+//#include "BlueMarble/entryPoint.h"

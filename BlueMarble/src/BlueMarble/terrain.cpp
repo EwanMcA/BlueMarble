@@ -31,8 +31,10 @@ namespace BlueMarble {
     {
         oXCount = xCount;
         oYCount = yCount;
-        oPosition = position;
         oSpacing = spacing;
+        oPosition = position;
+
+        SetComponent<COMPONENT_TYPE::TRANSFORM>(std::make_shared<TransformComponent>(position));
 
         oHeightMap.resize(oXCount * oYCount, 0.0f);
         oDataLayers.push_back(Ref<std::vector<float>>(&oHeightMap));
@@ -58,11 +60,14 @@ namespace BlueMarble {
         if (oXCount == oYCount)
         {
             // TODO: Diamond Square Algorithm
+            //       or noise functions?
         }
     }
 
     void Terrain::LoadVB()
     {
+        // TODO: Expose layout, to keep terrain agnostic to the amount of layer data
+
         Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(oVertices.data(), oVertices.size() * sizeof(float)));
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
@@ -70,6 +75,8 @@ namespace BlueMarble {
                               { BlueMarble::ShaderDataType::Float2, "aTexCoord" },
                               { BlueMarble::ShaderDataType::Float2, "aStats" } });
         oVA->SetVertexBuffer(squareVB);
+
+        SetComponent<COMPONENT_TYPE::VERTEX_ARRAY>(std::make_shared<VertexArrayComponent>(oVA));
     }
 
     void Terrain::GenerateVertices(std::vector<float>& vertices)
@@ -131,7 +138,10 @@ namespace BlueMarble {
             for (int j = std::max(0, x - radius); j < x + radius && j < (int) oXCount; ++j)
             {
                 if (WithinRadius(x, y, i, j, radius))
+                {
                     (*oDataLayers[layerIx])[j + i * oXCount] += amount;
+                    (*oDataLayers[layerIx])[j + i * oXCount] = std::clamp((*oDataLayers[layerIx])[j + i * oXCount], 0.0f, 1.0f);
+                }
             }
         }
 
@@ -165,7 +175,7 @@ namespace BlueMarble {
             std::min(y + radius, (int)oYCount));
     }
 
-    void Terrain::Load()
+    void Terrain::Load(Ref<Material> material)
     {
         oVA.reset(BlueMarble::VertexArray::Create());
 
@@ -188,14 +198,7 @@ namespace BlueMarble {
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
         oVA->SetIndexBuffer(squareIB);
 
-        oShader.reset(BlueMarble::Shader::Create("assets/shaders/terrain.glsl"));
-    }
-
-    void Terrain::Draw(const std::vector<Ref<BlueMarble::Texture2D>>& textures, glm::vec4 textureCutoffs)
-    {
-        oShader->Bind();
-        std::dynamic_pointer_cast<OpenGLShader>(oShader)->UploadUniformFloat4("uTextureCutoffs", textureCutoffs);
-        BlueMarble::Renderer::Submit(oShader, oVA, textures, glm::translate(glm::mat4(1.0f), oPosition));
+        SetComponent<COMPONENT_TYPE::MATERIAL>(std::make_shared<MaterialComponent>(material));
     }
 
     void Terrain::NormalAt(const unsigned int x, const unsigned int y, glm::vec3& normal) const

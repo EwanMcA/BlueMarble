@@ -186,6 +186,7 @@ namespace BlueMarble {
         GLint location = GetUniformLocation(name.c_str());
         glUniform3f(location, values.x, values.y, values.z);
     }
+
     void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& values)
     {
         GLint location = GetUniformLocation(name);
