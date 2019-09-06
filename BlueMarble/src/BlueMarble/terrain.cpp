@@ -2,8 +2,6 @@
 
 #include "terrain.h"
 #include "BlueMarble/Renderer/renderer.h"
-// TODO: Remove this, to make terrain API agnostic
-#include "Platform/OpenGL/openGLShader.h"
 
 #include "stb_image.h"
 #include "glm/gtc/matrix_transform.hpp"

@@ -8,8 +8,6 @@
 
 namespace BlueMarble {
 
-
-
     class OpenGLMaterial : public Material
     {
     public:

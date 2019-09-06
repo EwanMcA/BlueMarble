@@ -1,8 +1,6 @@
 #include "bmpch.h"
 #include "renderer.h"
 
-#include "Platform/OpenGL/openGLShader.h"
-
 namespace BlueMarble {
 
     Renderer::SceneData* Renderer::cSceneData = new Renderer::SceneData;

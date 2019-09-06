@@ -40,7 +40,6 @@ uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
 uniform sampler2D uTexture3;
-uniform sampler2D uTexture4;
 uniform vec4 uTextureCutoffs;
 
 void main()
