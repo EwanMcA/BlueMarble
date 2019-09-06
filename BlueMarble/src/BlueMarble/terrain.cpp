@@ -34,8 +34,8 @@ namespace BlueMarble {
 
         SetComponent<COMPONENT_TYPE::TRANSFORM>(std::make_shared<TransformComponent>(position));
 
-        oHeightMap.resize(oXCount * oYCount, 0.0f);
-        oDataLayers.push_back(Ref<std::vector<float>>(&oHeightMap));
+        oHeightMap = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.0f);
+        oDataLayers.push_back(oHeightMap);
     }
 
     void Terrain::ResetHeightMap(BMPHeightMap& heightMap)
@@ -48,7 +48,7 @@ namespace BlueMarble {
                 int vertex = i * oXCount + j;
                 int height = heightMap.oLocalBuffer[pixel * 4];
                 
-                oHeightMap[vertex] = (height / 255.0f);
+                (*oHeightMap)[vertex] = (height / 255.0f);
             }
         }
     }

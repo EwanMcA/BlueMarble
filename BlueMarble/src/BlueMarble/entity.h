@@ -10,7 +10,7 @@ namespace BlueMarble {
     {
     public:
         Entity() = default;
-        virtual ~Entity() {}
+        virtual ~Entity() = default;
 
         long GetID() { return oID; }
 

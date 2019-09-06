@@ -25,6 +25,8 @@ namespace BlueMarble {
         Terrain()
         : oXCount(0), oYCount(0), oSpacing(0) {}
 
+        virtual ~Terrain() = default;
+
         void Init(const uint32_t xCount,
                   const uint32_t yCount,
                   const float spacing = 1.0f,
@@ -37,13 +39,13 @@ namespace BlueMarble {
         float GetSpacing() const { return oSpacing; }
         uint32_t GetXCount() const { return oXCount; }
         uint32_t GetYCount() const { return oYCount; }
-        float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightScale * oHeightMap[x + y * oXCount]; }
+        float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightScale * (*oHeightMap)[x + y * oXCount]; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
         const glm::vec3& GetPosition() const { return oPosition; }
 
         // Modifiers
         void GenerateVertices(std::vector<float>& vertices);
-        void ResetHeightMap() { oHeightMap.clear(); oHeightMap.resize(oXCount * oYCount, 0.0f); }
+        void ResetHeightMap() { oHeightMap->clear(); oHeightMap->resize(oXCount * oYCount, 0.0f); }
         void ResetHeightMap(BMPHeightMap& heightMap);
         void GenerateRandomHeightMap();
         void RefreshVertices() { RefreshVertices(0, 0, oXCount, oYCount); }
@@ -67,7 +69,7 @@ namespace BlueMarble {
         float oHeightScale = 0.25f;
         glm::vec3 oPosition;
 
-        std::vector<float> oHeightMap;
+        Ref<std::vector<float>> oHeightMap;
         std::vector<float> oVertices;
 
         // TODO: Generalise this callback system so that everything beyond positions/normals comes from the 

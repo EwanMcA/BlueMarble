@@ -35,11 +35,14 @@ public:
 
     GameLayer(std::shared_ptr<BlueMarble::GameCamera> camera,
         std::shared_ptr<std::vector<BlueMarble::Ref<BlueMarble::Entity>>> entities);
+
+    virtual ~GameLayer() = default;
         
     virtual void OnUpdate(BlueMarble::TimeStep ts) override;
     virtual void OnImGuiRender() override;
     virtual void OnEvent(BlueMarble::Event& event) override;
 
+    void CreateTerrain();
     void UpdateTerrain(BlueMarble::TimeStep ts);
     void RenderEditorUI();
     bool OnMouseScrollEvent(BlueMarble::MouseScrollEvent& event);
@@ -47,7 +50,7 @@ public:
 private:
     std::shared_ptr<std::vector<BlueMarble::Ref<BlueMarble::Entity>>> oEntities;
 
-    BlueMarble::Terrain oTerrain;
+    BlueMarble::Ref<BlueMarble::Terrain> oTerrain;
     std::string oHeightmapFilename;
 
     std::shared_ptr<BlueMarble::GameCamera> oCamera;
@@ -58,8 +61,8 @@ private:
     float oTerrainHeightScale = 0.5f;
 
     glm::vec4 oTerrainCutoffs = { 0.0f, 0.015f, 0.03f, 0.3f };
-    std::vector<float> oMoisture;
-    std::vector<float> oHeat;
+    BlueMarble::Ref<std::vector<float>> oMoisture;
+    BlueMarble::Ref<std::vector<float>> oHeat;
 
     GAME_MODE oMode{ EDITING };
     DATA_LAYER oEditLayer{ HEIGHT };

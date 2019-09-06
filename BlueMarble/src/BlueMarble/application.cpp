@@ -29,10 +29,6 @@ namespace BlueMarble {
         PushOverlay(oImGuiLayer);
 	}
 
-	Application::~Application()
-	{
-	}
-	
 	void Application::PushLayer(Layer* layer)
 	{
 		oLayerStack.PushLayer(layer);

@@ -9,21 +9,25 @@ class Sandbox : public BlueMarble::Application
 {
 public:
     Sandbox()
-        : oCamera(glm::radians(45.0f),
-                 (float)BlueMarble::Application::Get().GetWindow().GetWidth() /
-                 (float)BlueMarble::Application::Get().GetWindow().GetHeight(),
-                 0.1f,
-                 100.0f)
+        : oCamera(std::make_shared<BlueMarble::GameCamera>(
+                     glm::radians(45.0f),
+                     (float)BlueMarble::Application::Get().GetWindow().GetWidth() /
+                     (float)BlueMarble::Application::Get().GetWindow().GetHeight(),
+                     0.1f,
+                     100.0f))
     {
-        PushLayer(new GameLayer(std::shared_ptr<BlueMarble::GameCamera>(&oCamera),
-            std::shared_ptr<std::vector<BlueMarble::Ref<BlueMarble::Entity>>>(&oEntities)));
-        PushLayer(new RenderLayer(std::shared_ptr<BlueMarble::GameCamera>(&oCamera),
-            std::shared_ptr<std::vector<BlueMarble::Ref<BlueMarble::Entity>>>(&oEntities)));
+        oEntities = std::make_shared<std::vector<BlueMarble::Ref<BlueMarble::Entity>>>();
+
+        PushLayer(new GameLayer(oCamera, oEntities));
+        PushLayer(new RenderLayer(oCamera, oEntities));
     }
 
-    ~Sandbox() = default;
+    virtual ~Sandbox() override
+    {
+
+    }
 
 private:
-    BlueMarble::GameCamera oCamera;
-    std::vector<BlueMarble::Ref<BlueMarble::Entity>> oEntities;
+    BlueMarble::Ref<BlueMarble::GameCamera> oCamera;
+    std::shared_ptr<std::vector<BlueMarble::Ref<BlueMarble::Entity>>> oEntities;
 };
