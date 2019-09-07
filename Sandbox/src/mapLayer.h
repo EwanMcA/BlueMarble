@@ -56,6 +56,7 @@ private:
     float oTerrainModAmount = 1.0f;
     float oTerrainModRadius = 3.0f;
 
+    // TODO: Fix up this weird ref situation
     BlueMarble::Ref<std::vector<float>> oMoisture;
     BlueMarble::Ref<std::vector<float>> oHeat;
 

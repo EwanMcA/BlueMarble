@@ -19,6 +19,8 @@ namespace BlueMarble {
         virtual void UploadUniforms() override;
         virtual void UploadTextures() override;
 
+        virtual void SetBool(const std::string& name, const bool value) override
+            { oBools[name] = value; }
         virtual void SetInt(const std::string& name, const int value) override
             { oInts[name] = value; }
         virtual void SetFloat(const std::string& name, const float value) override
@@ -37,6 +39,7 @@ namespace BlueMarble {
         virtual void AddTexture2D(Ref<Texture2D> texture) override
             { oTextures.push_back(std::dynamic_pointer_cast<OpenGLTexture2D>(texture)); }
 
+        virtual const bool GetBool(const std::string& name) const override { return oBools.find(name)->second; }
         virtual const int GetInt(const std::string& name) const override { return oInts.find(name)->second; }
         virtual const float GetFloat(const std::string& name) const override { return oFloats.find(name)->second; }
         virtual const glm::vec2& GetFloat2(const std::string& name) const override { return oFloat2s.find(name)->second; }
@@ -49,6 +52,9 @@ namespace BlueMarble {
         Ref<OpenGLShader> oShader;
         std::vector<Ref<OpenGLTexture2D>> oTextures;
 
+        // TODO: Refactor this into map of std::any or std::variant or similar.
+        //       Should be able to use templates for the above methods.
+        std::map<std::string, bool> oBools;
         std::map<std::string, int> oInts;
         std::map<std::string, float> oFloats;
         std::map<std::string, glm::vec2> oFloat2s;

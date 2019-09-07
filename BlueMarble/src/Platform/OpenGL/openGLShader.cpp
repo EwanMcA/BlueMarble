@@ -163,6 +163,12 @@ namespace BlueMarble {
         glUseProgram(0);
     }
 
+    void OpenGLShader::UploadUniformBool(const std::string& name, const bool value)
+    {
+        GLint location = GetUniformLocation(name);
+        glUniform1i(location, value);
+    }
+
     void OpenGLShader::UploadUniformInt(const std::string& name, const int value)
     {
         GLint location = GetUniformLocation(name);

@@ -49,6 +49,7 @@ namespace BlueMarble {
         void ResetHeightMap() { oHeightMap->clear(); oHeightMap->resize(oXCount * oYCount, 0.0f); }
         void ResetHeightMap(BMPHeightMap& heightMap);
         void GenerateRandomHeightMap();
+        void RefreshOverlay();
         void RefreshVertices() { RefreshVertices(0, 0, oXCount, oYCount); }
         void RefreshVertices(int xMin, int yMin, int xMax, int yMax);
         void LayerAdd(const int layerIx, const int x, const int y, const float amount, const int radius);
@@ -57,6 +58,10 @@ namespace BlueMarble {
         void SetTexCoordCallback(const std::function<std::pair<float, float>(int, int)>& callback) 
         {
             oTexCoordCallback = callback;
+        }
+        void SetOverlayCallback(const std::function<float(int, int)>& callback)
+        {
+            oOverlayCallback = callback;
         }
 
         void AddDataLayer(Ref<std::vector<float>> layer) { oDataLayers.push_back(layer); }
@@ -84,6 +89,11 @@ namespace BlueMarble {
             float xTex = (x % 2 == 0) ? 0.0f : 1.0f;
             float yTex = (y % 2 == 0) ? 0.0f : 1.0f;
             return { xTex, yTex };
+        };
+
+        std::function<float(int, int)> oOverlayCallback =
+            [](int x, int y) -> float {
+            return 0.0f;
         };
 
         // Layers have a data point for each vertex, and are submitted to the shader in the vertex buffer

@@ -41,6 +41,7 @@ void MapLayer::CreateTerrain()
     material->AddTexture2D(BlueMarble::Texture2D::Create("assets/textures/snow.png"));
 
     material->SetFloat4("uTextureCutoffs", oTerrainCutoffs);
+    material->SetBool("uDisplayOverlay", false);
 
     oTerrain->Load(material);
     /////////////////////////////
@@ -124,9 +125,23 @@ void MapLayer::RenderEditorUI()
     ImGui::NewLine();
 
     ImGui::BeginGroup();
-    ImGui::RadioButton("Height", (int*)&oEditLayer, HEIGHT);
-    ImGui::RadioButton("Moisture", (int*)&oEditLayer, MOISTURE);
-    ImGui::RadioButton("Heat", (int*)&oEditLayer, HEAT);
+    if (ImGui::RadioButton("Height", (int*)&oEditLayer, HEIGHT))
+    {
+        oTerrain->GetComponent<BlueMarble::MaterialComponent>()->oMaterial->SetBool("uDisplayOverlay", false);
+    }
+    else if (ImGui::RadioButton("Moisture", (int*)&oEditLayer, MOISTURE))
+    {
+        oTerrain->SetOverlayCallback([this](int x, int y) -> float { return (*oMoisture)[x + y * oXCount]; });
+        oTerrain->RefreshOverlay();
+        oTerrain->GetComponent<BlueMarble::MaterialComponent>()->oMaterial->SetBool("uDisplayOverlay", true);
+    }
+    if (ImGui::RadioButton("Heat", (int*)&oEditLayer, HEAT))
+    {
+        oTerrain->SetOverlayCallback([this](int x, int y) -> float { return (*oHeat)[x + y * oXCount]; });
+        oTerrain->RefreshOverlay();
+        oTerrain->GetComponent<BlueMarble::MaterialComponent>()->oMaterial->SetBool("uDisplayOverlay", true);
+    }
+
     ImGui::EndGroup();
     ImGui::SameLine();
     ImGui::BeginGroup();

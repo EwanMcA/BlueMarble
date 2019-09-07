@@ -5,6 +5,7 @@ layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
 layout(location = 2) in vec2 aTexCoord;
 layout(location = 3) in vec2 aStats;
+layout(location = 4) in float aOverlay;
 
 uniform mat4 uViewProjection;
 uniform mat4 uTransform;
@@ -14,6 +15,7 @@ out vec3 vNormal;
 out vec2 vTexCoord;
 out vec3 vWorldPosition;
 out vec2 vStats;
+out float vOverlay;
 
 void main()
 {
@@ -23,6 +25,7 @@ void main()
     gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
     vWorldPosition = vec3(uTransform * vec4(aPosition, 1.0));
 	vStats = aStats;
+    vOverlay = aOverlay;
 }
 
 #type fragment
@@ -35,12 +38,14 @@ in vec3 vNormal;
 in vec2 vTexCoord;
 in vec3 vWorldPosition;
 in vec2 vStats;
+in float vOverlay;
 
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
 uniform sampler2D uTexture3;
 uniform vec4 uTextureCutoffs;
+uniform bool uDisplayOverlay;
 
 void main()
 {
@@ -77,5 +82,8 @@ void main()
         texMix = texture( uTexture3, vTexCoord );
     }
 
+    if (uDisplayOverlay) {
+        texMix = mix(texMix, vec4(1.0f - vOverlay, vOverlay, 0.0f, 1.0f), 0.5);
+    }
     color = vec4(ambient + diffuse, 1.0f) * texMix;
 }

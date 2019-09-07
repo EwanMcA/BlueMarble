@@ -7,6 +7,9 @@ namespace BlueMarble {
     {
         oShader->Bind();
 
+        for (auto kv : oBools)
+            oShader->UploadUniformBool(kv.first, kv.second);
+
         for (auto kv : oInts)
             oShader->UploadUniformInt(kv.first, kv.second);
 

@@ -19,6 +19,7 @@ namespace BlueMarble {
         virtual void Unbind() const override;
 
         // Shader needs to be bound before calling this
+        void UploadUniformBool(const std::string& name, const bool value);
         void UploadUniformInt(const std::string& name, const int value);
         void UploadUniformFloat(const std::string& name, const float value);
         void UploadUniformFloat2(const std::string& name, const glm::vec2& values);

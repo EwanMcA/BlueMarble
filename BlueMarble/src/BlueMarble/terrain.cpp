@@ -6,6 +6,8 @@
 #include "stb_image.h"
 #include "glm/gtc/matrix_transform.hpp"
 
+#define STRIDE 11
+
 namespace BlueMarble {
     
     bool WithinRadius(const int x, const int y, const int i, const int j, const int radius)
@@ -71,7 +73,8 @@ namespace BlueMarble {
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
                               { BlueMarble::ShaderDataType::Float3, "aNormal"   },
                               { BlueMarble::ShaderDataType::Float2, "aTexCoord" },
-                              { BlueMarble::ShaderDataType::Float2, "aStats" } });
+                              { BlueMarble::ShaderDataType::Float2, "aStats" },
+                              { BlueMarble::ShaderDataType::Float, "aOverlay" } });
         oVA->SetVertexBuffer(squareVB);
 
         SetComponent<BlueMarble::VertexArrayComponent>(std::make_shared<VertexArrayComponent>(oVA));
@@ -100,8 +103,28 @@ namespace BlueMarble {
 
                 for (int i = 1; i < oDataLayers.size(); ++i)
                     vertices.push_back((*oDataLayers[i])[x + y * oXCount]);
+
+                // Overlay
+                vertices.push_back(0.0f);
             }
         }
+    }
+
+    void Terrain::RefreshOverlay()
+    {
+        for (int y = 0; y < oYCount; ++y)
+        {
+            for (int x = 0; x < oXCount; ++x)
+            {
+                if (oOverlayCallback)
+                {
+                    int vbIndex = y * (oXCount * STRIDE) + (x * STRIDE);
+                    oVertices[vbIndex + 10] = oOverlayCallback(x, y);
+                }
+            }
+        }
+     
+        LoadVB();
     }
 
     void Terrain::RefreshVertices(int xMin, int yMin, int xMax, int yMax)
@@ -111,17 +134,31 @@ namespace BlueMarble {
         {
             for (int x = xMin; x < xMax; ++x)
             {
-                int vbIndex = y * (oXCount * 10) + (x * 10);
+                int vbIndex = y * (oXCount * STRIDE) + (x * STRIDE);
                 glm::vec3 normal;
                 NormalAt(x, y, normal);
                 oVertices[vbIndex + 2] = HeightAt(x, y);
                 oVertices[vbIndex + 3] = normal.x;
                 oVertices[vbIndex + 4] = normal.y;
                 oVertices[vbIndex + 5] = normal.z;
-                // Skip tex coords as they are constant
 
+                if (oTexCoordCallback) 
+                {
+                    float xTex{ 0.0f }, yTex{ 0.0f };
+                    std::tie(xTex, yTex) = oTexCoordCallback(x, y);
+                    oVertices[vbIndex + 6] = xTex;
+                    oVertices[vbIndex + 7] = yTex;
+                }
+
+                // oDataLayers[0] is the heightmap
                 for (int i = 1; i < oDataLayers.size(); ++i)
                     oVertices[vbIndex + 7 + i] = (*oDataLayers[i])[x + y * oXCount];
+
+                // Overlay
+                if (oOverlayCallback)
+                {
+                    oVertices[vbIndex + 7 + oDataLayers.size()] = oOverlayCallback(x, y);
+                }
             }
         }
 
