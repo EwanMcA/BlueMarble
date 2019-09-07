@@ -9,31 +9,32 @@ namespace BlueMarble {
     class Entity
     {
     public:
-        Entity() = default;
+        Entity(long id = 0) : oID(id) {}
         virtual ~Entity() = default;
 
         long GetID() { return oID; }
 
-        template <COMPONENT_TYPE T>
-        void SetComponent(Ref<Component> component) { oComponents[T] = component; oID = (long) T | oID; }
-        template <COMPONENT_TYPE T>
-        void RemoveComponent(Ref<Component> component) { oComponents.erase(T); oID = (~(long)T) & oID; }
+        template <typename T>
+        void SetComponent(Ref<Component> component) { oComponents[GetTypeID<T>()] = component; }
+        template <typename T>
+        void RemoveComponent() { oComponents.erase(GetTypeID<T>()); }
 
-        // TODO: A bit cumbersome (and unsafe) to have to specify the type and the enum. Find a cleaner method.
         template<typename T>
-        Ref<T> GetComponent(COMPONENT_TYPE componentType) 
+        Ref<T> GetComponent() 
         { 
-            return std::static_pointer_cast<T>(oComponents[componentType]);
+            return std::static_pointer_cast<T>(oComponents[GetTypeID<T>()]);
         }
 
-        std::map<COMPONENT_TYPE, Ref<Component>>::iterator begin() { return oComponents.begin(); }
-        std::map<COMPONENT_TYPE, Ref<Component>>::iterator end() { return oComponents.end(); }
-        std::map<COMPONENT_TYPE, Ref<Component>>::const_iterator begin() const { return oComponents.begin(); }
-        std::map<COMPONENT_TYPE, Ref<Component>>::const_iterator end() const { return oComponents.end(); }
-    private:
-        std::map<COMPONENT_TYPE, Ref<Component>> oComponents;
+        template<typename T>
+        bool HasComponent() { return oComponents.find(GetTypeID<T>()) != oComponents.end(); }
 
-        // ID made up of bit flags which identify the components the entity currently contains
+        std::map<uint32_t, Ref<Component>>::iterator begin() { return oComponents.begin(); }
+        std::map<uint32_t, Ref<Component>>::iterator end() { return oComponents.end(); }
+        std::map<uint32_t, Ref<Component>>::const_iterator begin() const { return oComponents.begin(); }
+        std::map<uint32_t, Ref<Component>>::const_iterator end() const { return oComponents.end(); }
+    private:
+        std::map<uint32_t, Ref<Component>> oComponents;
+
         long oID{ 0 };
     };
 

@@ -49,7 +49,7 @@ void GameLayer::CreateTerrain()
 
 void GameLayer::UpdateTerrain(BlueMarble::TimeStep ts)
 {
-    oTerrain->GetComponent<BlueMarble::MaterialComponent>(COMPONENT_TYPE::MATERIAL)->
+    oTerrain->GetComponent<BlueMarble::MaterialComponent>()->
         oMaterial->SetFloat4("uTextureCutoffs", oTerrainCutoffs);
 
     unsigned int width = BlueMarble::Application::Get().GetWindow().GetWidth();

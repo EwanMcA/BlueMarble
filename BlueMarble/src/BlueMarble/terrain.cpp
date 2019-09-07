@@ -32,7 +32,7 @@ namespace BlueMarble {
         oSpacing = spacing;
         oPosition = position;
 
-        SetComponent<COMPONENT_TYPE::TRANSFORM>(std::make_shared<TransformComponent>(position));
+        SetComponent<BlueMarble::TransformComponent>(std::make_shared<TransformComponent>(position));
 
         oHeightMap = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.0f);
         oDataLayers.push_back(oHeightMap);
@@ -74,7 +74,7 @@ namespace BlueMarble {
                               { BlueMarble::ShaderDataType::Float2, "aStats" } });
         oVA->SetVertexBuffer(squareVB);
 
-        SetComponent<COMPONENT_TYPE::VERTEX_ARRAY>(std::make_shared<VertexArrayComponent>(oVA));
+        SetComponent<BlueMarble::VertexArrayComponent>(std::make_shared<VertexArrayComponent>(oVA));
     }
 
     void Terrain::GenerateVertices(std::vector<float>& vertices)
@@ -196,7 +196,7 @@ namespace BlueMarble {
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
         oVA->SetIndexBuffer(squareIB);
 
-        SetComponent<COMPONENT_TYPE::MATERIAL>(std::make_shared<MaterialComponent>(material));
+        SetComponent<BlueMarble::MaterialComponent>(std::make_shared<MaterialComponent>(material));
     }
 
     void Terrain::NormalAt(const unsigned int x, const unsigned int y, glm::vec3& normal) const

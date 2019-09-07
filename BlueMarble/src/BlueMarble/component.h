@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,16 +9,14 @@
 #include "BlueMarble/Renderer/vertexArray.h"
 
 namespace BlueMarble {
+    
+    extern std::atomic<uint32_t> TypeIdCounter;
 
-    // Enables the layers/systems to use a bit mask to identify relevant entities
-    enum class COMPONENT_TYPE {
-        TRANSFORM       = 1 << 0,
-        VELOCITY        = 1 << 1,
-        MESH            = 1 << 2,
-        LAYER           = 1 << 3,
-        VERTEX_ARRAY    = 1 << 4,
-        MATERIAL        = 1 << 5
-    };
+    template <typename T>
+    int GetTypeID() {
+        static int uint32_t = ++TypeIdCounter;
+        return uint32_t;
+    }
 
     class Component
     {
@@ -34,26 +33,25 @@ namespace BlueMarble {
         TransformComponent(const glm::vec3& position)
             : oTransform(glm::translate(glm::mat4(1.0f), position)) {}
 
+        virtual ~TransformComponent() = default;
+
         glm::mat4 oTransform;
     };
 
     class VelocityComponent : public Component
     {
     public:
+        virtual ~VelocityComponent() = default;
+
         glm::vec3 oVelocity;
     };
 
     class MeshComponent : public Component
     {
     public:
+        virtual ~MeshComponent() = default;
+
         std::vector<float[6]> oMesh;
-    };
-
-    // Data for each vertex, apart from positions / normals.
-    class LayerComponent : public Component
-    {
-    public:
-
     };
 
     class VertexArrayComponent : public Component
@@ -61,6 +59,8 @@ namespace BlueMarble {
     public:
         VertexArrayComponent(Ref<BlueMarble::VertexArray> va)
             : oVA(va) {}
+
+        virtual ~VertexArrayComponent() = default;
 
         Ref<BlueMarble::VertexArray> oVA;
     };
@@ -70,6 +70,8 @@ namespace BlueMarble {
     public:
         MaterialComponent(Ref<BlueMarble::Material> material)
             : oMaterial(material) {}
+
+        virtual ~MaterialComponent() = default;
 
         Ref<Material> oMaterial;
     };

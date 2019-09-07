@@ -1,6 +1,8 @@
 #include "renderLayer.h"
 
-using BlueMarble::COMPONENT_TYPE;
+using BlueMarble::MaterialComponent;
+using BlueMarble::VertexArrayComponent;
+using BlueMarble::TransformComponent;
 
 void RenderLayer::OnUpdate(BlueMarble::TimeStep ts)
 {
@@ -11,19 +13,13 @@ void RenderLayer::OnUpdate(BlueMarble::TimeStep ts)
 
     for (BlueMarble::Ref<BlueMarble::Entity> entity : *oEntities)
     {
-        long id{ entity->GetID() };
-        if (id & (long)COMPONENT_TYPE::TRANSFORM &&
-            id & (long)COMPONENT_TYPE::VERTEX_ARRAY &&
-            id & (long)COMPONENT_TYPE::MATERIAL)
+        if (entity->HasComponent<MaterialComponent>() &&
+            entity->HasComponent<VertexArrayComponent>() &&
+            entity->HasComponent<TransformComponent>())
         {
-            const BlueMarble::Ref<BlueMarble::Material> material =  
-                    (entity->GetComponent<BlueMarble::MaterialComponent>(COMPONENT_TYPE::MATERIAL))->oMaterial;
-            const BlueMarble::Ref<BlueMarble::VertexArray> va = 
-                    (entity->GetComponent<BlueMarble::VertexArrayComponent>(COMPONENT_TYPE::VERTEX_ARRAY))->oVA;
-            const glm::mat4 transform = 
-                    (entity->GetComponent<BlueMarble::TransformComponent>(COMPONENT_TYPE::TRANSFORM))->oTransform;
-
-            BlueMarble::Renderer::Submit(material, va, transform);
+            BlueMarble::Renderer::Submit(entity->GetComponent<MaterialComponent>()->oMaterial, 
+                                         entity->GetComponent<VertexArrayComponent>()->oVA, 
+                                         entity->GetComponent<TransformComponent>()->oTransform);
         }
     }
 

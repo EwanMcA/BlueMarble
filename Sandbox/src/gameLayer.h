@@ -10,8 +10,6 @@
 #define X_VERTICES 128
 #define Y_VERTICES 128
 
-using BlueMarble::COMPONENT_TYPE;
-
 class GameLayer : public BlueMarble::Layer
 {
 public:
