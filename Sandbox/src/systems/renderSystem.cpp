@@ -1,17 +1,17 @@
-#include "renderLayer.h"
+#include "renderSystem.h"
 
 using BlueMarble::MaterialComponent;
 using BlueMarble::VertexArrayComponent;
 using BlueMarble::TransformComponent;
 
-void RenderLayer::OnUpdate(BlueMarble::TimeStep ts)
+void RenderSystem::OnUpdate(BlueMarble::TimeStep ts, std::vector<Ref<Entity>>& entities)
 {
     BlueMarble::RenderCommand::SetClearColor({ 0.4f, 0.6f, 1.0f, 1 });
     BlueMarble::RenderCommand::Clear();
 
     BlueMarble::Renderer::BeginScene(*oCamera);
 
-    for (BlueMarble::Ref<BlueMarble::Entity> entity : *oEntities)
+    for (BlueMarble::Ref<BlueMarble::Entity> entity : entities)
     {
         if (entity->HasComponent<MaterialComponent>() &&
             entity->HasComponent<VertexArrayComponent>() &&

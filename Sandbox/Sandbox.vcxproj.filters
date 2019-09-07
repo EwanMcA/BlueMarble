@@ -2,12 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\sandbox.cpp" />
-    <ClCompile Include="src\RenderLayer.cpp" />
     <ClCompile Include="src\GameLayer.cpp" />
+    <ClCompile Include="src\mapLayer.cpp" />
+    <ClCompile Include="src\systems\renderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\RenderLayer.h" />
     <ClInclude Include="src\sandbox.h" />
     <ClInclude Include="src\GameLayer.h" />
+    <ClInclude Include="src\mapLayer.h" />
+    <ClInclude Include="src\systems\renderSystem.h" />
   </ItemGroup>
 </Project>

@@ -25,6 +25,14 @@ namespace BlueMarble {
         virtual void SetMat3(const std::string& name, const glm::mat3& matrix) = 0;
         virtual void SetMat4(const std::string& name, const glm::mat4& matrix) = 0;
 
+        virtual const int GetInt(const std::string& name) const = 0;
+        virtual const float GetFloat(const std::string& name) const = 0;
+        virtual const glm::vec2& GetFloat2(const std::string& name) const = 0;
+        virtual const glm::vec3& GetFloat3(const std::string& name) const = 0;
+        virtual const glm::vec4& GetFloat4(const std::string& name) const = 0;
+        virtual const glm::mat3& GetMat3(const std::string& name) const = 0;
+        virtual const glm::mat4& GetMat4(const std::string& name) const = 0;
+
         virtual void AddTexture2D(Ref<Texture2D> texture) = 0;
     };
 

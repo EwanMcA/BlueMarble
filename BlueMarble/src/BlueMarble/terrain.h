@@ -40,6 +40,7 @@ namespace BlueMarble {
         uint32_t GetXCount() const { return oXCount; }
         uint32_t GetYCount() const { return oYCount; }
         float HeightAt(const uint32_t x, const uint32_t y) const { return oHeightScale * (*oHeightMap)[x + y * oXCount]; }
+        float GetHeightScale() const { return oHeightScale; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
         const glm::vec3& GetPosition() const { return oPosition; }
 

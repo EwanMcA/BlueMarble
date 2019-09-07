@@ -2,8 +2,12 @@
 
 #include <BlueMarble.h>
 
-#include "GameLayer.h"
-#include "RenderLayer.h"
+#include "gameLayer.h"
+#include "mapLayer.h"
+#include "systems/renderSystem.h"
+
+#define X_VERTICES 256
+#define Y_VERTICES 256
 
 class Sandbox : public BlueMarble::Application
 {
@@ -16,10 +20,10 @@ public:
                      0.1f,
                      100.0f))
     {
-        oEntities = std::make_shared<std::vector<BlueMarble::Ref<BlueMarble::Entity>>>();
-
-        PushLayer(new GameLayer(oCamera, oEntities));
-        PushLayer(new RenderLayer(oCamera, oEntities));
+        ecs = std::make_shared<BlueMarble::EntityComponentSystem>();
+        ecs->AddSystem(new RenderSystem(oCamera));
+        PushLayer(new MapLayer(X_VERTICES, Y_VERTICES, oCamera, ecs));
+        PushLayer(new GameLayer(X_VERTICES, Y_VERTICES, oCamera, ecs));
     }
 
     virtual ~Sandbox() override
@@ -29,5 +33,5 @@ public:
 
 private:
     BlueMarble::Ref<BlueMarble::GameCamera> oCamera;
-    std::shared_ptr<std::vector<BlueMarble::Ref<BlueMarble::Entity>>> oEntities;
+    std::shared_ptr<BlueMarble::EntityComponentSystem> ecs;
 };

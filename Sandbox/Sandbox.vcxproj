@@ -131,13 +131,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\mapLayer.h" />
     <ClInclude Include="src\gameLayer.h" />
-    <ClInclude Include="src\renderLayer.h" />
+    <ClInclude Include="src\systems\renderSystem.h" />
     <ClInclude Include="src\sandbox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameLayer.cpp" />
-    <ClCompile Include="src\RenderLayer.cpp" />
+    <ClCompile Include="src\mapLayer.cpp" />
+    <ClCompile Include="src\systems\renderSystem.cpp" />
+    <ClCompile Include="src\gameLayer.cpp" />
     <ClCompile Include="src\sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>

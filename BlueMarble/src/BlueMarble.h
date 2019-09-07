@@ -6,6 +6,9 @@
 #include "BlueMarble/layer.h"
 #include "BlueMarble/Log.h"
 
+#include "BlueMarble/ecs.h"
+#include "BlueMarble/component.h"
+
 #include "BlueMarble/Core/timeStep.h"
 
 #include "BlueMarble/input.h"

@@ -18,31 +18,33 @@ namespace BlueMarble {
 		Application();
 		virtual ~Application() = default;
 
-		void Run();
+        void Run();
 
-		void OnEvent(Event& e);
+        void OnEvent(Event& e);
 
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* overlay);
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* overlay); 
+        void PopLayer(Layer* layer);
+        void PopOverlay(Layer* overlay);
 
-		inline Window& GetWindow() { return *oWindow;  }
+        inline Window& GetWindow() { return *oWindow;  }
 
-		inline static Application& Get() { return *cInstance; }
-	private:
-		bool OnWindowClose(WindowCloseEvent& e);
+        inline static Application& Get() { return *cInstance; }
+    private:
+        bool OnWindowClose(WindowCloseEvent& e);
 
     private:
-		std::shared_ptr<Window> oWindow;
-		ImGuiLayer* oImGuiLayer;
-		bool oRunning = true;
-		LayerStack oLayerStack; 
+        std::shared_ptr<Window> oWindow;
+        ImGuiLayer* oImGuiLayer;
+        bool oRunning = true;
+        LayerStack oLayerStack;
         float oLastFrameTime = 0.0f;
 
     private:
-		static Application* cInstance;
+        static Application* cInstance;
 	};
 
-	// To be defined in CLIENT
-	Application* CreateApplication();
+    // To be defined in CLIENT
+    Application* CreateApplication();
 }
 

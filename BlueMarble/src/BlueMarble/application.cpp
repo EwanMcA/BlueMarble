@@ -41,6 +41,18 @@ namespace BlueMarble {
 		overlay->OnAttach();
 	}
 
+    void Application::PopLayer(Layer* layer)
+    {
+        oLayerStack.PopLayer(layer);
+        layer->OnDetach();
+    }
+
+    void Application::PopOverlay(Layer* overlay)
+    {
+        oLayerStack.PopOverlay(overlay);
+        overlay->OnDetach();
+    }
+
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);

@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="src\BlueMarble.h" />
     <ClInclude Include="src\BlueMarble\Core\timeStep.h" />
+    <ClInclude Include="src\BlueMarble\ecs.h" />
     <ClInclude Include="src\BlueMarble\Events\applicationEvent.h" />
     <ClInclude Include="src\BlueMarble\Events\event.h" />
     <ClInclude Include="src\BlueMarble\Events\keyEvent.h" />
@@ -546,7 +547,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlueMarble\Component.cpp" />
+    <ClCompile Include="src\BlueMarble\ecs.cpp" />
     <ClCompile Include="src\BlueMarble\ImGui\imGuiBuild.cpp" />
     <ClCompile Include="src\BlueMarble\ImGui\imGuiLayer.cpp" />
     <ClCompile Include="src\BlueMarble\Renderer\RendererAPI.cpp" />
@@ -559,6 +560,7 @@
     <ClCompile Include="src\BlueMarble\Renderer\texture.cpp" />
     <ClCompile Include="src\BlueMarble\Renderer\vertexArray.cpp" />
     <ClCompile Include="src\BlueMarble\application.cpp" />
+    <ClCompile Include="src\BlueMarble\component.cpp" />
     <ClCompile Include="src\BlueMarble\layer.cpp" />
     <ClCompile Include="src\BlueMarble\layerStack.cpp" />
     <ClCompile Include="src\BlueMarble\log.cpp" />

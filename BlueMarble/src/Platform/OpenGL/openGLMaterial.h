@@ -19,23 +19,31 @@ namespace BlueMarble {
         virtual void UploadUniforms() override;
         virtual void UploadTextures() override;
 
-        virtual void SetInt(const std::string& name, const int value)
+        virtual void SetInt(const std::string& name, const int value) override
             { oInts[name] = value; }
-        virtual void SetFloat(const std::string& name, const float value)
+        virtual void SetFloat(const std::string& name, const float value) override
             { oFloats[name] = value; }
-        virtual void SetFloat2(const std::string& name, const glm::vec2& values)
+        virtual void SetFloat2(const std::string& name, const glm::vec2& values) override
             { oFloat2s[name] = values; }
-        virtual void SetFloat3(const std::string& name, const glm::vec3& values)
+        virtual void SetFloat3(const std::string& name, const glm::vec3& values) override
             { oFloat3s[name] = values; }
-        virtual void SetFloat4(const std::string& name, const glm::vec4& values)
+        virtual void SetFloat4(const std::string& name, const glm::vec4& values) override
             { oFloat4s[name] = values; }
-        virtual void SetMat3(const std::string& name, const glm::mat3& matrix)
+        virtual void SetMat3(const std::string& name, const glm::mat3& matrix) override
             { oMat3s[name] = matrix; }
-        virtual void SetMat4(const std::string& name, const glm::mat4& matrix)
+        virtual void SetMat4(const std::string& name, const glm::mat4& matrix) override
             { oMat4s[name] = matrix; }
 
         virtual void AddTexture2D(Ref<Texture2D> texture) override
             { oTextures.push_back(std::dynamic_pointer_cast<OpenGLTexture2D>(texture)); }
+
+        virtual const int GetInt(const std::string& name) const override { return oInts.find(name)->second; }
+        virtual const float GetFloat(const std::string& name) const override { return oFloats.find(name)->second; }
+        virtual const glm::vec2& GetFloat2(const std::string& name) const override { return oFloat2s.find(name)->second; }
+        virtual const glm::vec3& GetFloat3(const std::string& name) const override { return oFloat3s.find(name)->second; }
+        virtual const glm::vec4& GetFloat4(const std::string& name) const override { return oFloat4s.find(name)->second; }
+        virtual const glm::mat3& GetMat3(const std::string& name) const override { return oMat3s.find(name)->second; }
+        virtual const glm::mat4& GetMat4(const std::string& name) const override { return oMat4s.find(name)->second; }
 
     private:
         Ref<OpenGLShader> oShader;
