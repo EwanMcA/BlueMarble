@@ -65,6 +65,7 @@ void main()
         Default:      Water     Beach     Grassland       Snow
         LowM, LowH:                       Rocky desert    Rock
         LowM, HighH:                      Sandy desert    Rock
+        HighM, LowH:                      Tundra/snow     Snow
         HighM, HighH:                     Rainforest      Rock
     */
     if (vPosition.z < uTextureCutoffs.g) {
@@ -76,7 +77,14 @@ void main()
     } else if (vPosition.z < uTextureCutoffs.a) {
         ratio = (vPosition.z - uTextureCutoffs.b) / (uTextureCutoffs.a - uTextureCutoffs.b);
         ratio = ratio * ratio;
-        texMix = (vStats.x >= 1.0) ? texture( uTexture0, vTexCoord ) : texture( uTexture2, vTexCoord );
+
+        if (vStats.x >= 1.0)     // lakes/rivers
+            texMix = texture( uTexture0, vTexCoord );
+        else if (vStats.x < 0.5) // Arid land
+            texMix = mix(vec4(0.85, 0.4, 0.1, 1.0), texture(uTexture2, vTexCoord), 0.5 + vStats.x / 2);
+        else                     // Grass land
+            texMix = texture(uTexture2, vTexCoord);
+
         texMix = mix(texMix, texture( uTexture3, vTexCoord ), ratio);
 	} else {
         texMix = texture( uTexture3, vTexCoord );

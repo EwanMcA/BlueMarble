@@ -18,8 +18,9 @@ public:
 
     enum EDIT_MODE {
         ADD = 0,
-        SUBTRACT = 1,
-        SMOOTH = 2
+        SET = 1,
+        SUBTRACT = 2,
+        SMOOTH = 3
     };
 
     MapLayer(const uint32_t xCount,
@@ -54,6 +55,7 @@ private:
     glm::vec4 oTerrainCutoffs{ 0.0f, 0.015f, 0.03f, 0.3f };
     float oTerrainHeightScale = 0.5f;
     float oTerrainModAmount = 1.0f;
+    float oTerrainSetAmount = 0.1f;
     float oTerrainModRadius = 3.0f;
 
     // TODO: Fix up this weird ref situation

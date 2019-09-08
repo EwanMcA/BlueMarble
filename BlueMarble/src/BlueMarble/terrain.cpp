@@ -186,6 +186,28 @@ namespace BlueMarble {
                         std::min(y + radius, (int)oYCount));
     }
 
+    void Terrain::LayerSet(const int layerIx, const int x, const int y, const float amount, const int radius)
+    {
+        float setAmount = std::clamp(amount, 0.0f, 1.0f);
+
+        // loops form a square, so there is an additional check for circular radius
+        for (int i = std::max(0, y - radius); i < y + radius && i < (int)oYCount; ++i)
+        {
+            for (int j = std::max(0, x - radius); j < x + radius && j < (int)oXCount; ++j)
+            {
+                if (WithinRadius(x, y, i, j, radius))
+                {
+                    (*oDataLayers[layerIx])[j + i * oXCount] = setAmount;
+                }
+            }
+        }
+
+        RefreshVertices(std::max(0, x - radius),
+            std::max(0, y - radius),
+            std::min(x + radius, (int)oXCount),
+            std::min(y + radius, (int)oYCount));
+    }
+
     void Terrain::LayerSmooth(const int layerIx, const int x, const int y, const int radius)
     {
         for (int i = std::max(0, y - radius); i < y + radius && i < (int)oYCount; ++i)

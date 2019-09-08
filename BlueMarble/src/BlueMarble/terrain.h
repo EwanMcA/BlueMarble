@@ -53,6 +53,7 @@ namespace BlueMarble {
         void RefreshVertices() { RefreshVertices(0, 0, oXCount, oYCount); }
         void RefreshVertices(int xMin, int yMin, int xMax, int yMax);
         void LayerAdd(const int layerIx, const int x, const int y, const float amount, const int radius);
+        void LayerSet(const int layerIx, const int x, const int y, const float amount, const int radius);
         void LayerSmooth(const int layerIx, const int x, const int y, const int radius);
         void SetHeightScale(const float scale) { oHeightScale = scale; }
         void SetTexCoordCallback(const std::function<std::pair<float, float>(int, int)>& callback) 

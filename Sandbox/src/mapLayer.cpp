@@ -18,7 +18,7 @@ void MapLayer::CreateTerrain()
     oTerrain->SetHeightScale(oTerrainHeightScale);
 
     // Terrain Data Layers
-    oMoisture = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.0f);
+    oMoisture = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.75f);
     oHeat = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.0f);
     oTerrain->AddDataLayer(oMoisture);
     oTerrain->AddDataLayer(oHeat);
@@ -85,6 +85,10 @@ void MapLayer::UpdateTerrain(BlueMarble::TimeStep ts)
             {
                 oTerrain->LayerSmooth(oEditLayer, x, y, oTerrainModRadius);
             }
+            else if (oEditMode == SET)
+            {
+                oTerrain->LayerSet(oEditLayer, x, y, oTerrainSetAmount, oTerrainModRadius);
+            }
             else
             {
                 int sign = (oEditMode == ADD) ? 1 : -1;
@@ -146,6 +150,7 @@ void MapLayer::RenderEditorUI()
     ImGui::SameLine();
     ImGui::BeginGroup();
     ImGui::RadioButton("Add", (int*)&oEditMode, ADD);
+    ImGui::RadioButton("Set", (int*)&oEditMode, SET);
     ImGui::RadioButton("Subtract", (int*)&oEditMode, SUBTRACT);
     ImGui::RadioButton("Smooth", (int*)&oEditMode, SMOOTH);
     ImGui::EndGroup();
@@ -153,6 +158,8 @@ void MapLayer::RenderEditorUI()
 
     if (oEditMode == ADD || oEditMode == SUBTRACT)
         ImGui::InputFloat("Change", &oTerrainModAmount, 0.5f);
+    if (oEditMode == SET)
+        ImGui::InputFloat("Value", &oTerrainSetAmount, 0.1f);
     ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
     if (ImGui::InputFloat("Height Scale", &oTerrainHeightScale, 0.01f))
         oTerrain->RefreshVertices();
