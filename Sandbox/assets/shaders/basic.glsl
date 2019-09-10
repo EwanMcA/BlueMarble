@@ -4,16 +4,16 @@
 #version 330 core
 
 layout(location = 0) in vec3 aPosition;
-//layout(location = 1) in vec2 aTexCoord;
+layout(location = 1) in vec2 aTexCoord;
 
 uniform mat4 uViewProjection;
 uniform mat4 uTransform;
 
-//out vec2 vTexCoord;
+out vec2 vTexCoord;
 
 void main()
 {
-	//vTexCoord = aTexCoord;
+	vTexCoord = aTexCoord;
     gl_Position = uViewProjection * uTransform * vec4(aPosition, 1.0);
 }
 
@@ -24,13 +24,13 @@ layout(location = 0) out vec4 color;
 
 in vec2 vTexCoord;
 
-//uniform sampler2D uTexture;
+uniform sampler2D uTexture0;
 uniform bool uCanPlace;
 
 void main()
 {
     if (uCanPlace)
-        color = vec4(1.0, 1.0, 1.0, 1.0);
+        color = texture(uTexture0, vTexCoord);
     else
-        color = vec4(1.0, 0.5, 0.5, 1.0);
+        color = mix(texture(uTexture0, vTexCoord), vec4(1.0, 0.0, 0.0, 0.0), 0.5);
 }
