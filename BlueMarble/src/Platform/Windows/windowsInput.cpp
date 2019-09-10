@@ -1,8 +1,6 @@
 #include "bmpch.h"
 #include "windowsInput.h"
 
-#include "BlueMarble/application.h"
-
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -59,4 +57,14 @@ namespace BlueMarble {
         return win.z;
     }
 
+    std::pair<float, float> WindowsInput::GetNormMousePositionImpl()
+    {
+        auto& window = Application::Get().GetWindow();
+        double xpos, ypos;
+        glfwGetCursorPos(static_cast<GLFWwindow*>(window.GetNativeWindow()), &xpos, &ypos);
+        xpos = xpos / (Application::Get().GetWindow().GetWidth() * 0.5f) - 1.0f;
+        ypos = ypos / (Application::Get().GetWindow().GetHeight() * 0.5f) - 1.0f;
+
+        return { (float)xpos, (float)ypos };
+    }
 }

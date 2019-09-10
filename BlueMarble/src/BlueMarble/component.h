@@ -18,6 +18,9 @@ namespace BlueMarble {
         return uint32_t;
     }
 
+    // TODO: Implement shared components, for things like vector_arrays
+    //       which are common among many entities.
+
     class Component
     {
     public:
@@ -36,6 +39,7 @@ namespace BlueMarble {
         virtual ~TransformComponent() = default;
 
         glm::mat4 oTransform;
+        bool oTrackMouse = false;
     };
 
     class VelocityComponent : public Component

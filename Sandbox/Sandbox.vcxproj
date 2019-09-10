@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;BM_PLATFORM_WINDOWS;BM_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\BlueMarble\vendor\spdlog\include;..\BlueMarble\src;..\BlueMarble\vendor;..\BlueMarble\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\BlueMarble\vendor\spdlog\include;..\BlueMarble\src;..\BlueMarble\vendor;..\BlueMarble\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -95,7 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;BM_PLATFORM_WINDOWS;BM_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\BlueMarble\vendor\spdlog\include;..\BlueMarble\src;..\BlueMarble\vendor;..\BlueMarble\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\BlueMarble\vendor\spdlog\include;..\BlueMarble\src;..\BlueMarble\vendor;..\BlueMarble\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,7 +115,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;BM_PLATFORM_WINDOWS;BM_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\BlueMarble\vendor\spdlog\include;..\BlueMarble\src;..\BlueMarble\vendor;..\BlueMarble\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\BlueMarble\vendor\spdlog\include;..\BlueMarble\src;..\BlueMarble\vendor;..\BlueMarble\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -131,16 +131,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\mapLayer.h" />
+    <ClInclude Include="src\city.h" />
+    <ClInclude Include="src\components\components.h" />
     <ClInclude Include="src\gameLayer.h" />
-    <ClInclude Include="src\systems\renderSystem.h" />
+    <ClInclude Include="src\mapLayer.h" />
     <ClInclude Include="src\sandbox.h" />
+    <ClInclude Include="src\systems\citySystem.h" />
+    <ClInclude Include="src\systems\PlayerInputSystem.h" />
+    <ClInclude Include="src\systems\renderSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\mapLayer.cpp" />
-    <ClCompile Include="src\systems\renderSystem.cpp" />
     <ClCompile Include="src\gameLayer.cpp" />
+    <ClCompile Include="src\mapLayer.cpp" />
     <ClCompile Include="src\sandbox.cpp" />
+    <ClCompile Include="src\systems\citySystem.cpp" />
+    <ClCompile Include="src\systems\renderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BlueMarble\BlueMarble.vcxproj">

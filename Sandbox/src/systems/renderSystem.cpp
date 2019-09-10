@@ -17,9 +17,24 @@ void RenderSystem::OnUpdate(BlueMarble::TimeStep ts, std::vector<Ref<Entity>>& e
             entity->HasComponent<VertexArrayComponent>() &&
             entity->HasComponent<TransformComponent>())
         {
-            BlueMarble::Renderer::Submit(entity->GetComponent<MaterialComponent>()->oMaterial, 
-                                         entity->GetComponent<VertexArrayComponent>()->oVA, 
-                                         entity->GetComponent<TransformComponent>()->oTransform);
+            auto transformComp = entity->GetComponent<TransformComponent>();
+            if (transformComp->oTrackMouse) 
+            {
+                glm::vec3& worldCoords = oCamera->GetWorldCoords(BlueMarble::Input::GetNormMouseX(),
+                                                                 BlueMarble::Input::GetNormMouseY(),
+                                                                 BlueMarble::Input::GetNormMouseZ());
+
+                BlueMarble::Renderer::Submit(entity->GetComponent<MaterialComponent>()->oMaterial, 
+                                             entity->GetComponent<VertexArrayComponent>()->oVA, 
+                                             glm::translate(transformComp->oTransform,
+                                                 { worldCoords.x, worldCoords.y, worldCoords.z + 0.05f }));
+            }
+            else
+            {
+                BlueMarble::Renderer::Submit(entity->GetComponent<MaterialComponent>()->oMaterial,
+                                             entity->GetComponent<VertexArrayComponent>()->oVA,
+                                             transformComp->oTransform);
+            }
         }
     }
 

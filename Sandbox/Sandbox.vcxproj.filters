@@ -1,15 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\sandbox.cpp" />
-    <ClCompile Include="src\GameLayer.cpp" />
-    <ClCompile Include="src\mapLayer.cpp" />
-    <ClCompile Include="src\systems\renderSystem.cpp" />
+    <Filter Include="components">
+      <UniqueIdentifier>{8BA12798-7759-69E5-E060-4241CC3704D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="systems">
+      <UniqueIdentifier>{3D76CBBA-A955-4A56-B26D-D52C1ECCB0B7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\sandbox.h" />
-    <ClInclude Include="src\GameLayer.h" />
+    <ClInclude Include="src\city.h" />
+    <ClInclude Include="src\components\components.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gameLayer.h" />
     <ClInclude Include="src\mapLayer.h" />
-    <ClInclude Include="src\systems\renderSystem.h" />
+    <ClInclude Include="src\sandbox.h" />
+    <ClInclude Include="src\systems\citySystem.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\renderSystem.h">
+      <Filter>systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\PlayerInputSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\gameLayer.cpp" />
+    <ClCompile Include="src\mapLayer.cpp" />
+    <ClCompile Include="src\sandbox.cpp" />
+    <ClCompile Include="src\systems\citySystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\systems\renderSystem.cpp">
+      <Filter>systems</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -46,7 +46,6 @@ private:
     const uint32_t oYCount;
 
     std::shared_ptr<BlueMarble::GameCamera> oCamera;
-    std::vector<BlueMarble::Ref<BlueMarble::Entity>> oEntities;
     std::shared_ptr<BlueMarble::EntityComponentSystem> oECS;
 
     BlueMarble::Ref<BlueMarble::Terrain> oTerrain;
@@ -61,6 +60,7 @@ private:
     // TODO: Fix up this weird ref situation
     BlueMarble::Ref<std::vector<float>> oMoisture;
     BlueMarble::Ref<std::vector<float>> oHeat;
+    BlueMarble::Ref<std::vector<float>> oTerritory;
 
     DATA_LAYER oEditLayer{ HEIGHT };
     EDIT_MODE oEditMode{ ADD };

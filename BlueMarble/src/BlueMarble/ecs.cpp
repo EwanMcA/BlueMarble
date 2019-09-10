@@ -4,11 +4,11 @@
 namespace BlueMarble {
     
 
-    void EntityComponentSystem::Update(TimeStep ts, std::vector<Ref<Entity>>& entities)
+    void EntityComponentSystem::Update(TimeStep ts)
     {
         for (System* system : oSystems)
         {
-            system->OnUpdate(ts, entities);
+            system->OnUpdate(ts, oEntities);
         }
     }
 
@@ -23,4 +23,12 @@ namespace BlueMarble {
         if (it != oSystems.end())
             oSystems.erase(it);
     }
+
+    void EntityComponentSystem::RemoveEntity(Ref<Entity> entity)
+    {
+        auto it = std::find(oEntities.begin(), oEntities.end(), entity);
+        if (it != oEntities.end())
+            oEntities.erase(it);
+    }
+
 }

@@ -6,7 +6,7 @@
 #include "stb_image.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-#define STRIDE 11
+#define STRIDE 12
 
 namespace BlueMarble {
     
@@ -73,11 +73,9 @@ namespace BlueMarble {
         squareVB->SetLayout({ { BlueMarble::ShaderDataType::Float3, "aPosition" },
                               { BlueMarble::ShaderDataType::Float3, "aNormal"   },
                               { BlueMarble::ShaderDataType::Float2, "aTexCoord" },
-                              { BlueMarble::ShaderDataType::Float2, "aStats" },
+                              { BlueMarble::ShaderDataType::Float3, "aStats" },
                               { BlueMarble::ShaderDataType::Float, "aOverlay" } });
         oVA->SetVertexBuffer(squareVB);
-
-        SetComponent<BlueMarble::VertexArrayComponent>(std::make_shared<VertexArrayComponent>(oVA));
     }
 
     void Terrain::GenerateVertices(std::vector<float>& vertices)
@@ -119,7 +117,7 @@ namespace BlueMarble {
                 if (oOverlayCallback)
                 {
                     int vbIndex = y * (oXCount * STRIDE) + (x * STRIDE);
-                    oVertices[vbIndex + 10] = oOverlayCallback(x, y);
+                    oVertices[vbIndex + STRIDE - 1] = oOverlayCallback(x, y);
                 }
             }
         }
@@ -255,6 +253,7 @@ namespace BlueMarble {
         squareIB.reset(BlueMarble::IndexBuffer::Create(squareIndices.data(), squareIndices.size()));
         oVA->SetIndexBuffer(squareIB);
 
+        SetComponent<BlueMarble::VertexArrayComponent>(std::make_shared<VertexArrayComponent>(oVA));
         SetComponent<BlueMarble::MaterialComponent>(std::make_shared<MaterialComponent>(material));
     }
 

@@ -20,8 +20,10 @@ void MapLayer::CreateTerrain()
     // Terrain Data Layers
     oMoisture = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.75f);
     oHeat = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.0f);
+    oTerritory = std::make_shared<std::vector<float>>(oXCount * oYCount, 0.0f);
     oTerrain->AddDataLayer(oMoisture);
     oTerrain->AddDataLayer(oHeat);
+    oTerrain->AddDataLayer(oTerritory);
 
     oTerrain->SetTexCoordCallback([](int x, int y) -> std::pair<float, float> {
         float xTex = (x % 2 == 0) ? 0.5f : 1.0f;
@@ -46,7 +48,7 @@ void MapLayer::CreateTerrain()
     oTerrain->Load(material);
     /////////////////////////////
 
-    oEntities.push_back(oTerrain);
+    oECS->AddEntity(oTerrain);
 }
 
 
@@ -54,8 +56,6 @@ void MapLayer::OnUpdate(BlueMarble::TimeStep ts)
 {
     if (oMode == EDITING)
         UpdateTerrain(ts);
-
-    oECS->Update(ts, oEntities);
 }
 
 void MapLayer::UpdateTerrain(BlueMarble::TimeStep ts)
@@ -68,11 +68,9 @@ void MapLayer::UpdateTerrain(BlueMarble::TimeStep ts)
 
     if (BlueMarble::Input::IsMouseButtonPressed(0))
     {
-        float normMouseX = BlueMarble::Input::GetMouseX() / (width * 0.5f) - 1.0f;
-        float normMouseY = BlueMarble::Input::GetMouseY() / (height * 0.5f) - 1.0f;
-        float normMouseZ = 2 * BlueMarble::Input::GetMouseZ() - 1.0f;
-
-        glm::vec3 world = oCamera->GetWorldCoords(normMouseX, normMouseY, normMouseZ);
+        glm::vec3 world = oCamera->GetWorldCoords(BlueMarble::Input::GetNormMouseX(), 
+                                                  BlueMarble::Input::GetNormMouseY(), 
+                                                  BlueMarble::Input::GetNormMouseZ());
 
         float xRatio = (world.x - oTerrain->GetPosition().x) / oTerrain->GetXWidth();
         float yRatio = (world.y - oTerrain->GetPosition().y) / oTerrain->GetYWidth();
@@ -157,9 +155,9 @@ void MapLayer::RenderEditorUI()
     ImGui::NewLine();
 
     if (oEditMode == ADD || oEditMode == SUBTRACT)
-        ImGui::InputFloat("Change", &oTerrainModAmount, 0.5f);
+        ImGui::InputFloat("Change", &oTerrainModAmount, 0.025f);
     if (oEditMode == SET)
-        ImGui::InputFloat("Value", &oTerrainSetAmount, 0.1f);
+        ImGui::InputFloat("Value", &oTerrainSetAmount, 0.025f);
     ImGui::InputFloat("Radius", &oTerrainModRadius, 1);
     if (ImGui::InputFloat("Height Scale", &oTerrainHeightScale, 0.01f))
         oTerrain->RefreshVertices();

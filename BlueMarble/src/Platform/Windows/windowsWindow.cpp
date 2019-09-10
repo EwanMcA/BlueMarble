@@ -7,6 +7,9 @@
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
+// TODO: Remove this
+#include <glad/glad.h>
+
 namespace BlueMarble {
 
 	static bool cGLFWInitialized = false;
@@ -56,16 +59,19 @@ namespace BlueMarble {
 		glfwSetWindowUserPointer(oWindow, &oData);
 		SetVSync(true);
 		
-		// Set GLFW callbacks
-		glfwSetWindowSizeCallback(oWindow, [](GLFWwindow* window, int width, int height)
-		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.Width = width;
-			data.Height = height;
+        // Set GLFW callbacks
+        glfwSetWindowSizeCallback(oWindow, [](GLFWwindow* window, int width, int height)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            data.Width = width;
+            data.Height = height;
 
-			WindowResizeEvent event(width, height);
-			data.EventCallback(event);
-		});
+            // TODO: This shouldn't be here
+            glViewport(0, 0, width, height);
+
+            WindowResizeEvent event(width, height);
+            data.EventCallback(event);
+        });
 
 		glfwSetWindowCloseCallback(oWindow, [](GLFWwindow* window)
 		{

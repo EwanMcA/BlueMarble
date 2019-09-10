@@ -24,9 +24,13 @@ namespace BlueMarble {
         void AddSystem(System* system);
         void RemoveSystem(System* system);
 
-        void Update(TimeStep ts, std::vector<Ref<Entity>>& entities);
+        void Update(TimeStep ts);
+
+        void AddEntity(Ref<Entity> entity) { oEntities.push_back(entity); }
+        void RemoveEntity(Ref<Entity> entity);
     private:
         std::vector<System*> oSystems;
+        std::vector<Ref<Entity>> oEntities;
     };
 
 }

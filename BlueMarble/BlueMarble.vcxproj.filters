@@ -114,6 +114,9 @@
     <ClInclude Include="src\BlueMarble\core.h">
       <Filter>src\BlueMarble</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlueMarble\ecs.h">
+      <Filter>src\BlueMarble</Filter>
+    </ClInclude>
     <ClInclude Include="src\BlueMarble\entity.h">
       <Filter>src\BlueMarble</Filter>
     </ClInclude>
@@ -1266,7 +1269,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\BlueMarble\ecs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BlueMarble\ImGui\imGuiBuild.cpp">
@@ -1306,6 +1308,9 @@
       <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\component.cpp">
+      <Filter>src\BlueMarble</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlueMarble\ecs.cpp">
       <Filter>src\BlueMarble</Filter>
     </ClCompile>
     <ClCompile Include="src\BlueMarble\layer.cpp">
@@ -1353,6 +1358,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\BlueMarble\ecs.cpp" />
   </ItemGroup>
 </Project>

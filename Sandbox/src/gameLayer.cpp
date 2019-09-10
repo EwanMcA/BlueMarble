@@ -1,4 +1,6 @@
 #include "gameLayer.h"
+#include "city.h"
+#include "components/components.h"
 
 GameLayer::GameLayer(const uint32_t xCount, 
                      const uint32_t yCount,
@@ -21,7 +23,6 @@ void GameLayer::OnUpdate(BlueMarble::TimeStep ts)
     {
         oCamera->Translate(oCameraMoveSpeed * ts, 0.0f);
     }
-
     if (BlueMarble::Input::IsKeyPressed(BM_KEY_UP) ||
         BlueMarble::Input::IsKeyPressed(BM_KEY_W))
     {
@@ -32,11 +33,23 @@ void GameLayer::OnUpdate(BlueMarble::TimeStep ts)
     {
         oCamera->Translate(0.0f, -oCameraMoveSpeed * ts);
     }
+
+    oECS->Update(ts);
 }
 
 void GameLayer::OnImGuiRender() 
 {
-    
+    ImGui::Begin("Game Menu");
+
+    if (ImGui::Button("Place City")) {
+        BlueMarble::Ref<City> city = std::make_shared<City>(1, 100);
+        city->GetComponent<BlueMarble::TransformComponent>()->oTrackMouse = true;
+        city->SetComponent<PlacingComponent>(std::make_shared<PlacingComponent>(true));
+        city->SetComponent<PlayerInputComponent>(std::make_shared<PlayerInputComponent>());
+        oECS->AddEntity(city);
+    }
+
+    ImGui::End();
 }
 
 bool GameLayer::OnMouseScrollEvent(BlueMarble::MouseScrollEvent& event)

@@ -108,6 +108,7 @@ project "Sandbox"
 
 	includedirs
 	{
+		"%{prj.name}/src",
 		"BlueMarble/vendor/spdlog/include",
 		"BlueMarble/src",
 		"BlueMarble/vendor",
