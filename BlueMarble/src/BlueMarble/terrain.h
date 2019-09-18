@@ -43,18 +43,21 @@ namespace BlueMarble {
         float GetHeightScale() const { return oHeightScale; }
         void NormalAt(const uint32_t x, const uint32_t y, glm::vec3& normal) const;
         const glm::vec3& GetPosition() const { return oPosition; }
+        float LayerGet(const int layerIx, const int x, const int y) const { return (*oDataLayers[layerIx])[x + y * oXCount]; }
 
         // Modifiers
         void GenerateVertices(std::vector<float>& vertices);
-        void ResetHeightMap() { oHeightMap->clear(); oHeightMap->resize(oXCount * oYCount, 0.0f); }
-        void ResetHeightMap(BMPHeightMap& heightMap);
         void GenerateRandomHeightMap();
         void RefreshOverlay();
-        void RefreshVertices() { RefreshVertices(0, 0, oXCount, oYCount); }
-        void RefreshVertices(int xMin, int yMin, int xMax, int yMax);
+        void RefreshVertices() { RefreshVertices(-1, 0, 0, oXCount, oYCount); }
+        void RefreshVertices(const int layerIx, const int xMin, const int yMin, const int xMax, const int yMax);
         void LayerAdd(const int layerIx, const int x, const int y, const float amount, const int radius);
+        void LayerSet(const int layerIx, const int x, const int y, const float amount);
         void LayerSet(const int layerIx, const int x, const int y, const float amount, const int radius);
         void LayerSmooth(const int layerIx, const int x, const int y, const int radius);
+        void LayerClear(const int layerIx) { oDataLayers[layerIx]->clear(); oDataLayers[layerIx]->resize(oXCount * oYCount, 0.0f); }
+        void ResetHeightMap() { LayerClear(0); }
+        void ResetHeightMap(BMPHeightMap& heightMap);
         void SetHeightScale(const float scale) { oHeightScale = scale; }
         void SetTexCoordCallback(const std::function<std::pair<float, float>(int, int)>& callback) 
         {

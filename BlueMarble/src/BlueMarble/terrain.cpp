@@ -14,7 +14,7 @@ namespace BlueMarble {
     {
         float dx = abs(j - (int)x);
         float dy = abs(i - (int)y);
-        return sqrt(dx * dx + dy * dy) < radius;
+        return (dx * dx + dy * dy) < (radius * radius);
     }
     
     BMPHeightMap::BMPHeightMap(const std::string& path)
@@ -125,7 +125,7 @@ namespace BlueMarble {
         LoadVB();
     }
 
-    void Terrain::RefreshVertices(int xMin, int yMin, int xMax, int yMax)
+    void Terrain::RefreshVertices(const int layerIx, const int xMin, const int yMin, const int xMax, const int yMax)
     {
         // Update heights and normals
         for (int y = yMin; y < yMax; ++y)
@@ -133,24 +133,31 @@ namespace BlueMarble {
             for (int x = xMin; x < xMax; ++x)
             {
                 int vbIndex = y * (oXCount * STRIDE) + (x * STRIDE);
-                glm::vec3 normal;
-                NormalAt(x, y, normal);
-                oVertices[vbIndex + 2] = HeightAt(x, y);
-                oVertices[vbIndex + 3] = normal.x;
-                oVertices[vbIndex + 4] = normal.y;
-                oVertices[vbIndex + 5] = normal.z;
-
-                if (oTexCoordCallback) 
+                if (layerIx <= 0)
                 {
-                    float xTex{ 0.0f }, yTex{ 0.0f };
-                    std::tie(xTex, yTex) = oTexCoordCallback(x, y);
-                    oVertices[vbIndex + 6] = xTex;
-                    oVertices[vbIndex + 7] = yTex;
-                }
+                    glm::vec3 normal;
+                    NormalAt(x, y, normal);
+                    oVertices[vbIndex + 2] = HeightAt(x, y);
+                    oVertices[vbIndex + 3] = normal.x;
+                    oVertices[vbIndex + 4] = normal.y;
+                    oVertices[vbIndex + 5] = normal.z;
 
-                // oDataLayers[0] is the heightmap
-                for (int i = 1; i < oDataLayers.size(); ++i)
-                    oVertices[vbIndex + 7 + i] = (*oDataLayers[i])[x + y * oXCount];
+                    if (oTexCoordCallback) 
+                    {
+                        float xTex{ 0.0f }, yTex{ 0.0f };
+                        std::tie(xTex, yTex) = oTexCoordCallback(x, y);
+                        oVertices[vbIndex + 6] = xTex;
+                        oVertices[vbIndex + 7] = yTex;
+                    }
+
+                    // oDataLayers[0] is the heightmap
+                    for (int i = 1; i < oDataLayers.size(); ++i)
+                        oVertices[vbIndex + 7 + i] = (*oDataLayers[i])[x + y * oXCount];
+                }
+                else
+                {
+                    oVertices[vbIndex + 7 + layerIx] = (*oDataLayers[layerIx])[x + y * oXCount];
+                }
 
                 // Overlay
                 if (oOverlayCallback)
@@ -160,6 +167,7 @@ namespace BlueMarble {
             }
         }
 
+        // TODO: Add refreshVB option via VertexBuffer update function
         LoadVB();
     }
 
@@ -178,10 +186,21 @@ namespace BlueMarble {
             }
         }
 
-        RefreshVertices(std::max(0, x - radius), 
+        RefreshVertices(layerIx,
+                        std::max(0, x - radius), 
                         std::max(0, y - radius), 
                         std::min(x + radius, (int)oXCount), 
                         std::min(y + radius, (int)oYCount));
+    }
+
+    void Terrain::LayerSet(const int layerIx, const int x, const int y, const float amount)
+    {
+        (*oDataLayers[layerIx])[x + y * oXCount] = std::clamp(amount, 0.0f, 1.0f);
+        RefreshVertices(layerIx,
+            x,
+            y,
+            std::min(x + 1, (int)oXCount),
+            std::min(y + 1, (int)oYCount));
     }
 
     void Terrain::LayerSet(const int layerIx, const int x, const int y, const float amount, const int radius)
@@ -200,7 +219,8 @@ namespace BlueMarble {
             }
         }
 
-        RefreshVertices(std::max(0, x - radius),
+        RefreshVertices(layerIx,
+            std::max(0, x - radius),
             std::max(0, y - radius),
             std::min(x + radius, (int)oXCount),
             std::min(y + radius, (int)oYCount));
@@ -224,7 +244,8 @@ namespace BlueMarble {
             }
         }
 
-        RefreshVertices(std::max(0, x - radius),
+        RefreshVertices(layerIx,
+            std::max(0, x - radius),
             std::max(0, y - radius),
             std::min(x + radius, (int)oXCount),
             std::min(y + radius, (int)oYCount));

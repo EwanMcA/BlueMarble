@@ -4,7 +4,7 @@
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
 layout(location = 2) in vec2 aTexCoord;
-layout(location = 3) in vec2 aStats;
+layout(location = 3) in vec3 aStats;
 layout(location = 4) in float aOverlay;
 
 uniform mat4 uViewProjection;
@@ -14,7 +14,7 @@ out vec3 vPosition;
 out vec3 vNormal;
 out vec2 vTexCoord;
 out vec3 vWorldPosition;
-out vec2 vStats;
+out vec3 vStats;
 out float vOverlay;
 
 void main()
@@ -37,7 +37,7 @@ in vec3 vPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
 in vec3 vWorldPosition;
-in vec2 vStats;
+in vec3 vStats;
 in float vOverlay;
 
 uniform sampler2D uTexture0;
@@ -92,6 +92,9 @@ void main()
 
     if (uDisplayOverlay) {
         texMix = mix(texMix, vec4(1.0f - vOverlay, vOverlay, 0.0f, 1.0f), 0.5);
+    }
+    if (vStats.z > 0) {
+        texMix = mix(texMix, vec4(1.0f, 1.0, 1.0, 1.0f), vStats.z / 2);
     }
     color = vec4(ambient + diffuse, 1.0f) * texMix;
 }

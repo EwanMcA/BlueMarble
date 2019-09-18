@@ -23,6 +23,8 @@
       <Filter>systems</Filter>
     </ClInclude>
     <ClInclude Include="src\systems\PlayerInputSystem.h" />
+    <ClInclude Include="src\systems\editSystem.h" />
+    <ClInclude Include="src\systems\territorySystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\gameLayer.cpp" />
@@ -34,5 +36,6 @@
     <ClCompile Include="src\systems\renderSystem.cpp">
       <Filter>systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\systems\territorySystem.cpp" />
   </ItemGroup>
 </Project>

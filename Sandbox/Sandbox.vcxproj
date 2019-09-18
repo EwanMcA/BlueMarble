@@ -137,8 +137,10 @@
     <ClInclude Include="src\mapLayer.h" />
     <ClInclude Include="src\sandbox.h" />
     <ClInclude Include="src\systems\citySystem.h" />
+    <ClInclude Include="src\systems\editSystem.h" />
     <ClInclude Include="src\systems\PlayerInputSystem.h" />
     <ClInclude Include="src\systems\renderSystem.h" />
+    <ClInclude Include="src\systems\territorySystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\gameLayer.cpp" />
@@ -146,6 +148,7 @@
     <ClCompile Include="src\sandbox.cpp" />
     <ClCompile Include="src\systems\citySystem.cpp" />
     <ClCompile Include="src\systems\renderSystem.cpp" />
+    <ClCompile Include="src\systems\territorySystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BlueMarble\BlueMarble.vcxproj">

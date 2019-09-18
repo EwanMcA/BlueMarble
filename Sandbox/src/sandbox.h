@@ -7,6 +7,7 @@
 #include "systems/renderSystem.h"
 #include "systems/citySystem.h"
 #include "systems/playerInputSystem.h"
+#include "systems/territorySystem.h"
 
 #define X_VERTICES 256
 #define Y_VERTICES 256
@@ -26,6 +27,7 @@ public:
         ecs->AddSystem(new RenderSystem(oCamera));
         ecs->AddSystem(new PlayerInputSystem(oCamera));
         ecs->AddSystem(new CitySystem(oCamera));
+        ecs->AddSystem(new TerritorySystem(oCamera));
         PushLayer(new MapLayer(X_VERTICES, Y_VERTICES, oCamera, ecs));
         PushLayer(new GameLayer(X_VERTICES, Y_VERTICES, oCamera, ecs));
     }

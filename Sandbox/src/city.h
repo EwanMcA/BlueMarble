@@ -12,12 +12,14 @@ public:
     {
         auto va = BlueMarble::Ref<BlueMarble::VertexArray>(BlueMarble::VertexArray::Create());
 
+        // TODO: Scale this the proper way.
+        // TODO: Get a 3D mesh / texture for cities.
         float scale = 0.25f;
         std::vector<float> vertices =
-        { scale * -0.5f, scale *  0.5f, 0.0f, 0.0f, 0.0f,
-          scale * -0.5f, scale * -0.5f, 0.0f, 0.0f, 1.0f,
-          scale *  0.5f, scale * -0.5f, 0.0f, 1.0f, 1.0f,
-          scale *  0.5f, scale *  0.5f, 0.0f, 1.0f, 0.0f };
+        { scale * -0.5f, scale *  0.5f, 0.0f, 0.0f, 1.0f,
+          scale * -0.5f, scale * -0.5f, 0.0f, 0.0f, 0.0f,
+          scale *  0.5f, scale * -0.5f, 0.0f, 1.0f, 0.0f,
+          scale *  0.5f, scale *  0.5f, 0.0f, 1.0f, 1.0f };
 
         Ref<BlueMarble::VertexBuffer> squareVB;
         squareVB.reset(BlueMarble::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float)));
@@ -39,6 +41,8 @@ public:
         SetComponent<BlueMarble::MaterialComponent>(std::make_shared<BlueMarble::MaterialComponent>(material));
         SetComponent<BlueMarble::TransformComponent>(std::make_shared<BlueMarble::TransformComponent>(position));
         SetComponent<PlayerComponent>(std::make_shared<PlayerComponent>(playerID));
+        SetComponent<SizeComponent>(std::make_shared<SizeComponent>(5, 5)); // starting width & length
+        SetComponent<MapPositionComponent>(std::make_shared<MapPositionComponent>(0, 0));
         SetComponent<PopulationComponent>(std::make_shared<PopulationComponent>(initialPop));
     }
     virtual ~City() = default;

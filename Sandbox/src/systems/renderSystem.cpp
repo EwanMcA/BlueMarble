@@ -27,7 +27,7 @@ void RenderSystem::OnUpdate(BlueMarble::TimeStep ts, std::vector<Ref<Entity>>& e
                 BlueMarble::Renderer::Submit(entity->GetComponent<MaterialComponent>()->oMaterial, 
                                              entity->GetComponent<VertexArrayComponent>()->oVA, 
                                              glm::translate(transformComp->oTransform,
-                                                 { worldCoords.x, worldCoords.y, worldCoords.z + 0.05f }));
+                                                 { worldCoords.x, worldCoords.y, worldCoords.z + 0.01f }));
             }
             else
             {
