@@ -196,11 +196,8 @@ namespace BlueMarble {
     void Terrain::LayerSet(const int layerIx, const int x, const int y, const float amount)
     {
         (*oDataLayers[layerIx])[x + y * oXCount] = std::clamp(amount, 0.0f, 1.0f);
-        RefreshVertices(layerIx,
-            x,
-            y,
-            std::min(x + 1, (int)oXCount),
-            std::min(y + 1, (int)oYCount));
+
+        RefreshVertices(layerIx, x, y, std::min(x + 1, (int)oXCount), std::min(y + 1, (int)oYCount));
     }
 
     void Terrain::LayerSet(const int layerIx, const int x, const int y, const float amount, const int radius)

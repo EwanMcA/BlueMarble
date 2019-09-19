@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 
-#define SECONDS_PER_TILE 0.25
+#define SECONDS_PER_TILE 0.1
 
 void TerritorySystem::OnUpdate(BlueMarble::TimeStep ts, std::vector<Ref<Entity>>& entities)
 {
@@ -28,6 +28,7 @@ void TerritorySystem::OnUpdate(BlueMarble::TimeStep ts, std::vector<Ref<Entity>>
                 if (entity->HasComponent<TerritoryComponent>())
                 {
                     BlueMarble::TimeStep& timer = entity->GetComponent<TerritoryComponent>()->oTimer += ts;
+
                     if (timer.GetSeconds() > SECONDS_PER_TILE)
                     {
                         //terrain->LayerSet(3, posComp->oX, posComp->oY, 1.0f, GetRadius(entity));
@@ -47,7 +48,7 @@ int TerritorySystem::GetRadius(Ref<Entity> entity) const
 
 void TerritorySystem::Grow(Ref<BlueMarble::Terrain> terrain, int x, int y, int r)
 {
-    auto comp = [&terrain, x, y](std::pair<int, int> a, std::pair<int, int> b) -> bool
+    auto comp = [x, y](std::pair<int, int> a, std::pair<int, int> b) -> bool
     {
         float ar = abs(a.first - x) * abs(a.first - x) + abs(a.second - y) * abs(a.second - y);
         float br = abs(b.first - x) * abs(b.first - x) + abs(b.second - y) * abs(b.second - y);
@@ -55,19 +56,16 @@ void TerritorySystem::Grow(Ref<BlueMarble::Terrain> terrain, int x, int y, int r
     };
     std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(comp)> q(comp);
     
-    std::unordered_set<int> visited;
+    std::set<std::pair<int, int>> visited;
     q.push({x, y});
 
     while (!q.empty())
     {
-
         auto [nx, ny] = q.top();
         q.pop();
 
-        if (visited.find(nx + ny * terrain->GetXCount()) != visited.end())
-            continue;
-        else
-            visited.insert(nx + ny * terrain->GetXCount());
+        if (visited.find({ nx, ny }) != visited.end()) continue;
+        else visited.insert({ nx, ny });
         
         // TODO: Get rid of magic layer index 3, define enum somewhere, or specific territory get method
         // TODO: Handle different players' territory.
@@ -86,7 +84,7 @@ void TerritorySystem::Grow(Ref<BlueMarble::Terrain> terrain, int x, int y, int r
             {
                 int nextY = ny + i;
                 if (nextY >= 0 && nextY < terrain->GetYCount() &&
-                    (abs(nx - x) * abs(nx - x) + abs(nextY - y) * abs(nextY - y) <= r))
+                    abs(nx - x) * abs(nx - x) + abs(nextY - y) * abs(nextY - y) <= (r * r))
                 {
                     q.push({ nx, nextY });
                 }

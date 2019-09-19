@@ -94,7 +94,9 @@ void main()
         texMix = mix(texMix, vec4(1.0f - vOverlay, vOverlay, 0.0f, 1.0f), 0.5);
     }
     if (vStats.z > 0) {
-        texMix = mix(texMix, vec4(1.0f, 1.0, 1.0, 1.0f), vStats.z / 2);
+        texMix = (vStats.z < 0.5) ? mix(texMix, vec4(1.0f, 1.0, 1.0, 1.0f), vStats.z)
+                                  : mix(texMix, vec4(1.0f, 1.0, 1.0, 1.0f), 0.75 - vStats.z / 2);
     }
+
     color = vec4(ambient + diffuse, 1.0f) * texMix;
 }
